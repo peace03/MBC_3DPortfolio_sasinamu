@@ -16,11 +16,6 @@ public class PlayerMove : MonoBehaviour
 
     private CharacterController cc;                     // 캐릭터 컨트롤러
 
-    private DuckovInputActions inputActions;            // 인풋 시스템
-    private InputAction moveAction;                     // 이동 액션
-    private InputAction runAction;                      // 달리기 액션
-    private InputAction rollAction;                     // 구르기 액션
-
     private Vector2 moveInput;                          // 입력 값
 
     private void Awake()
@@ -29,47 +24,26 @@ public class PlayerMove : MonoBehaviour
         curStamina = maxStamina;
 
         cc = GetComponent<CharacterController>();
-
-        inputActions = new DuckovInputActions();
-        moveAction = inputActions.Player.Move;
-        runAction = inputActions.Player.Run;
-        rollAction = inputActions.Player.Roll;
-    }
-
-    private void OnEnable()
-    {
-        // 인풋 시스템 구독
-        inputActions.Player.Enable();
     }
 
     private void Update()
     {
-        if (runAction.WasPerformedThisFrame())
-            pressRunKey = true;
-
-        if (runAction.WasCompletedThisFrame())
-            pressRunKey = false;
-
-        // 스테미나
-        HandleStamina();
+        // 달리기 키를 눌렀는지 확인하기
+        //pressRunKey = runAction.IsPressed();
+        // 스테미나 관리하기
+        //HandleStamina();
     }
 
     private void FixedUpdate()
     {
-        // 이동
+        // 이동 관리하기
         HandleMove();
-    }
-
-    private void OnDisable()
-    {
-        // 인풋 시스템 구독 해제
-        inputActions.Player.Disable();
     }
 
     // 이동 관리 함수
     private void HandleMove()
     {
-        moveInput = moveAction.ReadValue<Vector2>();
+        moveInput = PlayerFacade.instance.GetInput();
         // 입력 값에 따른 방향 정하기
         Vector3 dir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
         // 달리기 조건(키 눌림, 스테미나 있음)에 해당되면 달리기 속도, 아니라면 움직이는 속도
