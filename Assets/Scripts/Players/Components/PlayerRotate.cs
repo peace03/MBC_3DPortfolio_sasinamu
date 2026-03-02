@@ -1,10 +1,6 @@
 using UnityEngine;
-
 public class PlayerRotate : MonoBehaviour
 {
-    [Header("마우스")]
-    [SerializeField] private Transform mouseTarget;     // 마우스 위치
-
     private Camera mainCam;                             // 메인 카메라
 
     private Plane groundPlane;                          // 캐릭터의 아래 평면
@@ -34,8 +30,8 @@ public class PlayerRotate : MonoBehaviour
         {
             // 카메라와 레이저의 거리를 이용해 마우스의 위치 저장
             Vector3 hitPoint = ray.GetPoint(distance);
-            // 카메라의 마우스 타겟 위치 설정
-            mouseTarget.position = hitPoint;
+            // y 값 초기화
+            hitPoint.y = 0f;
             // 플레이어에서 마우스 위치의 방향 저장
             Vector3 dir = (hitPoint - transform.position).normalized;
             // x축 회전 막기(위 아래로 회전)

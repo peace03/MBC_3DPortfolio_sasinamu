@@ -74,6 +74,10 @@ public class InputManager : MonoBehaviour
         // 달리기 이벤트
         else if (context.action == runAction)
             EventBus<RunEvent>.Publish(new RunEvent { isPressed = context.ReadValueAsButton() });
+        // 구르기 이벤트
+        else if (context.action == rollAction)
+            EventBus<RollEvent>.Publish(new RollEvent { isPressed = context.ReadValueAsButton() });
+        // 그 외
         else
             Debug.Log("없는 입력 이벤트");
     }
