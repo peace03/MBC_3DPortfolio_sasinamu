@@ -24,7 +24,6 @@ public class InputManager : MonoBehaviour
         runAction = inputActions.Player.Run;
         allActions.Add(runAction);
         rollAction = inputActions.Player.Roll;
-        allActions.Add(rollAction);
         mousePosAction = inputActions.Camera.MousePosition;
     }
 
@@ -42,6 +41,9 @@ public class InputManager : MonoBehaviour
             // 키에서 손을 뗄 때
             action.canceled += ChangeInputAction;
         }
+
+        rollAction.started += ChangeInputAction;
+        rollAction.canceled += ChangeInputAction;
     }
 
     private void Update()
@@ -59,6 +61,9 @@ public class InputManager : MonoBehaviour
             // 키에서 손을 뗄 때
             action.canceled -= ChangeInputAction;
         }
+
+        rollAction.started -= ChangeInputAction;
+        rollAction.canceled -= ChangeInputAction;
 
         // 입력 이벤트 불가능
         inputActions.Player.Disable();

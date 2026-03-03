@@ -1608,14 +1608,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   pressedRunKey: 0
-  pressedRollKey: 0
   isRolling: 0
+  lastUsedStamTime: 0
   moveSpeed: 5
   runSpeed: 7
-  rollTime: 1
-  rollDistance: 10
-  maxStamina: 5
+  rollTime: 0.3
+  rollDistance: 3
+  maxStamina: 100
   curStamina: 0
+  stamRegenStartDelay: 5
+  stamRegenRate: 15
+  runStamRate: 2
+  rollStamAmount: 10
 --- !u!143 &1974293185
 CharacterController:
   m_ObjectHideFlags: 0
