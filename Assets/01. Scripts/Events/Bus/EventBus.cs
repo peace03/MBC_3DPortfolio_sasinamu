@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 public static class EventBus<T> where T : IEvent
 {

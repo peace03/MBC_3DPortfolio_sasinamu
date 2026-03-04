@@ -1,10 +1,9 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 public class PlayerMove : MonoBehaviour
 {
-    [Header("상태")]
+    [Header("정보")]
     [SerializeField] private bool pressedRunKey;            // 달리기 키 누름 여부
     [SerializeField] private bool isRolling;                // 구르는 중인지 여부
     [SerializeField] private float lastUsedStamTime;        // 스테미나를 마지막으로 사용한 시간
