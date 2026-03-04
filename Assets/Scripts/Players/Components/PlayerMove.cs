@@ -185,11 +185,9 @@ public class PlayerMove : MonoBehaviour
     // 스테미나 감소 함수
     private void UseStamina(float amount)
     {
-        // 스테미나 감소
-        curStamina -= amount;
+        // 스테미나 감소 후 최소값, 최대값에 맞춰서 반영
+        curStamina = Mathf.Clamp(curStamina - amount, 0, maxStamina);
         // 스테미나 사용한 시간 갱신
         lastUsedStamTime = Time.time;
-        // 스테미나 최소값, 최대값에 맞춰서 반영
-        curStamina = Mathf.Clamp(curStamina, 0, maxStamina);
     }
 }

@@ -60,6 +60,6 @@ public class CameraTarget : MonoBehaviour
         // 메인 카메라 우측 값 정리
         camRight.Normalize();
         // 이동 방향 반환
-        return (camForward * mousePos.y + camRight * mousePos.x).normalized;
+        return camForward * mousePos.y + camRight * mousePos.x;
     }
 }
