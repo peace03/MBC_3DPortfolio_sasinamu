@@ -270,7 +270,7 @@ public class EnemyBT : MonoBehaviour
     // 회전 관리 함수
     private void HandleRotate(Vector3 pos)
     {
-        // 방향 받아오기
+        // 방향 저장
         Vector3 dir = (pos - transform.position).normalized;
         // 높이 제거
         dir.y = 0f;
@@ -287,7 +287,7 @@ public class EnemyBT : MonoBehaviour
     // 이동 관리 함수
     private void HandleMove(Vector3 pos)
     {
-        // 방향 받아오기
+        // 방향 저장
         Vector3 dir = (pos - transform.position).normalized;
         // 높이 제거
         dir.y = 0f;

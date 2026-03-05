@@ -18,10 +18,8 @@ public struct MousePosEvent : IEvent
     public MousePosEvent(Vector2 pos) => mousePos = pos;
 }
 
-public struct RollEvent : IEvent
-{
-    public bool isPressed;
-    public RollEvent(bool value) => isPressed = value;
-}
+public struct RollEvent : IEvent {}
 
 public struct InteractEvent : IEvent {}
+
+public struct EscEvent : IEvent {}

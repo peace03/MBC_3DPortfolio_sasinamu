@@ -77,7 +77,7 @@ public class PlayerMove : MonoBehaviour
     private void SetPressedRollKey(RollEvent data)
     {
         // 구르는 중이거나, 키에서 손을 뗐거나, 현재 스테미나가 구르기 스테미나 소모량보다 적다면
-        if (isRolling || !data.isPressed || curStamina <= rollStamAmount)
+        if (isRolling || curStamina <= rollStamAmount)
             // 종료
             return;
 
@@ -94,7 +94,7 @@ public class PlayerMove : MonoBehaviour
     // 이동 관리 함수
     private void HandleMove()
     {
-        // 움직일 방향 받아오기
+        // 움직일 방향 저장
         Vector3 dir = CalculateMoveDirection();
         // 달리기 조건(키 눌림, 스테미나 있음)에 해당되면 달리기 속도, 아니라면 움직이는 속도
         float curSpeed = (pressedRunKey && curStamina > 0) ? runSpeed : moveSpeed;

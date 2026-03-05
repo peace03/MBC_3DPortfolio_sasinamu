@@ -8,6 +8,7 @@ public class PlayerInteract : MonoBehaviour
 
     [Header("스탯")]
     [SerializeField] private float maxInteractDistance;         // 최대 상호작용 거리
+    [SerializeField] private float minInteractAngle;            // 최소 상호작용 각도
     [SerializeField] private float maxInteractAngle;            // 최대 상호작용 각도
 
     private void OnEnable()
@@ -31,9 +32,8 @@ public class PlayerInteract : MonoBehaviour
     // 상호작용 가능한 타겟 설정하는 함수
     private void SetInteractableTarget()
     {
-        // 반지름이 최대 상호작용 거리인 구에 닿은, 상호작용 레이어에 속한 물체들 받아오기
-        var targets = Physics.OverlapSphere(transform.position, maxInteractDistance,
-                                            interactLayer);
+        // 반지름이 최대 상호작용 거리인 구에 닿은, 상호작용 레이어에 속한 물체들 저장
+        var targets = Physics.OverlapSphere(transform.position, maxInteractDistance, interactLayer);
 
         // 근처에 상호작용 가능한 물체들이 없고, 현재 상호작용 타겟이 있다면
         if (targets.Length == 0 && curInteractTarget != null)
@@ -50,39 +50,30 @@ public class PlayerInteract : MonoBehaviour
 
         // 저장할 타겟
         Collider target = null;
-        // 타겟과의 거리, 각도에 대한 점수
-        float targetScore = float.MaxValue;
+        // 타겟에 대한 점수
+        float score = -1f;
 
         // 물체들의 수만큼
         foreach (var trg in targets)
         {
             // 상호작용 인터페이스가 없다면
             if (!trg.TryGetComponent(out IInteractable interactable))
-                // 건너뛰기
-                continue;
-
-            // 물체와의 거리 저장
-            var dis = Vector3.Distance(trg.transform.position, transform.forward);
-            // 물체와의 방향 저장
-            var dir = (trg.transform.position - transform.position).normalized;
-            // 물체와의 각도 저장
-            var angle = Vector3.Angle(transform.forward, dir);
-
-            // 상호작용 가능한 거리와 각도 조건에 맞지 않다면
-            if (!CheckCanInteract(dis, angle))
-                // 건너뛰기
-                continue;
-
-            // 거리와 각도(10도 == 1f)에 다른 점수 저장
-            var score = dis + angle * 0.1f;
-
-            // 점수가 타겟 점수보다 작다면
-            if (score < targetScore)
             {
-                // 타겟 점수 갱신
-                targetScore = score;
-                // 타겟 갱신
+                Debug.Log($"[Error] Target {trg.gameObject.name}에 인터페이스가 없음");
+                // 건너뛰기
+                continue;
+            }
+
+            // 상호작용 가능한지 확인 후, 반환되는 타겟에 대한 점수 저장
+            float value = CheckCanInteract(trg);
+
+            // 이전 타겟에 대한 점수보다 현재 점수가 크다면
+            if (value > score)
+            {
+                // 타겟 변경
                 target = trg;
+                // 점수 갱신
+                score = value;
             }
         }
 
@@ -91,19 +82,28 @@ public class PlayerInteract : MonoBehaviour
     }
 
     // 상호작용 가능 여부 확인 함수
-    private bool CheckCanInteract(float dis, float angle)
+    private float CheckCanInteract(Collider target)
     {
-        // 물체와 가깝다면
-        if (dis <= maxInteractDistance * 0.5f)
-            // 각도가 최대 상호작용 각도 안에 있다면 true 반환
-            return angle <= maxInteractAngle;
-        // 물체와 적당히 가깝다면
-        else if (dis <= maxInteractDistance)
-            // 각도가 최대 상호작용 각도의 절반 안에 있다면 true 반환
-            return angle <= maxInteractAngle * 0.5f;
+        // 플레이어와 가까운 물체의 표면 좌표 저장
+        Vector3 trgClosestPos = target.ClosestPoint(transform.position);
+        // 플레이어 반지름 저장
+        float radius = Mathf.Max(transform.localScale.x, transform.localScale.z) * 0.5f;
+        // 물체의 표면 좌표와의 거리를 받아와서, 계산하기 편하게 정규화하기
+        float dis = Mathf.InverseLerp(radius, maxInteractDistance, Vector3.Distance(transform.position, trgClosestPos));
+        // 거리에 따른 상호작용 가능한 각도 저장
+        float canInteractAngle = Mathf.Lerp(maxInteractAngle, minInteractAngle, dis);
+        // 물체의 표면 좌표와의 방향 저장
+        Vector3 dir = (trgClosestPos - transform.position).normalized;
+        // 물체의 표면 좌표와의 각도 저장
+        float angle = Vector3.Angle(transform.forward, dir);
 
-        // 멀다면 false 반환
-        return false;
+        // 상호작용이 불가능한 각도라면
+        if (angle > canInteractAngle)
+            // 종료
+            return -1f;
+
+        // 0 ~ 2 사이의 점수를 반환 (1 - 거리(0~1)) + (1 - 각도(0~1))
+        return (1f - dis) + (1f - angle / canInteractAngle);
     }
 
     // 상호작용 실행 함수

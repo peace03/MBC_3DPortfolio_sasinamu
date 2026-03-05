@@ -15,7 +15,7 @@ public class BT_Selector : BT_Node
         // 자식 노드들 수만큼
         foreach(var node in children)
         {
-            // 노드 한 개의 상태 현황 결과 받아오기
+            // 노드 한 개의 상태 현황 결과 저장
             var status = node.Evaluate();
 
             // 결과가 성공이라면

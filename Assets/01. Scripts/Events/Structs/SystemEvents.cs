@@ -2,17 +2,15 @@ using System.Collections.Generic;
 
 public struct UIStateEvent : IEvent
 {
-    public bool isUIOpen;
-    public UIStateEvent(bool value) => isUIOpen = value;
+    public bool isOpenUI;
+    public UIStateEvent(bool value) => isOpenUI = value;
 }
 
 public struct LootBoxEvent : IEvent
 {
     public string boxName;
-    public List<string> itemsList;
-    public LootBoxEvent(string name, List<string> items)
+    public LootBoxEvent(string name)
     {
         boxName = name;
-        itemsList = items;
     }
 }
