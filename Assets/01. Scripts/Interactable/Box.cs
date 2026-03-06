@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LootBox : MonoBehaviour, IInteractable
+public class Box : MonoBehaviour, IInteractable
 {
     [Header("정보")]
     [SerializeField] private string boxName;        // 상자 이름

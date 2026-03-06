@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBT : MonoBehaviour
+public class EnemyBT : MonoBehaviour, IDamageable
 {
     private BT_Node root;                                   // BT의 뿌리(시작) 노드
 
     [Header("정보")]
+    [SerializeField] private bool isDamaged;                // 피격 여부
     [SerializeField] private float lastAttackTime;          // 마지막 공격 시간
     [SerializeField] private Transform player;              // 플레이어
     [SerializeField] private bool needToReturn;             // 복귀 필요 여부
@@ -14,6 +15,8 @@ public class EnemyBT : MonoBehaviour
     [SerializeField] private Transform patrolPoint;         // 순찰 지점
 
     [Header("스탯")]
+    [SerializeField] private float curHp;                   // 현재 Hp
+    [SerializeField] private float maxHp;                   // 최대 Hp
     [SerializeField] private float moveSpeed;               // 이동 속도
     [SerializeField] private float maxChaseDistance;        // 최대 추적 거리
     [SerializeField] private float attackPower;             // 공격력
@@ -29,6 +32,22 @@ public class EnemyBT : MonoBehaviour
         // BT 생성
         root = new BT_Selector(new List<BT_Node>
         {
+            // 죽음
+            new BT_Sequence(new List<BT_Node>
+            {
+                // HP가 0인지 확인
+                new BT_Action(CheckDead),
+                // 죽음
+                new BT_Action(IsDead)
+            }),
+            // 피격
+            new BT_Sequence(new List<BT_Node>
+            {
+                // 피격 상태 확인
+                new BT_Action(CheckDamaged),
+                // 피격 애니메이션 재생
+                new BT_Action(PlayDamagedAnimation)
+            }),
             // 공격
             new BT_Sequence(new List<BT_Node>
             {
@@ -73,10 +92,72 @@ public class EnemyBT : MonoBehaviour
         cc = GetComponent<CharacterController>();
     }
 
+    private void OnEnable()
+    {
+        // Hp 설정
+        curHp = maxHp;
+    }
+
     private void Update()
     {
         // BT 실행
         root.Evaluate();
+    }
+
+    // 죽음 확인 함수
+    private BT_NodeStatus CheckDead()
+    {
+        // 현재 체력이 0보다 작거나 같다면 ? 성공 반환 : 실패 반환
+        return curHp <= 0f ? BT_NodeStatus.Success : BT_NodeStatus.Failure;
+    }
+
+    // 죽음 함수
+    private BT_NodeStatus IsDead()
+    {
+        Debug.Log("죽음...");
+        // 애니메이션 재생
+
+        // 적 오브젝트 비활성화
+        gameObject.SetActive(false);
+        // 죽음 이벤트 발생
+        EventBus<DeadEvent>.Publish(new DeadEvent());
+        // 성공 반환
+        return BT_NodeStatus.Success;
+    }
+
+    // 피격 확인 함수
+    private BT_NodeStatus CheckDamaged()
+    {
+        // 피격 상태라면 ? 성공 반환 : 실패 반환
+        return isDamaged ? BT_NodeStatus.Success : BT_NodeStatus.Failure;
+    }
+
+    // 피격 애니메이션 재생 함수
+    private BT_NodeStatus PlayDamagedAnimation()
+    {
+        // 애니메이션 재생
+
+        // 피격 상태 변경
+        isDamaged = false;
+        // 성공 반환
+        return BT_NodeStatus.Success;
+    }
+
+    // 거리 확인 함수
+    private BT_NodeStatus CheckDistance(Vector3 pos, float range)
+    {
+        // 플레이어와 가까운 타겟의 표면 좌표 저장
+        Vector3 trgClosestPos = player.GetComponent<Collider>().ClosestPoint(transform.position);
+        // 타겟과의 거리 저장
+        float distance = CalculateTargetDistance(trgClosestPos);
+        // 타겟과의 거리가 매개변수의 거리보다 작거나 같으면 ? 성공 반환 : 실패 반환
+        return distance <= range ? BT_NodeStatus.Success : BT_NodeStatus.Failure;
+    }
+
+    // 매개변수 타겟와의 거리 계산 함수
+    private float CalculateTargetDistance(Vector3 pos)
+    {
+        return Vector3.Distance(transform.position, pos);
     }
 
     // 공격 딜레이 시간 확인 함수
@@ -95,63 +176,10 @@ public class EnemyBT : MonoBehaviour
             return BT_NodeStatus.Success;
     }
 
-    // 거리 확인 함수
-    private BT_NodeStatus CheckDistance(Vector3 pos, float range)
-    {
-        // 타겟과의 거리 저장
-        float distance = CalculateTargetDistance(pos);
-        // 타겟과의 거리가 매개변수의 거리보다 작거나 같으면 ? 성공 반환 : 실패 반환
-        return distance <= range ? BT_NodeStatus.Success : BT_NodeStatus.Failure;
-    }
-
-    // 순찰 지점 랜덤으로 정하는 함수
-    private BT_NodeStatus SetRandomPatrolPoint()
-    {
-        // 순찰 지점 설정을 안했다면
-        if(!setPatrolPoint)
-        {
-            // 지름이 1인 원에서 뽑은 랜덤 위치에 최대 순찰 거리를 곱해서 저장
-            Vector3 rand = Random.insideUnitSphere * maxPatrolDistance;
-            // 높이 제거
-            rand.y = 0f;
-            // 순찰 지점의 위치를 복귀 지점의 위치에 랜덤 위치를 더한 값으로 설정
-            patrolPoint.position = returnPoint.position + rand;
-            // 순찰 지점 설정함
-            setPatrolPoint = true;
-        }
-
-        // 성공 반환
-        return BT_NodeStatus.Success;
-    }
-
     // 공격 거리 확인 함수
     private BT_NodeStatus CheckAttackDistance()
     {
         return CheckDistance(player.position, maxAttackDistance);
-    }
-
-    // 추격 거리 확인 함수
-    private BT_NodeStatus CheckChaseDistance()
-    {
-        return CheckDistance(player.position, maxChaseDistance);
-    }
-
-    // 복귀 거리 확인 함수
-    private BT_NodeStatus CheckReturnDistance()
-    {
-        // 복귀 지점과의 거리 저장
-        float distance = CalculateTargetDistance(returnPoint.position);
-        // 복귀 지점과의 거리가 최대 복귀 거리보다 크거나 같고 && 복귀가 필요한 상태라면 ? 성공 반환 : 실패 반환
-        return (distance >= maxReturnDistance && needToReturn) ? BT_NodeStatus.Success : BT_NodeStatus.Failure;
-    }
-
-    // 순찰 거리 확인 함수
-    private BT_NodeStatus CheckPatrolDistance()
-    {
-        // 순찰 지점과의 거리 저장
-        float dis = CalculateTargetDistance(patrolPoint.position);
-        // 순찰 지점과의 거리랑 멀다면 ? 성공 반환 : 실패 반환
-        return dis >= 0.1f ? BT_NodeStatus.Success : BT_NodeStatus.Failure;
     }
 
     // 플레이어 공격 함수
@@ -174,12 +202,18 @@ public class EnemyBT : MonoBehaviour
         return BT_NodeStatus.Running;
     }
 
+    // 추격 거리 확인 함수
+    private BT_NodeStatus CheckChaseDistance()
+    {
+        return CheckDistance(player.position, maxChaseDistance);
+    }
+
     // 플레이어 추격 함수
     private BT_NodeStatus ChasePlayer()
     {
         Debug.Log("플레이어 추격!");
         // 복귀가 필요없는 상태였다면
-        if(!needToReturn)
+        if (!needToReturn)
             // 복귀가 필요한 상태로 변경
             needToReturn = true;
 
@@ -196,6 +230,15 @@ public class EnemyBT : MonoBehaviour
 
         // 진행 중 반환
         return BT_NodeStatus.Running;
+    }
+
+    // 복귀 거리 확인 함수
+    private BT_NodeStatus CheckReturnDistance()
+    {
+        // 복귀 지점과의 거리 저장
+        float distance = CalculateTargetDistance(returnPoint.position);
+        // 복귀 지점과의 거리가 최대 복귀 거리보다 크거나 같고 && 복귀가 필요한 상태라면 ? 성공 반환 : 실패 반환
+        return (distance >= maxReturnDistance && needToReturn) ? BT_NodeStatus.Success : BT_NodeStatus.Failure;
     }
 
     // 복귀 함수
@@ -225,6 +268,35 @@ public class EnemyBT : MonoBehaviour
 
         // 진행 중 반환
         return BT_NodeStatus.Running;
+    }
+
+    // 순찰 지점 랜덤으로 정하는 함수
+    private BT_NodeStatus SetRandomPatrolPoint()
+    {
+        // 순찰 지점 설정을 안했다면
+        if (!setPatrolPoint)
+        {
+            // 지름이 1인 원에서 뽑은 랜덤 위치에 최대 순찰 거리를 곱해서 저장
+            Vector3 rand = Random.insideUnitSphere * maxPatrolDistance;
+            // 높이 제거
+            rand.y = 0f;
+            // 순찰 지점의 위치를 복귀 지점의 위치에 랜덤 위치를 더한 값으로 설정
+            patrolPoint.position = returnPoint.position + rand;
+            // 순찰 지점 설정함
+            setPatrolPoint = true;
+        }
+
+        // 성공 반환
+        return BT_NodeStatus.Success;
+    }
+
+    // 순찰 거리 확인 함수
+    private BT_NodeStatus CheckPatrolDistance()
+    {
+        // 순찰 지점과의 거리 저장
+        float dis = CalculateTargetDistance(patrolPoint.position);
+        // 순찰 지점과의 거리랑 멀다면 ? 성공 반환 : 실패 반환
+        return dis >= 0.1f ? BT_NodeStatus.Success : BT_NodeStatus.Failure;
     }
 
     // 순찰 함수
@@ -261,12 +333,6 @@ public class EnemyBT : MonoBehaviour
         return BT_NodeStatus.Success;
     }
 
-    // 매개변수 타겟와의 거리 계산 함수
-    private float CalculateTargetDistance(Vector3 pos)
-    {
-        return Vector3.Distance(transform.position, pos);
-    }
-
     // 회전 관리 함수
     private void HandleRotate(Vector3 pos)
     {
@@ -293,5 +359,16 @@ public class EnemyBT : MonoBehaviour
         dir.y = 0f;
         // 이동
         cc.Move(dir * moveSpeed * Time.deltaTime);
+    }
+
+    // 피격 함수
+    public void Damaged(DamagedEvent data)
+    {
+        // Hp 감소
+        curHp -= data.amount;
+        // 피격 상태임
+        isDamaged = true;
+        // 피격 이벤트 발생
+        EventBus<DamagedEvent>.Publish(data);
     }
 }

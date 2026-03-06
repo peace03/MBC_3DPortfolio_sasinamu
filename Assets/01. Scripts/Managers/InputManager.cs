@@ -14,6 +14,7 @@ public class InputManager : MonoBehaviour
     private InputAction rollAction;                 // 구르기 액션
     private InputAction interactAction;             // 상호작용 액션
     private InputAction escAction;                  // ESC 액션
+    private InputAction fireAction;                 // 발사 액션
     private InputAction mousePosAction;             // 마우스 위치 액션
 
     private Vector2 curMousePos;                    // 현재 마우스 위치
@@ -40,6 +41,9 @@ public class InputManager : MonoBehaviour
         // ESC
         escAction = inputActions.Player.Esc;
         allActionsList.Add(escAction);
+        // 발사
+        fireAction = inputActions.Player.Fire;
+        allActionsList.Add(fireAction);
         // 마우스 위치
         mousePosAction = inputActions.Camera.MousePosition;
     }
@@ -144,5 +148,9 @@ public class InputManager : MonoBehaviour
                 // 이벤트 발생
                 EventBus<InteractEvent>.Publish(new InteractEvent());
         }
+        // 입력된 액션이 발사 액션일 때
+        else if (context.action == fireAction)
+            // 이벤트 발생
+            EventBus<FireEvent>.Publish(new FireEvent(context.ReadValueAsButton()));
     }
 }

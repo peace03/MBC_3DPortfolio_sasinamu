@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using UnityEngine;
 
 public struct UIStateEvent : IEvent
 {
@@ -12,5 +12,20 @@ public struct LootBoxEvent : IEvent
     public LootBoxEvent(string name)
     {
         boxName = name;
+    }
+}
+
+public struct DeadEvent : IEvent {}
+
+public struct DamagedEvent : IEvent
+{
+    public GameObject attacker;
+    public GameObject target;
+    public float amount;
+    public DamagedEvent(GameObject attacker, float amount)
+    {
+        this.attacker = attacker;
+        this.target = null;
+        this.amount = amount;
     }
 }

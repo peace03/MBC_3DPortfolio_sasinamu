@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3235220320064810426}
@@ -174,7 +174,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1
-  m_Radius: 0.5
+  m_Radius: 1.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -192,12 +192,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b819da4702abe742bccab342d4d6900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBT
+  isDamaged: 0
   lastAttackTime: 0
   player: {fileID: 0}
   needToReturn: 0
   returnPoint: {fileID: 7896936178090933514}
   setPatrolPoint: 0
   patrolPoint: {fileID: 5671998858917984792}
+  curHp: 0
+  maxHp: 0
   moveSpeed: 3
   maxChaseDistance: 10
   attackPower: 5
