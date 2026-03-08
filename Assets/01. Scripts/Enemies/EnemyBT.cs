@@ -11,7 +11,7 @@ public class EnemyBT : MonoBehaviour, IDamageable
     [SerializeField] private Transform player;              // 플레이어
     [SerializeField] private bool needToReturn;             // 복귀 필요 여부
     [SerializeField] private Transform returnPoint;         // 복귀 지점
-    [SerializeField] private bool setPatrolPoint;           // 순찰 지점 설정 여부
+    [SerializeField] private bool isArrivalPatrolPoint;     // 순찰 지점 도착 여부
     [SerializeField] private Transform patrolPoint;         // 순찰 지점
 
     [Header("스탯")]
@@ -25,7 +25,8 @@ public class EnemyBT : MonoBehaviour, IDamageable
     [SerializeField] private float maxReturnDistance;       // 최대 복귀 거리
     [SerializeField] private float maxPatrolDistance;       // 최대 순찰 거리
 
-    private CharacterController cc;                         // 캐릭터 컨트롤러
+    private CharacterController cc;                         // 적 캐릭터 컨트롤러
+    private Animator anim;                                  // 적 애니메이터
 
     private void Awake()
     {
@@ -74,6 +75,8 @@ public class EnemyBT : MonoBehaviour, IDamageable
                 // 복귀
                 new BT_Action(MoveToReturnPoint)
             }),
+            // 대기
+            new BT_Action(Idle),
             // 순찰(패트롤)
             new BT_Sequence(new List<BT_Node>
             {
@@ -83,13 +86,13 @@ public class EnemyBT : MonoBehaviour, IDamageable
                 new BT_Action(CheckPatrolDistance),
                 // 순찰
                 new BT_Action(MoveToPatrolPoint)
-            }),
-            // 대기
-            new BT_Action(Idle)
+            })
         });
 
         // 초기화
+        isArrivalPatrolPoint = true;
         cc = GetComponent<CharacterController>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     private void OnEnable()
@@ -115,8 +118,10 @@ public class EnemyBT : MonoBehaviour, IDamageable
     private BT_NodeStatus IsDead()
     {
         Debug.Log("죽음...");
-        // 애니메이션 재생
-
+        // 이전 애니메이션 종료 ★ 나중에 고치기 ★
+        anim.SetBool("Idle", false);
+        // 애니메이션 재생 ★ 나중에 고치기 ★
+        anim.Play("None", 0, 0f);
         // 적 오브젝트 비활성화
         gameObject.SetActive(false);
         // 죽음 이벤트 발생
@@ -135,9 +140,12 @@ public class EnemyBT : MonoBehaviour, IDamageable
     // 피격 애니메이션 재생 함수
     private BT_NodeStatus PlayDamagedAnimation()
     {
-        // 애니메이션 재생
-
-        // 피격 상태 변경
+        Debug.Log("피격 상태");
+        // 이전 애니메이션 종료 ★ 나중에 고치기 ★
+        anim.SetBool("Idle", false);
+        // 애니메이션 재생 ★ 나중에 고치기 ★
+        anim.Play("None", 0, 0f);
+        // 피격 상태 아님
         isDamaged = false;
         // 성공 반환
         return BT_NodeStatus.Success;
@@ -165,11 +173,8 @@ public class EnemyBT : MonoBehaviour, IDamageable
     {
         // 공격을 했고, 마지막 공격 시간에서 공격 딜레이 시간만큼 지나지 않았다면
         if (lastAttackTime != 0 && Time.time - lastAttackTime <= attackDelayTime)
-        {
-            Debug.Log("공격 쿨타임 기다리는 중...");
             // 진행 중 반환
             return BT_NodeStatus.Running;
-        }
         // 공격을 안했거나, 마지막 공격 시간에서 공격 딜레이 시간만큼 지났다면
         else
             // 성공 반환
@@ -185,13 +190,14 @@ public class EnemyBT : MonoBehaviour, IDamageable
     // 플레이어 공격 함수
     private BT_NodeStatus AttackPlayer()
     {
-        Debug.Log("플레이어 공격!");
         // 회전
         HandleRotate(player.position);
         // 이동
         HandleMove(player.position);
-        // 애니메이션 재생
-
+        // 이전 애니메이션 종료 ★ 나중에 고치기 ★
+        anim.SetBool("Idle", false);
+        // 애니메이션 재생 ★ 나중에 고치기 ★
+        anim.Play("None", 0, 0f);
         // 플레이어 체력 계산
 
         // 공격한 시간 저장
@@ -211,7 +217,6 @@ public class EnemyBT : MonoBehaviour, IDamageable
     // 플레이어 추격 함수
     private BT_NodeStatus ChasePlayer()
     {
-        Debug.Log("플레이어 추격!");
         // 복귀가 필요없는 상태였다면
         if (!needToReturn)
             // 복귀가 필요한 상태로 변경
@@ -221,8 +226,10 @@ public class EnemyBT : MonoBehaviour, IDamageable
         HandleRotate(player.position);
         // 이동
         HandleMove(player.position);
-        // 애니메이션 재생
-
+        // 이전 애니메이션 종료 ★ 나중에 고치기 ★
+        anim.SetBool("Idle", false);
+        // 애니메이션 재생 ★ 나중에 고치기 ★
+        anim.Play("None", 0, 0f);
         // 플레이어와의 거리가 공격 거리보다 작거나 같다면
         if (CalculateTargetDistance(player.position) <= maxAttackDistance)
             // 성공 반환
@@ -249,17 +256,17 @@ public class EnemyBT : MonoBehaviour, IDamageable
             // 실패 반환
             return BT_NodeStatus.Failure;
 
-        Debug.Log("복귀!");
         // 회전
         HandleRotate(returnPoint.position);
         // 이동
         HandleMove(returnPoint.position);
-        // 애니메이션 재생
-
+        // 이전 애니메이션 종료 ★ 나중에 고치기 ★
+        anim.SetBool("Idle", false);
+        // 애니메이션 재생 ★ 나중에 고치기 ★
+        anim.Play("None", 0, 0f);
         // 복귀 지점과의 거리가 최대 복귀 거리보다 작거나 같다면
         if (CalculateTargetDistance(returnPoint.position) <= maxReturnDistance)
         {
-            Debug.Log("복귀 완료!");
             // 복귀가 필요없는 상태로 변환
             needToReturn = false;
             // 성공 반환
@@ -270,11 +277,43 @@ public class EnemyBT : MonoBehaviour, IDamageable
         return BT_NodeStatus.Running;
     }
 
+    // 대기 함수
+    private BT_NodeStatus Idle()
+    {
+        // 순찰 지점에 도착한 상태라면
+        if (isArrivalPatrolPoint)
+        {
+            // Idle 애니메이션 시작 상태가 아니라면
+            if (!anim.GetBool("Idle"))
+            {
+                // Idle 애니메이션 시작 상태
+                anim.SetBool("Idle", true);
+                // 애니메이션 0초로 시작
+                anim.Play("Idle", 0, 0f);
+                // 진행 중 반환
+                return BT_NodeStatus.Running;
+            }
+
+            // 현재 0번 레이어 애니메이터 정보 저장
+            var animInfo = anim.GetCurrentAnimatorStateInfo(0);
+
+            // 현재 애니메이션이 Idle이고, 애니메이션 진행 시간이 끝나지 않았다면
+            if (animInfo.IsName("Idle") && animInfo.normalizedTime <= 1f)
+                // 진행 중 반환
+                return BT_NodeStatus.Running;
+        }
+
+        // Idle 애니메이션 시작 상태 아님
+        anim.SetBool("Idle", false);
+        // 실패 반환
+        return BT_NodeStatus.Failure;
+    }
+
     // 순찰 지점 랜덤으로 정하는 함수
     private BT_NodeStatus SetRandomPatrolPoint()
     {
-        // 순찰 지점 설정을 안했다면
-        if (!setPatrolPoint)
+        // 순찰 지점에 도착했다면
+        if (isArrivalPatrolPoint)
         {
             // 지름이 1인 원에서 뽑은 랜덤 위치에 최대 순찰 거리를 곱해서 저장
             Vector3 rand = Random.insideUnitSphere * maxPatrolDistance;
@@ -282,8 +321,8 @@ public class EnemyBT : MonoBehaviour, IDamageable
             rand.y = 0f;
             // 순찰 지점의 위치를 복귀 지점의 위치에 랜덤 위치를 더한 값으로 설정
             patrolPoint.position = returnPoint.position + rand;
-            // 순찰 지점 설정함
-            setPatrolPoint = true;
+            // 순찰 지점에 도착하지 않은 상태
+            isArrivalPatrolPoint = false;
         }
 
         // 성공 반환
@@ -302,7 +341,6 @@ public class EnemyBT : MonoBehaviour, IDamageable
     // 순찰 함수
     private BT_NodeStatus MoveToPatrolPoint()
     {
-        Debug.Log("순찰 중!");
         // 회전
         HandleRotate(patrolPoint.position);
         // 이동
@@ -312,25 +350,14 @@ public class EnemyBT : MonoBehaviour, IDamageable
         // 순찰 지점과의 거리가 가깝다면
         if (CalculateTargetDistance(patrolPoint.position) <= 0.1f)
         {
-            Debug.Log("순찰 완료!");
-            // 순찰 지점 세팅 필요함
-            setPatrolPoint = false;
+            // 순찰 지점 도착 상태
+            isArrivalPatrolPoint = true;
             // 성공 반환
             return BT_NodeStatus.Success;
         }
 
         // 진행 중 반환
         return BT_NodeStatus.Running;
-    }
-
-    // 대기 함수
-    private BT_NodeStatus Idle()
-    {
-        Debug.Log("대기 중!");
-        // 애니메이션 재생
-
-        // 성공 반환
-        return BT_NodeStatus.Success;
     }
 
     // 회전 관리 함수
@@ -370,5 +397,11 @@ public class EnemyBT : MonoBehaviour, IDamageable
         isDamaged = true;
         // 피격 이벤트 발생
         EventBus<DamagedEvent>.Publish(data);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, maxChaseDistance);
     }
 }
