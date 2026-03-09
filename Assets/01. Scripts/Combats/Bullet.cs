@@ -9,9 +9,14 @@ public class Bullet : MonoBehaviour
 
     private DamagedEvent bulletInfo;                // 총알 정보(쏜 사람, 맞은 사람, 데미지)
 
+    private int playerLayer;
+    private int enemyLayer;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        playerLayer = LayerMask.NameToLayer("Player");
+        enemyLayer = LayerMask.NameToLayer("Enemy");
     }
 
     private void OnEnable()
@@ -21,14 +26,20 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // 공격 오브젝트의 레이어와 닿은 오브젝트의 레이어가 같다면
+        if (bulletInfo.attacker.layer == other.gameObject.layer)
+            // 종료
+            return;
+
         // 총알과 닿은 콜라이더가 데미지를 입을 수 있는 인터페이스를 가지고 있다면
         if (other.TryGetComponent(out IDamageable target))
         {
-            // 맞은 놈 설정
+            // 타겟(닿은 오브젝트) 설정
             bulletInfo.target = other.gameObject;
             // 데미지 전달하기
             target.Damaged(bulletInfo);
             // 피격 이펙트가 있다면 넣기
+
         }
 
         // 총알 비활성화

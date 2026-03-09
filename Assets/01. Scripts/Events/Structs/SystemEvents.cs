@@ -15,7 +15,14 @@ public struct LootBoxEvent : IEvent
     }
 }
 
-public struct DeadEvent : IEvent {}
+public struct DeadEvent : IEvent
+{
+    public bool isPlayer;
+    public DeadEvent(bool isPlayer)
+    {
+        this.isPlayer = isPlayer;
+    }
+}
 
 public struct DamagedEvent : IEvent
 {

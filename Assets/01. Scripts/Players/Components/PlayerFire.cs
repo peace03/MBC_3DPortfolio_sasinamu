@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerFire : MonoBehaviour
 {
-    [Header("총알")]
     [SerializeField] private GameObject bulletPrefab;       // 총알 프리팹
 
     [Header("정보")]
@@ -12,11 +11,16 @@ public class PlayerFire : MonoBehaviour
     [SerializeField] private bool isSingleFire;             // 단발 발사 여부
     [SerializeField] private float nextFireTime;            // 다음 발사 시간
 
-
     [Header("스탯")]
-    [SerializeField] private float attackPower;             // 공격력
     [SerializeField] private float singleFireDelayTime;     // 단발 발사 딜레이 시간
     [SerializeField] private float autoFireDelayTime;       // 연발 발사 딜레이 시간
+
+    private PlayerStat stat;
+
+    private void Awake()
+    {
+        stat = PlayerFacade.instance.PlayerStat;
+    }
 
     private void OnEnable()
     {
@@ -73,8 +77,8 @@ public class PlayerFire : MonoBehaviour
             // 종료
             return;
 
-        var bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        bullet.GetComponent<Bullet>().SetBulletInfo(new DamagedEvent(gameObject, attackPower));
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        bullet.GetComponent<Bullet>().SetBulletInfo(new DamagedEvent(gameObject, stat.AttackPower));
         // 다음 발사 시간 갱신
         nextFireTime = Time.time + delay;
     }

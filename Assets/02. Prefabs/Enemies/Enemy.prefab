@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2581542573094958839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8684043614751624942}
+  m_Layer: 8
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8684043614751624942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2581542573094958839}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.2, y: 0, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3235220320064810426}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3228771653255210401
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,7 +42,8 @@ GameObject:
   - component: {fileID: 8925756935431708438}
   - component: {fileID: 306940809485736334}
   - component: {fileID: 3666718637570506249}
-  m_Layer: 0
+  - component: {fileID: 3595004079198415701}
+  m_Layer: 8
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,6 +122,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &3595004079198415701
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228771653255210401}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 85bdd6254c6ab20449d79e666757c39c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3512758482422157870
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,7 +153,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7896936178090933514}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Return
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -132,7 +186,9 @@ GameObject:
   - component: {fileID: 3235220320064810426}
   - component: {fileID: 4161059018815963447}
   - component: {fileID: 2552602638983706681}
-  m_Layer: 0
+  - component: {fileID: 519330809131404460}
+  - component: {fileID: 7155736016848592792}
+  m_Layer: 8
   m_Name: Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,6 +209,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8925756935431708438}
+  - {fileID: 8684043614751624942}
   m_Father: {fileID: 9131988402151523288}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &4161059018815963447
@@ -174,7 +231,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1
-  m_Radius: 1.5
+  m_Radius: 1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -192,21 +249,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b819da4702abe742bccab342d4d6900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBT
-  isDamaged: 0
-  lastAttackTime: 0
   player: {fileID: 0}
+  isPlayDamAnimation: 0
+  lastAttackTime: 0
   needToReturn: 0
   returnPoint: {fileID: 7896936178090933514}
-  setPatrolPoint: 0
+  isArrivalPoint: 0
   patrolPoint: {fileID: 5671998858917984792}
+--- !u!114 &519330809131404460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3714955864315138667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b577e155be8d541b7c5583bd1e0870, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  bulletPrefab: {fileID: 7557476646370500223, guid: c0aaa84374a57f84aa49f37a4bd582de, type: 3}
+  target: {fileID: 0}
+  firePoint: {fileID: 8684043614751624942}
+  moveSpeed: 5
+--- !u!114 &7155736016848592792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3714955864315138667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de048681dda836548ad0166564c7fd4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyStat
   curHp: 0
-  maxHp: 0
-  moveSpeed: 3
-  maxChaseDistance: 10
-  attackPower: 5
+  maxHp: 100
+  attackPower: 10
   attackDelayTime: 3
-  maxAttackDistance: 1
-  maxReturnDistance: 0.1
+  maxAttackDistance: 5
+  maxSpreadAngle: 30
+  maxChaseDistance: 10
+  maxReturnDistance: 10
   maxPatrolDistance: 10
 --- !u!1 &6565530455449050984
 GameObject:
@@ -217,7 +302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9131988402151523288}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +335,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5384676490859091989}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283,7 +368,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5671998858917984792}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Patrol
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}

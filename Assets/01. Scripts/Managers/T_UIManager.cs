@@ -11,6 +11,8 @@ public class T_UIManager : MonoBehaviour
         EventBus<LootBoxEvent>.OnEvent += T_OpenUI;
         // ESC 이벤트 구독
         EventBus<EscEvent>.OnEvent += T_ESCEvent;
+        // 플레이어 죽음 이벤트 구독
+        EventBus<DeadEvent>.OnEvent += T_PlayerDead;
     }
 
     private void OnDisable()
@@ -19,6 +21,8 @@ public class T_UIManager : MonoBehaviour
         EventBus<LootBoxEvent>.OnEvent -= T_OpenUI;
         // ESC 이벤트 구독 해제
         EventBus<EscEvent>.OnEvent -= T_ESCEvent;
+        // 플레이어 죽음 이벤트 구독 해제
+        EventBus<DeadEvent>.OnEvent -= T_PlayerDead;
     }
 
     private void T_OpenUI(LootBoxEvent data)
@@ -46,5 +50,12 @@ public class T_UIManager : MonoBehaviour
             // UI 활성화 이벤트 발생
             EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
         }
+    }
+
+    private void T_PlayerDead(DeadEvent data)
+    {
+        // 플레이어가 죽은 거라면
+        if(data.isPlayer)
+            Debug.Log("플레이어 죽음");
     }
 }
