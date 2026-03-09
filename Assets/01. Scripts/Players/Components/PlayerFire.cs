@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class PlayerFire : MonoBehaviour
 {
-    [SerializeField] private GameObject bulletPrefab;       // 총알 프리팹
-
     [Header("정보")]
     [SerializeField] private Transform firePoint;           // 발사 위치
     [SerializeField] private bool pressedFireButton;        // 발사 버튼 누름 여부
@@ -19,7 +17,7 @@ public class PlayerFire : MonoBehaviour
 
     private void Awake()
     {
-        stat = PlayerFacade.instance.PlayerStat;
+        stat = SystemFacade.instance.PlayerStat;
     }
 
     private void OnEnable()
@@ -77,8 +75,9 @@ public class PlayerFire : MonoBehaviour
             // 종료
             return;
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        bullet.GetComponent<Bullet>().SetBulletInfo(new DamagedEvent(gameObject, stat.AttackPower));
+        Bullet bullet = SystemFacade.instance.BulletFactory.GetBullet();
+        bullet.transform.SetPositionAndRotation(firePoint.position, firePoint.rotation);
+        bullet.SetBulletInfo(new DamagedEvent(gameObject, stat.AttackPower));
         // 다음 발사 시간 갱신
         nextFireTime = Time.time + delay;
     }

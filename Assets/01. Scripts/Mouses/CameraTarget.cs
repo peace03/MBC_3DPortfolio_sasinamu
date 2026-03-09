@@ -31,7 +31,7 @@ public class CameraTarget : MonoBehaviour
     private Vector3 GetMouseViewportPosition()
     {
         // 마우스 위치를 0(왼쪽, 아래) ~ 1(오른쪽, 위)의 값으로 변환
-        Vector3 mousePos = mainCam.ScreenToViewportPoint(PlayerFacade.instance.GetMousePosition());
+        Vector3 mousePos = mainCam.ScreenToViewportPoint(SystemFacade.instance.GetMousePosition());
         // 마우스 값을 중앙에 맞게 설정
         mousePos.x -= 0.5f;
         mousePos.y -= 0.5f;
