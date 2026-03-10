@@ -26,10 +26,10 @@ public class BulletFactory : MonoBehaviour
         // 초기화
         smallBulletPool = new ObjectPool<Bullet>(() =>
                                         CreateBullet(smallBulletPrefab, smallBulletPool, smallBulletContainer),
-                                                                            GetBullet, ReturnBullet, DestroyBullet, maxSize: smallBulletMaxCount);
+                                            GetBullet, ReturnBullet, DestroyBullet, maxSize: smallBulletMaxCount);
         largeBulletPool = new ObjectPool<Bullet>(() =>
                                         CreateBullet(largeBulletPrefab, largeBulletPool, largeBulletContainer),
-                                                                            GetBullet, ReturnBullet, DestroyBullet);
+                                            GetBullet, ReturnBullet, DestroyBullet, maxSize: largeBulletMaxCount);
     }
 
     // 총알 설정 함수

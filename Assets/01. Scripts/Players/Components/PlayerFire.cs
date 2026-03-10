@@ -76,7 +76,7 @@ public class PlayerFire : MonoBehaviour
             return;
 
         Bullet bullet = SystemFacade.instance.BulletFactory.SmallBulletPool.Get();
-        bullet.transform.SetPositionAndRotation(firePoint.position, firePoint.rotation);
+        //bullet.transform.SetPositionAndRotation(firePoint.position, firePoint.rotation);
         //bullet.SetBulletInfo(new DamagedEvent(gameObject, stat.AttackPower));
         // 다음 발사 시간 갱신
         nextFireTime = Time.time + delay;

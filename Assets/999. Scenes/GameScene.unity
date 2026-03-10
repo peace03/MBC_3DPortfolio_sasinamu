@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFacade
   playerStat: {fileID: 1974293191}
   inputManager: {fileID: 1116467618}
-  bulletFactory: {fileID: 0}
+  bulletFactory: {fileID: 1637584048}
 --- !u!1 &10256702
 GameObject:
   m_ObjectHideFlags: 0

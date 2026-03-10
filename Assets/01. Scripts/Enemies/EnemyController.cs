@@ -123,8 +123,8 @@ public class EnemyController : MonoBehaviour
         // 플레이어 방향 각도에 탄 퍼짐 각도 더하기
         Quaternion finalRot = playerRot * spreadRot;
 
-        Bullet bullet = SystemFacade.instance.BulletFactory.LargeBulletPool.Get();
-        bullet.transform.SetPositionAndRotation(firePoint.position, finalRot);
-        bullet.GetComponent<Bullet>().SetBulletInfo(new DamagedEvent(gameObject, attackPower));
+        //Bullet bullet = SystemFacade.instance.BulletFactory.LargeBulletPool.Get();
+        //bullet.transform.SetPositionAndRotation(firePoint.position, finalRot);
+        //bullet.GetComponent<Bullet>().SetBulletInfo(new DamagedEvent(gameObject, attackPower));
     }
 }

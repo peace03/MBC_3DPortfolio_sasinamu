@@ -17,7 +17,8 @@ public class Bullet : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    private void OnEnable()
+    // 내일 고치기
+    private void Init()
     {
         rb.AddForce(transform.forward * bulletSpeed, ForceMode.Impulse);
     }
