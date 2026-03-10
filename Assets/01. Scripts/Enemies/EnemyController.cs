@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] private GameObject bulletPrefab;       // 총알 프리팹
-
     [Header("정보")]
     [SerializeField] private Transform target;                  // 목표
     [SerializeField] private Transform firePoint;               // 발사 위치
@@ -125,7 +123,8 @@ public class EnemyController : MonoBehaviour
         // 플레이어 방향 각도에 탄 퍼짐 각도 더하기
         Quaternion finalRot = playerRot * spreadRot;
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, finalRot);
+        Bullet bullet = SystemFacade.instance.BulletFactory.LargeBulletPool.Get();
+        bullet.transform.SetPositionAndRotation(firePoint.position, finalRot);
         bullet.GetComponent<Bullet>().SetBulletInfo(new DamagedEvent(gameObject, attackPower));
     }
 }

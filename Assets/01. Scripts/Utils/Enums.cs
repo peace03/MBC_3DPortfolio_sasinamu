@@ -8,7 +8,7 @@ public enum FireMode
 // 애니메이션 상태
 public enum AnimState
 {
-    Idle,
-    Move,
-    Damaged
+    Idle,       // 대기
+    Move,       // 이동
+    Damaged     // 피격
 }

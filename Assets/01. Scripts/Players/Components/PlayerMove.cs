@@ -8,6 +8,9 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private bool isRolling;                // 구르는 중인지 여부
     [SerializeField] private float lastUsedStamTime;        // 스테미나를 마지막으로 사용한 시간
 
+    /* 이거 PlayerStat으로 옮겨야 함!!
+     * 그리고 달리기, 과적 경우도 있으니까기본 이동 속도에 배수를 곱해주는 방식으로 고치기!
+     * 배수도 기본 배수(1)에 달리기 배수, 과적 배수 등을 곱해주는 걸로 해야 함!! */
     [Header("스탯")]
     [SerializeField] private float moveSpeed;               // 움직이는 속도
     [SerializeField] private float runSpeed;                // 달리는 속도

@@ -1,22 +1,20 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class Bullet : MonoBehaviour
 {
     [Header("스탯")]
     [SerializeField] private float bulletSpeed;     // 총알 속도
 
+    private IObjectPool<Bullet> poolRef;            // 총알 오브젝트 풀 주소
+
     private Rigidbody rb;                           // 총알 리지드바디
 
     private DamagedEvent bulletInfo;                // 총알 정보(쏜 사람, 맞은 사람, 데미지)
 
-    private int playerLayer;
-    private int enemyLayer;
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        playerLayer = LayerMask.NameToLayer("Player");
-        enemyLayer = LayerMask.NameToLayer("Enemy");
     }
 
     private void OnEnable()
@@ -45,6 +43,9 @@ public class Bullet : MonoBehaviour
         // 총알 비활성화
         gameObject.SetActive(false);
     }
+
+    // 오브젝트 풀 주소 설정 함수
+    public void SetPoolReference(IObjectPool<Bullet> pool) => poolRef = pool;
 
     // 총알 정보 설정 함수
     public void SetBulletInfo(DamagedEvent data)
