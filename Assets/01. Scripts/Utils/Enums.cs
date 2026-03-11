@@ -10,5 +10,6 @@ public enum AnimState
 {
     Idle,       // 대기
     Move,       // 이동
-    Damaged     // 피격
+    Damaged,    // 피격
+    Dead        // 죽음
 }

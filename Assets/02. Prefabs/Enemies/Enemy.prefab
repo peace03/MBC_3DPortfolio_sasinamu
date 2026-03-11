@@ -250,12 +250,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBT
   player: {fileID: 0}
-  isPlayDamAnimation: 0
-  lastAttackTime: 0
-  needToReturn: 0
   returnPoint: {fileID: 7896936178090933514}
-  isArrivalPoint: 0
   patrolPoint: {fileID: 5671998858917984792}
+  lastAttackTime: 0
+  lastDamagedTime: 0
+  startIdleTime: 0
+  needToReturn: 0
+  needToResetPatrolPoint: 1
 --- !u!114 &519330809131404460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,10 +269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b577e155be8d541b7c5583bd1e0870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  bulletPrefab: {fileID: 7557476646370500223, guid: c0aaa84374a57f84aa49f37a4bd582de, type: 3}
   target: {fileID: 0}
   firePoint: {fileID: 8684043614751624942}
-  moveSpeed: 5
 --- !u!114 &7155736016848592792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,10 +283,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de048681dda836548ad0166564c7fd4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStat
+  isDamaged: 0
   curHp: 0
   maxHp: 100
   attackPower: 10
+  moveSpeed: 5
   attackDelayTime: 3
+  hitStunTime: 2
+  idleTime: 3
   maxAttackDistance: 5
   maxSpreadAngle: 30
   maxChaseDistance: 10

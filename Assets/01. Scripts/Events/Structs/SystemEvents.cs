@@ -26,13 +26,13 @@ public struct DeadEvent : IEvent
 
 public struct DamagedEvent : IEvent
 {
-    public GameObject attacker;
-    public GameObject target;
+    public IDamageable attacker;
+    public IDamageable target;
     public float amount;
-    public DamagedEvent(GameObject attacker, float amount)
+    public DamagedEvent(IDamageable attacker, float amount)
     {
         this.attacker = attacker;
-        this.target = null;
+        target = null;
         this.amount = amount;
     }
 }

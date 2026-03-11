@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -5,28 +6,39 @@ public class Bullet : MonoBehaviour
 {
     [Header("스탯")]
     [SerializeField] private float bulletSpeed;     // 총알 속도
+    [SerializeField] private float returnTime;      // 총알 반납 시간(총알 비활성화 시점)
 
     private IObjectPool<Bullet> poolRef;            // 총알 오브젝트 풀 주소
 
     private Rigidbody rb;                           // 총알 리지드바디
+    private Coroutine returnToPoolCoroutine;        // 총알 반납 코루틴
 
     private DamagedEvent bulletInfo;                // 총알 정보(쏜 사람, 맞은 사람, 데미지)
 
     private void Awake()
     {
+        // 초기화
         rb = GetComponent<Rigidbody>();
     }
 
-    // 내일 고치기
-    private void Init()
+    private void OnEnable()
     {
-        rb.AddForce(transform.forward * bulletSpeed, ForceMode.Impulse);
+        // 초기화
+        rb.linearVelocity = Vector3.zero;
+    }
+
+    private void OnDisable()
+    {
+        // 총알 반납 코루틴 정지
+        StopCoroutine(returnToPoolCoroutine);
+        // 총알 반납 코루틴 초기화
+        returnToPoolCoroutine = null;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         // 공격 오브젝트의 레이어와 닿은 오브젝트의 레이어가 같다면
-        if (bulletInfo.attacker.layer == other.gameObject.layer)
+        if (bulletInfo.attacker.LayerNumber == other.gameObject.layer)
             // 종료
             return;
 
@@ -34,24 +46,53 @@ public class Bullet : MonoBehaviour
         if (other.TryGetComponent(out IDamageable target))
         {
             // 타겟(닿은 오브젝트) 설정
-            bulletInfo.target = other.gameObject;
+            bulletInfo.target = target;
             // 데미지 전달하기
             target.Damaged(bulletInfo);
-            // 피격 이펙트가 있다면 넣기
-
         }
 
-        // 총알 비활성화
-        gameObject.SetActive(false);
+        // 총알 반납
+        poolRef.Release(this);
     }
 
     // 오브젝트 풀 주소 설정 함수
     public void SetPoolReference(IObjectPool<Bullet> pool) => poolRef = pool;
 
-    // 총알 정보 설정 함수
-    public void SetBulletInfo(DamagedEvent data)
+    // 총알 발사 함수
+    public void FireBullet(DamagedEvent data, Vector3 pos, Quaternion rot)
     {
         // 총알 정보 설정
         bulletInfo = data;
+        // 총알 위치, 각도 설정
+        transform.SetPositionAndRotation(pos, rot);
+        // 총알 발사
+        rb.AddForce(transform.forward * bulletSpeed, ForceMode.Impulse);
+        // 총알 반납 코루틴 시작
+        ReturnBulletToPool();
+    }
+
+    // 총알 반납 함수
+    private void ReturnBulletToPool()
+    {
+        // 총알 반납 코루틴이 비어있지 않다면
+        if (returnToPoolCoroutine != null)
+        {
+            // 총알 반납 코루틴 정지
+            StopCoroutine(returnToPoolCoroutine);
+            // 총알 반납 코루틴 초기화
+            returnToPoolCoroutine = null;
+        }
+
+        // 총알 반납 코루틴 저장 및 시작
+        returnToPoolCoroutine = StartCoroutine(ReturnToPoolCoroutine());
+    }
+
+    // 총알 반납 코루틴 함수
+    private IEnumerator ReturnToPoolCoroutine()
+    {
+        // 총알 반납 시간만큼 대기
+        yield return new WaitForSeconds(returnTime);
+        // 총알 반납
+        poolRef.Release(this);
     }
 }

@@ -75,9 +75,10 @@ public class PlayerFire : MonoBehaviour
             // 종료
             return;
 
+        // S형 총알 받아오기
         Bullet bullet = SystemFacade.instance.BulletFactory.SmallBulletPool.Get();
-        //bullet.transform.SetPositionAndRotation(firePoint.position, firePoint.rotation);
-        //bullet.SetBulletInfo(new DamagedEvent(gameObject, stat.AttackPower));
+        // 총알 정보, 위치, 각도 설정 후 총알 발사
+        bullet.FireBullet(new DamagedEvent(stat, stat.AttackPower), firePoint.position, firePoint.rotation);
         // 다음 발사 시간 갱신
         nextFireTime = Time.time + delay;
     }
