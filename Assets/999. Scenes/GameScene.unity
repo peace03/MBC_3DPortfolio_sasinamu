@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d7c198ba61b9394ca27c41b8a6f6a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFacade
-  playerStat: {fileID: 1974293191}
+  playerManager: {fileID: 0}
   inputManager: {fileID: 1116467618}
   bulletFactory: {fileID: 1637584048}
 --- !u!1 &10256702
@@ -195,6 +195,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 864823478}
   - {fileID: 1116467617}
   - {fileID: 772036267}
   m_Father: {fileID: 0}
@@ -893,6 +894,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &864823477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 864823478}
+  - component: {fileID: 864823479}
+  m_Layer: 0
+  m_Name: Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &864823478
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864823477}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 10256703}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &864823479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864823477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae50fac1139b74f4a948193a0076bfca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
+  player: {fileID: 1974293186}
 --- !u!1 &897631405
 GameObject:
   m_ObjectHideFlags: 0
@@ -1829,20 +1875,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   pressedRunKey: 0
   isRolling: 0
-  lastUsedStamTime: 0
   moveSpeed: 5
-  runSpeed: 7
+  runSpeedMultiplier: 1.4
+  runStamRate: 2
   rollTime: 0.3
   rollDistance: 3
-  maxStamina: 100
-  curStamina: 0
-  stamRegenStartDelay: 5
-  stamRegenRate: 15
-  runStamRate: 2
   rollStamAmount: 10
-  cc: {fileID: 0}
-  mainCamTransform: {fileID: 0}
-  moveInput: {x: 0, y: 0}
 --- !u!143 &1974293185
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1910,11 +1948,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
   interactLayer:
+    serializedVersion: 2
     m_Bits: 1024
   curInteractTarget: {fileID: 0}
-  maxInteractDistance: 1
-  minInteractAngle: 30
-  maxInteractAngle: 135
 --- !u!114 &1974293190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1931,10 +1967,6 @@ MonoBehaviour:
   pressedFireButton: 0
   fireMode: 0
   isSingleFire: 0
-  nextFireTime: 0
-  singleFireDelayTime: 0.5
-  autoFireDelayTime: 0.1
-  stat: {fileID: 0}
 --- !u!114 &1974293191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1947,25 +1979,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96ae94f6dc4982340ad86e90111abc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStat
+  lastUsedStamTime: 0
   curHp: 0
   maxHp: 100
-  maxStamina: 0
   curStamina: 0
-  moveSpeed: 0
-  runSpeed: 0
-  rollTime: 0
-  rollDistance: 0
-  stamRegenStartDelay: 0
-  stamRegenRate: 0
-  runStamRate: 0
-  rollStamAmount: 0
-  maxInteractDistance: 0
-  minInteractAngle: 0
-  maxInteractAngle: 0
-  singleFireDelayTime: 0
-  autoFireDelayTime: 0
+  maxStamina: 100
+  stamRegenWaitTime: 5
+  stamRegenRate: 15
   attackPower: 10
   defensePower: 10
+  curWeight: 0
+  maxWeight: 45
+  minWeightSpeedMultiplier: 0.7
+  curHunger: 0
+  maxHunger: 100
+  curThirst: 0
+  maxThirst: 100
+  maxInteractDistance: 1
+  minInteractAngle: 30
+  maxInteractAngle: 150
+  singleFireDelayTime: 1
+  autoFireDelayTime: 0.5
 --- !u!1 &2001321652
 GameObject:
   m_ObjectHideFlags: 0

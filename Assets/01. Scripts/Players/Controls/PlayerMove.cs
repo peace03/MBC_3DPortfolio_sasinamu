@@ -23,13 +23,6 @@ public class PlayerMove : MonoBehaviour
 
     private Vector2 moveInput;                              // 입력 값
 
-    private void Awake()
-    {
-        // 초기화
-        cc = transform.GetComponent<CharacterController>();
-        mainCamTransform = Camera.main.transform;
-    }
-
     private void OnEnable()
     {
         // 이동 이벤트 구독
@@ -59,7 +52,12 @@ public class PlayerMove : MonoBehaviour
     }
 
     // 초기화 함수
-    public void Init(PlayerManager manager) => this.manager = manager;
+    public void Init(PlayerManager manager)
+    {
+        this.manager = manager;
+        cc = transform.GetComponent<CharacterController>();
+        mainCamTransform = Camera.main.transform;
+    }
 
     // 이동 입력 값 설정 함수
     private void SetMoveInput(MoveEvent data) => moveInput = data.moveInput;
@@ -90,11 +88,10 @@ public class PlayerMove : MonoBehaviour
     {
         // 움직일 방향 저장
         Vector3 dir = CalculateMoveDirection();
-        // 달리기 키를 눌렀고 스테미나가 있다면 ? 달리기 속도 : 이동 속도
+        // 달리기 키를 눌렀고 스테미나가 있다면 ? 이동 속도 * 달리기 * 무게 : 이동 속도 * 무게
         float finalSpeed = (pressedRunKey && manager.Stat.UseStamina(runStamRate * Time.deltaTime)) ?
-                                                                moveSpeed * runSpeedMultiplier : moveSpeed;
-        // 무게에 따라 무게 배율도 곱해줘야 함
-        // finalSpeed=
+                                moveSpeed * runSpeedMultiplier * manager.Stat.CurWeightSpeedMultiplier
+                                                    : moveSpeed * manager.Stat.CurWeightSpeedMultiplier;
         // 캐릭터 컨트롤러는 중력이 없으니 y축 눌러주기
         float yVelocity = 0f;
 
@@ -133,7 +130,7 @@ public class PlayerMove : MonoBehaviour
         // 구르는 중임
         isRolling = true;
         // 스테미나 사용
-        UseStamina(rollStamAmount);
+        manager.Stat.UseStamina(rollStamAmount);
         // 속도 저장
         float speed = rollDistance / rollTime;
         // 진행률
@@ -156,14 +153,5 @@ public class PlayerMove : MonoBehaviour
 
         // 구르기 종료
         isRolling = false;
-    }
-
-    // 스테미나 감소 함수
-    private void UseStamina(float amount)
-    {
-        // 스테미나 감소 후 최소값, 최대값에 맞춰서 반영
-        curStamina = Mathf.Clamp(curStamina - amount, 0, maxStamina);
-        // 스테미나 사용한 시간 갱신
-        lastUsedStamTime = Time.time;
     }
 }

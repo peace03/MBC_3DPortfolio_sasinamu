@@ -25,30 +25,46 @@ public class PlayerStat : MonoBehaviour, IDamageable
 
     [Space(10)]
     [SerializeField] private float attackPower;                         // 공격력
+    public float AttackPower => attackPower;
+
     [SerializeField] private float defensePower;                        // 방어력
-    [SerializeField] private int weight;                                // 무게
-    [SerializeField] private float weightSpeedMultiplier;               // 무게 속도 배율
-    public float WeightSpeedMultiplier => weightSpeedMultiplier;
+    public float DefensePower => defensePower;
+
+    [Space(10)]
+    [SerializeField] private float curWeight;                           // 현재 무게
+    [SerializeField] private float maxWeight;                           // 최대 무게
+    [SerializeField] private float minWeightSpeedMultiplier;            // 최소 무게 속도 배율
+    public float CurWeightSpeedMultiplier                               // 현재 무게 속도 배율
+    { get { return Mathf.Lerp(1, minWeightSpeedMultiplier, curWeight / maxWeight); } }
 
     [Space(10)]
     [SerializeField] private int curHunger;                             // 현재 허기
     [SerializeField] private int maxHunger;                             // 최대 허기
     public float hungerRatio => curHunger / maxHunger;                  // 허기 비율
 
+    [Space(10)]
     [SerializeField] private int curThirst;                             // 현재 갈증
     [SerializeField] private int maxThirst;                             // 최대 갈증
     public float thirstRatio => curThirst / maxThirst;                  // 갈증 비율
 
     [Header("스탯 제한 관련")]
     [SerializeField] private float maxInteractDistance;                 // 최대 상호작용 거리
+    public float MaxInteractDistance => maxInteractDistance;
+
     [SerializeField] private float minInteractAngle;                    // 최소 상호작용 각도
+    public float MinInteractAngle => minInteractAngle;
+
     [SerializeField] private float maxInteractAngle;                    // 최대 상호작용 각도
+    public float MaxInteractAngle => maxInteractAngle;
 
     [Space(10)]
-    [SerializeField] private float singleFireDelayTime;         // 단발 발사 딜레이 시간
-    [SerializeField] private float autoFireDelayTime;           // 연발 발사 딜레이 시간
+    [SerializeField] private float singleFireDelayTime;                 // 단발 발사 딜레이 시간
+    public float SingleFireDelayTime => singleFireDelayTime;
 
-    public int LayerNumber => gameObject.layer;                 // 레이어 번호
+    [SerializeField] private float autoFireDelayTime;                   // 연발 발사 딜레이 시간
+    public float AutoFireDelayTime => autoFireDelayTime;
+
+    public int LayerNumber => gameObject.layer;                         // 레이어 번호
     #endregion
 
     private void Awake()
@@ -63,6 +79,21 @@ public class PlayerStat : MonoBehaviour, IDamageable
     private void Update()
     {
         RegenStamina();
+    }
+
+    // 피격 함수
+    public void Damaged(DamagedEvent data)
+    {
+        // Hp 반영
+        curHp -= data.amount;
+
+        // 죽었다면
+        if (curHp <= 0)
+            // 플레이어 죽음
+            EventBus<DeadEvent>.Publish(new DeadEvent(true));
+
+        // 피격 이벤트 발생
+        EventBus<DamagedEvent>.Publish(data);
     }
 
     // 스테미나 회복 함수
@@ -86,28 +117,14 @@ public class PlayerStat : MonoBehaviour, IDamageable
             // 사용 불가
             return false;
 
-        // 스테미나 감소
-        curStamina -= amount;
+        // 스테미나 최소값, 최대값에 맞춰서 감소
+        curStamina = Mathf.Clamp(curStamina - amount, 0, maxStamina);
         // 스테미나 사용한 시간 갱신
         lastUsedStamTime = Time.time;
-        // 스테미나 최소값, 최대값에 맞춰서 반영
-        curStamina = Mathf.Clamp(curStamina, 0, maxStamina);
         // 사용 가능
         return true;
     }
 
-    // 피격 함수
-    public void Damaged(DamagedEvent data)
-    {
-        // Hp 반영
-        curHp -= data.amount;
-
-        // 죽었다면
-        if (curHp <= 0)
-            // 플레이어 죽음
-            EventBus<DeadEvent>.Publish(new DeadEvent(true));
-
-        // 피격 이벤트 발생
-        EventBus<DamagedEvent>.Publish(data);
-    }
+    // 현재 무게 갱신 함수
+    public void UpdateCurrentWeight(float weight) => curWeight = weight;
 }
