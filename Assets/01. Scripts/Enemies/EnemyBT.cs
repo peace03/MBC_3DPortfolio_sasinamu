@@ -67,14 +67,6 @@ public class EnemyBT : MonoBehaviour
                 // 복귀
                 new BT_Action(MoveToReturnPoint)
             }),
-            // 대기
-            new BT_Sequence(new List<BT_Node>
-            {
-                // 대기 시간 확인
-                new BT_Action(CheckIdleTime),
-                // 대기
-                new BT_Action(Idle)
-            }),
             // 순찰(패트롤)
             new BT_Sequence(new List<BT_Node>
             {
@@ -84,6 +76,14 @@ public class EnemyBT : MonoBehaviour
                 new BT_Action(CheckPatrolDistance),
                 // 순찰
                 new BT_Action(MoveToPatrolPoint)
+            }),
+            // 대기
+            new BT_Sequence(new List<BT_Node>
+            {
+                // 대기 시간 확인
+                new BT_Action(CheckIdleTime),
+                // 대기
+                new BT_Action(Idle)
             })
         });
 
@@ -122,8 +122,9 @@ public class EnemyBT : MonoBehaviour
     // 피격 경직 시간 확인 함수
     private BT_NodeStatus CheckHitStunTime()
     {
-        // 초기 상태가 아니고, 마지막 피격 시간에서 피격 경직 시간만큼 지나지 않았다면 ? 성공 반환 : 실패 반환
-        return (lastDamagedTime != 0 && Time.time - lastDamagedTime <= controller.Stat.HitStunTime) ?
+        // 피격 상태이거나, 초기 상태가 아니고 마지막 피격 시간에서 피격 경직 시간만큼 지나지 않았다면 ? 성공 반환 : 실패 반환
+        return (controller.IsDamaged ||
+                (lastDamagedTime != 0 && Time.time - lastDamagedTime <= controller.Stat.HitStunTime)) ?
                                                             BT_NodeStatus.Success : BT_NodeStatus.Failure;
     }
 
@@ -133,30 +134,28 @@ public class EnemyBT : MonoBehaviour
         // 현재 애니메이션이 피격 애니메이션이 아니라면
         if (controller.CurAnimState != AnimState.Damaged)
         {
+            Debug.Log("피격 애니메이션으로 변경");
             // 마지막 피격 시간 저장
             lastDamagedTime = Time.time;
-            // 애니메이션 변경
-            controller.ChangeAnimation(AnimState.Damaged);
             // 피격 상태 초기화
             controller.Stat.ResetDamagedState();
-            // 진행 중 반환
-            return BT_NodeStatus.Running;
+            // 애니메이션 변경
+            controller.ChangeAnimation(AnimState.Damaged);
         }
         // 현재 애니메이션이 피격 애니메이션인데, 피격 상태가 되었다면
         else if (controller.IsDamaged)
         {
+            Debug.Log("다시 맞음");
             // 마지막 피격 시간 저장
             lastDamagedTime = Time.time;
-            // 피격 애니메이션 다시 실행
-            controller.ReplayDamagedAnimation();
             // 피격 상태 초기화
             controller.Stat.ResetDamagedState();
-            // 진행 중 반환
-            return BT_NodeStatus.Running;
+            // 피격 애니메이션 다시 실행
+            controller.ReplayDamagedAnimation();
         }
 
-        // 성공 반환
-        return BT_NodeStatus.Success;
+        // 진행 중 반환
+        return BT_NodeStatus.Running;
     }
 
     // 거리 확인 함수
@@ -199,6 +198,8 @@ public class EnemyBT : MonoBehaviour
         controller.FireBullet();
         // 공격한 시간 저장
         lastAttackTime = Time.time;
+        // 애니메이션 변경
+        controller.ChangeAnimation(AnimState.Attack);
         // 성공 반환
         return BT_NodeStatus.Success;
     }
@@ -212,6 +213,11 @@ public class EnemyBT : MonoBehaviour
     // 플레이어 추격 함수
     private BT_NodeStatus ChasePlayer()
     {
+        // 플레이어와의 거리가 공격 거리보다 작거나 같다면
+        if (CalculateTargetDistance(player.position) <= controller.Stat.MaxAttackDistance)
+            // 성공 반환
+            return BT_NodeStatus.Success;
+
         // 복귀가 필요없는 상태였다면
         if (!needToReturn)
             // 복귀가 필요한 상태로 변경
@@ -225,11 +231,6 @@ public class EnemyBT : MonoBehaviour
         controller.MoveToTarget();
         // 애니메이션 변경
         controller.ChangeAnimation(AnimState.Move);
-
-        // 플레이어와의 거리가 공격 거리보다 작거나 같다면
-        if (CalculateTargetDistance(player.position) <= controller.Stat.MaxAttackDistance)
-            // 성공 반환
-            return BT_NodeStatus.Success;
 
         // 진행 중 반환
         return BT_NodeStatus.Running;
@@ -267,6 +268,8 @@ public class EnemyBT : MonoBehaviour
         {
             // 복귀가 필요없는 상태로 변환
             needToReturn = false;
+            // 순찰 지점 재설정 필요
+            needToResetPatrolPoint = true;
             // 대기 시작 시간 저장
             startIdleTime = Time.time;
             // 타겟 초기화
@@ -274,26 +277,6 @@ public class EnemyBT : MonoBehaviour
             // 성공 반환
             return BT_NodeStatus.Success;
         }
-
-        // 진행 중 반환
-        return BT_NodeStatus.Running;
-    }
-
-    // 도착 시간 확인 함수
-    private BT_NodeStatus CheckIdleTime()
-    {
-        // 초기 상태가 아니고, 대기 시작 시간에서 대기 시간만큼 지나지 않았다면 ? 성공 반환 : 실패 반환
-        return (startIdleTime != 0 || Time.time - startIdleTime <= controller.Stat.IdleTime) ?
-                                                    BT_NodeStatus.Success : BT_NodeStatus.Failure;
-    }
-
-    // 대기 함수
-    private BT_NodeStatus Idle()
-    {
-        // 현재 애니메이션 상태가 Idle이 아니라면
-        if (controller.CurAnimState != AnimState.Idle)
-            // 애니메이션 재생
-            controller.ChangeAnimation(AnimState.Idle);
 
         // 진행 중 반환
         return BT_NodeStatus.Running;
@@ -314,6 +297,7 @@ public class EnemyBT : MonoBehaviour
             // 순찰 지점 재설정 필요 없음
             needToResetPatrolPoint = false;
         }
+
         // 성공 반환
         return BT_NodeStatus.Success;
     }
@@ -342,8 +326,6 @@ public class EnemyBT : MonoBehaviour
         // 순찰 지점과의 거리가 가깝다면
         if (CalculateTargetDistance(patrolPoint.position) <= 0.1f)
         {
-            // 순찰 지점 재설정 필요
-            needToResetPatrolPoint = true;
             // 대기 시작 시간 저장
             startIdleTime = Time.time;
             // 타겟 초기화
@@ -352,6 +334,32 @@ public class EnemyBT : MonoBehaviour
             return BT_NodeStatus.Success;
         }
 
+        // 진행 중 반환
+        return BT_NodeStatus.Running;
+    }
+
+    // 도착 시간 확인 함수
+    private BT_NodeStatus CheckIdleTime()
+    {
+        // 대기 시작 시간에서 대기 시간만큼 지나지 않았다면
+        if (Time.time - startIdleTime <= controller.Stat.IdleTime)
+            // 성공 반환
+            return BT_NodeStatus.Success;
+        // 대기 시간만큼 지났다면
+        else
+        {
+            // 순찰 지점 재설정 필요
+            needToResetPatrolPoint = true;
+            // 실패 반환
+            return BT_NodeStatus.Failure;
+        }
+    }
+
+    // 대기 함수
+    private BT_NodeStatus Idle()
+    {
+        // 애니메이션 재생
+        controller.ChangeAnimation(AnimState.Idle);
         // 진행 중 반환
         return BT_NodeStatus.Running;
     }

@@ -6,32 +6,26 @@ public class PlayerMove : MonoBehaviour
     [Header("정보")]
     [SerializeField] private bool pressedRunKey;            // 달리기 키 누름 여부
     [SerializeField] private bool isRolling;                // 구르는 중인지 여부
-    [SerializeField] private float lastUsedStamTime;        // 스테미나를 마지막으로 사용한 시간
 
-    /* 이거 PlayerStat으로 옮겨야 함!!
-     * 그리고 달리기, 과적 경우도 있으니까기본 이동 속도에 배수를 곱해주는 방식으로 고치기!
-     * 배수도 기본 배수(1)에 달리기 배수, 과적 배수 등을 곱해주는 걸로 해야 함!! */
     [Header("스탯")]
-    [SerializeField] private float moveSpeed;               // 움직이는 속도
-    [SerializeField] private float runSpeed;                // 달리는 속도
-    [SerializeField] private float rollTime;                // 구르는 시간
-    [SerializeField] private float rollDistance;            // 구르는 거리
-    [SerializeField] private float maxStamina;              // 최대 스테미나
-    [SerializeField] private float curStamina;              // 현재 스테미나
-    [SerializeField] private float stamRegenStartDelay;     // 스테미나 회복 딜레이 시간
-    [SerializeField] private float stamRegenRate;           // 초당 스테미나 회복량
+    [SerializeField] private float moveSpeed;               // 이동 속도
+    [SerializeField] private float runSpeedMultiplier;      // 달리기 속도 배율
     [SerializeField] private float runStamRate;             // 초당 달리기 스테미나 소모량
+
+    [Space(10)]
+    [SerializeField] private float rollTime;                // 구르는 시간(클수록 느리게 구름)
+    [SerializeField] private float rollDistance;            // 구르는 거리
     [SerializeField] private float rollStamAmount;          // 구르기 스테미나 소모량
 
     private CharacterController cc;                         // 캐릭터 컨트롤러
     private Transform mainCamTransform;                     // 메인 카메라 트랜스폼
+    private PlayerManager manager;                          // 플레이어 매니저
 
     private Vector2 moveInput;                              // 입력 값
 
     private void Awake()
     {
         // 초기화
-        curStamina = maxStamina;
         cc = transform.GetComponent<CharacterController>();
         mainCamTransform = Camera.main.transform;
     }
@@ -43,13 +37,7 @@ public class PlayerMove : MonoBehaviour
         // 달리기 이벤트 구독
         EventBus<RunEvent>.OnEvent += SetPressedRunKey;
         // 구르기 이벤트 구독
-        EventBus<RollEvent>.OnEvent += SetPressedRollKey;
-    }
-
-    private void Update()
-    {
-        // 스테미나 설정
-        HandleStamina();
+        EventBus<RollEvent>.OnEvent += PressedRollKey;
     }
 
     private void FixedUpdate()
@@ -67,8 +55,11 @@ public class PlayerMove : MonoBehaviour
         // 달리기 이벤트 구독 해제
         EventBus<RunEvent>.OnEvent -= SetPressedRunKey;
         // 구르기 이벤트 구독 해제
-        EventBus<RollEvent>.OnEvent -= SetPressedRollKey;
+        EventBus<RollEvent>.OnEvent -= PressedRollKey;
     }
+
+    // 초기화 함수
+    public void Init(PlayerManager manager) => this.manager = manager;
 
     // 이동 입력 값 설정 함수
     private void SetMoveInput(MoveEvent data) => moveInput = data.moveInput;
@@ -76,11 +67,11 @@ public class PlayerMove : MonoBehaviour
     // 달리기 키 입력 값 설정 함수
     private void SetPressedRunKey(RunEvent data) => pressedRunKey = data.isPressed;
 
-    // 구르기 키 입력 값 설정 함수
-    private void SetPressedRollKey(RollEvent data)
+    // 구르기 키 입력 함수
+    private void PressedRollKey(RollEvent data)
     {
-        // 구르는 중이거나, 키에서 손을 뗐거나, 현재 스테미나가 구르기 스테미나 소모량보다 적다면
-        if (isRolling || curStamina <= rollStamAmount)
+        // 구르는 중이거나, 현재 스테미나가 구르기 스테미나 소모량보다 적다면
+        if (isRolling || !manager.Stat.UseStamina(rollStamAmount))
             // 종료
             return;
 
@@ -99,8 +90,11 @@ public class PlayerMove : MonoBehaviour
     {
         // 움직일 방향 저장
         Vector3 dir = CalculateMoveDirection();
-        // 달리기 조건(키 눌림, 스테미나 있음)에 해당되면 달리기 속도, 아니라면 움직이는 속도
-        float curSpeed = (pressedRunKey && curStamina > 0) ? runSpeed : moveSpeed;
+        // 달리기 키를 눌렀고 스테미나가 있다면 ? 달리기 속도 : 이동 속도
+        float finalSpeed = (pressedRunKey && manager.Stat.UseStamina(runStamRate * Time.deltaTime)) ?
+                                                                moveSpeed * runSpeedMultiplier : moveSpeed;
+        // 무게에 따라 무게 배율도 곱해줘야 함
+        // finalSpeed=
         // 캐릭터 컨트롤러는 중력이 없으니 y축 눌러주기
         float yVelocity = 0f;
 
@@ -112,7 +106,7 @@ public class PlayerMove : MonoBehaviour
         // 방향에 값 반영
         dir.y = yVelocity;
         // 이동(방향 * 속도 * 시간)
-        cc.Move(dir * curSpeed * Time.fixedDeltaTime);
+        cc.Move(dir * finalSpeed * Time.fixedDeltaTime);
 
     }
 
@@ -131,26 +125,6 @@ public class PlayerMove : MonoBehaviour
         camRight.Normalize();
         // 움직일 방향 반환
         return (camForward * moveInput.y + camRight * moveInput.x).normalized;
-    }
-
-    // 스테미나 관리 함수
-    private void HandleStamina()
-    {
-        // 달리기 키를 누르고 있고, 방향키 입력 값이 있다면
-        if (pressedRunKey && moveInput.magnitude > 0)
-        {
-            // 스테미나 감소
-            curStamina -= runStamRate * Time.deltaTime;
-            // 스테미나 사용한 시간 갱신
-            lastUsedStamTime = Time.time;
-        }
-        // 마지막으로 스테미나를 사용한 시간으로부터 회복 딜레이 시간 이상 지났다면
-        else if (Time.time - lastUsedStamTime > stamRegenStartDelay)
-            // 스테미나 회복
-            curStamina += stamRegenRate * Time.deltaTime;
-
-        // 스테미나 최소값, 최대값에 맞춰서 반영
-        curStamina = Mathf.Clamp(curStamina, 0, maxStamina);
     }
 
     // 구르기 코루틴 함수

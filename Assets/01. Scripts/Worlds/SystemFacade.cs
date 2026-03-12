@@ -3,12 +3,9 @@ using UnityEngine;
 public class SystemFacade : MonoBehaviour
 {
     public static SystemFacade instance;                        // 인스턴스
-    
-    [Header("플레이어 스탯")]
-    [SerializeField] private PlayerStat playerStat;             // 플레이어 스탯
-    public PlayerStat PlayerStat => playerStat;
 
     [Header("매니저")]
+    [SerializeField] private PlayerManager playerManager;       // 플레이어 매니저
     [SerializeField] private InputManager inputManager;         // 입력 매니저
 
     [Header("공장")]

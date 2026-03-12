@@ -9,17 +9,19 @@ public class EnemyStat : MonoBehaviour, IDamageable
 
     public bool IsDead => curHp <= 0;                       // 죽음 여부
 
-    [Header("기본 스탯")]
+    [Header("스탯")]
     [SerializeField] private float curHp;                   // 현재 체력
     [SerializeField] private float maxHp;                   // 최대 체력
     public float HpRatio => curHp / maxHp;                  // 체력 비율
 
+    [Space(10)]
     [SerializeField] private float attackPower;             // 공격력
     public float AttackPower => attackPower;
 
     [SerializeField] private float moveSpeed;               // 이동 속도
     public float MoveSpeed => moveSpeed;
 
+    [Space(10)]
     [SerializeField] private float attackDelayTime;         // 공격 딜레이 시간
     public float AttackDelayTime => attackDelayTime;
 
@@ -29,7 +31,7 @@ public class EnemyStat : MonoBehaviour, IDamageable
     [SerializeField] private float idleTime;                // 대기 시간
     public float IdleTime => idleTime;
 
-    [Header("거리 스탯")]
+    [Header("스탯 제한 관련")]
     [SerializeField] private float maxAttackDistance;       // 최대 공격 거리
     public float MaxAttackDistance => maxAttackDistance;
 

@@ -38,6 +38,8 @@ public class EnemyController : MonoBehaviour
         animHashDictionary.Add(AnimState.Idle, Animator.StringToHash("Idle"));
         // 이동
         animHashDictionary.Add(AnimState.Move, Animator.StringToHash("Move"));
+        // 공격
+        animHashDictionary.Add(AnimState.Attack, Animator.StringToHash("Attack"));
         // 피격
         animHashDictionary.Add(AnimState.Damaged, Animator.StringToHash("Damaged"));
         // 죽음
@@ -77,13 +79,7 @@ public class EnemyController : MonoBehaviour
     }
 
     // 이동 함수
-    public void MoveToTarget()
-    {
-        // 애니메이션 변경
-        ChangeAnimation(AnimState.Move);
-        // 이동
-        cc.Move(transform.forward * stat.MoveSpeed * Time.deltaTime);
-    }
+    public void MoveToTarget() => cc.Move(transform.forward * stat.MoveSpeed * Time.deltaTime);
 
     // 애니메이션 변경 함수
     public void ChangeAnimation(AnimState state)
@@ -98,21 +94,13 @@ public class EnemyController : MonoBehaviour
         {
             // 애니메이션 실행 상태
             anim.SetTrigger(newAnim);
-            // 애니메이션 0초부터 실행
-            anim.Play(newAnim, 0, 0f);
             // 현재 애니메이션 상태 변경
             curAnimState = state;
         }
     }
 
     // 피격 애니메이션 재생 함수
-    public void ReplayDamagedAnimation()
-    {
-        // 피격 상태임
-        anim.SetTrigger("Damaged");
-        // 피격 애니메이션 0초부터 실행
-        anim.Play("Damaged", 0, 0f);
-    }
+    public void ReplayDamagedAnimation() => anim.SetTrigger("Damaged");
 
     // 총알 발사 함수
     public void FireBullet()

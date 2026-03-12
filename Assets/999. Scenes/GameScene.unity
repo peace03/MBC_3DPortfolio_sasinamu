@@ -1840,6 +1840,9 @@ MonoBehaviour:
   stamRegenRate: 15
   runStamRate: 2
   rollStamAmount: 10
+  cc: {fileID: 0}
+  mainCamTransform: {fileID: 0}
+  moveInput: {x: 0, y: 0}
 --- !u!143 &1974293185
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1907,7 +1910,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
   interactLayer:
-    serializedVersion: 2
     m_Bits: 1024
   curInteractTarget: {fileID: 0}
   maxInteractDistance: 1
@@ -1932,6 +1934,7 @@ MonoBehaviour:
   nextFireTime: 0
   singleFireDelayTime: 0.5
   autoFireDelayTime: 0.1
+  stat: {fileID: 0}
 --- !u!114 &1974293191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1945,7 +1948,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStat
   curHp: 0
-  maxHp: 0
+  maxHp: 100
+  maxStamina: 0
+  curStamina: 0
+  moveSpeed: 0
+  runSpeed: 0
+  rollTime: 0
+  rollDistance: 0
+  stamRegenStartDelay: 0
+  stamRegenRate: 0
+  runStamRate: 0
+  rollStamAmount: 0
+  maxInteractDistance: 0
+  minInteractAngle: 0
+  maxInteractAngle: 0
+  singleFireDelayTime: 0
+  autoFireDelayTime: 0
   attackPower: 10
   defensePower: 10
 --- !u!1 &2001321652
