@@ -12,6 +12,6 @@ public class Box : MonoBehaviour, IInteractable
         // UI 활성화 이벤트 발생
         EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
         // UI에 전리품 상자 정보 넘겨주기
-        EventBus<LootBoxEvent>.Publish(new LootBoxEvent(boxName));
+        EventBus<BoxEvent>.Publish(new BoxEvent(boxName));
     }
 }

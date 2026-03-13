@@ -1,20 +1,3 @@
-using UnityEngine;
-
-public struct UIStateEvent : IEvent
-{
-    public bool isOpenUI;
-    public UIStateEvent(bool value) => isOpenUI = value;
-}
-
-public struct LootBoxEvent : IEvent
-{
-    public string boxName;
-    public LootBoxEvent(string name)
-    {
-        boxName = name;
-    }
-}
-
 public struct DeadEvent : IEvent
 {
     public bool isPlayer;
@@ -36,3 +19,24 @@ public struct DamagedEvent : IEvent
         this.amount = amount;
     }
 }
+
+public struct UIStateEvent : IEvent
+{
+    public bool isOpenUI;
+    public UIStateEvent(bool value) => isOpenUI = value;
+}
+
+public struct BoxEvent : IEvent
+{
+    public string boxName;
+    public BoxEvent(string name)
+    {
+        boxName = name;
+    }
+}
+
+public struct InventoryEvent : IEvent {}
+
+public struct MapEvent : IEvent {}
+
+public struct ShowControlsEvent : IEvent {}

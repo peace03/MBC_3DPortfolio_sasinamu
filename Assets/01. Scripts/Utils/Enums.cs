@@ -1,4 +1,4 @@
-// 발사 모드
+// 사격 모드
 public enum FireMode
 {
     Single,     // 단발
@@ -13,4 +13,13 @@ public enum AnimState
     Attack,     // 공격
     Damaged,    // 피격
     Dead        // 죽음
+}
+
+// 씬 종류
+public enum SceneType
+{
+    Start,      // 시작
+    Bunker,     // 벙커
+    Game,       // 게임
+    End         // 끝
 }

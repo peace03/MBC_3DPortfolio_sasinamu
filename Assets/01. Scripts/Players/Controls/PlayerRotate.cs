@@ -19,7 +19,7 @@ public class PlayerRotate : MonoBehaviour
     }
 
     // 회전 관리 함수
-    private void HandleRotate()
+    public void HandleRotate()
     {
         // 캐릭터의 아래 위치에 위를 바라보는 보이지 않는 평면 생성
         groundPlane = new Plane(Vector3.up, new Vector3(0, transform.position.y, 0));

@@ -22,10 +22,14 @@ public struct RollEvent : IEvent {}
 
 public struct InteractEvent : IEvent {}
 
-public struct EscEvent : IEvent {}
+public struct CancelEvent : IEvent {}
 
 public struct FireEvent : IEvent
 {
     public bool isPressed;
     public FireEvent(bool value) => isPressed = value;
 }
+
+public struct FireModeEvent : IEvent {}
+
+public struct ReloadEvent : IEvent {}

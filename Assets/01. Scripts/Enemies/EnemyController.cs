@@ -4,22 +4,20 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     [Header("정보")]
-    [SerializeField] private Transform target;                      // 목표
-    [SerializeField] private Transform firePoint;                   // 발사 위치
+    [SerializeField] private Transform target;                          // 목표
+    [SerializeField] private Transform firePoint;                       // 발사 위치
 
-    private CharacterController cc;                                 // 적 캐릭터 컨트롤러
-    private Animator anim;                                          // 적 애니메이터
-    private EnemyStat stat;                                         // 적 스탯(체력, 공격력 등)
+    private CharacterController cc;                                     // 적 캐릭터 컨트롤러
+    private Animator anim;                                              // 적 애니메이터
+    private EnemyStat stat;                                             // 적 스탯(체력, 공격력 등)
     public EnemyStat Stat => stat;
 
-    private Dictionary<AnimState, int> animHashDictionary           // 애니메이션 해시 값 딕셔너리
-                                                    = new();
+    private Dictionary<AnimState, int> animHashDictionary = new();      // 애니메이션 해시 값 딕셔너리
 
-    private AnimState curAnimState;                                 // 현재 애니메이션 상태
-    public AnimState CurAnimState => curAnimState;
+    private AnimState curAnimState;                                     // 현재 애니메이션 상태
 
-    public bool IsDead => stat.IsDead;                              // 죽음 여부
-    public bool IsDamaged => stat.IsDamaged;                        // 피격 여부
+    public bool IsDead => stat.IsDead;                                  // 죽음 여부
+    public bool IsDamaged => stat.IsDamaged;                            // 피격 여부
 
     private void Awake()
     {
@@ -100,7 +98,13 @@ public class EnemyController : MonoBehaviour
     }
 
     // 피격 애니메이션 재생 함수
-    public void ReplayDamagedAnimation() => anim.SetTrigger("Damaged");
+    public void PlayDamagedAnimation()
+    {
+        // 피격 애니메이션 실행
+        anim.SetTrigger("Damaged");
+        // 현재 애니메이션 상태를 피격으로 변경
+        curAnimState = AnimState.Damaged;
+    }
 
     // 총알 발사 함수
     public void FireBullet()

@@ -5,6 +5,7 @@ public class PlayerStat : MonoBehaviour, IDamageable
     #region Player Info
     [Header("정보")]
     [SerializeField] private float lastUsedStamTime;                    // 마지막 스테미나 사용한 시간
+    [SerializeField] private float lastDecreaseHungerAndThirstTime;     // 마지막 허기, 갈증 감소 시간
 
     [Header("기본 스탯")]
     [SerializeField] private float curHp;                               // 현재 체력
@@ -38,14 +39,16 @@ public class PlayerStat : MonoBehaviour, IDamageable
     { get { return Mathf.Lerp(1, minWeightSpeedMultiplier, curWeight / maxWeight); } }
 
     [Space(10)]
-    [SerializeField] private int curHunger;                             // 현재 허기
-    [SerializeField] private int maxHunger;                             // 최대 허기
+    [SerializeField] private float curHunger;                           // 현재 허기
+    [SerializeField] private float maxHunger;                           // 최대 허기
     public float hungerRatio => curHunger / maxHunger;                  // 허기 비율
 
-    [Space(10)]
-    [SerializeField] private int curThirst;                             // 현재 갈증
-    [SerializeField] private int maxThirst;                             // 최대 갈증
+    [SerializeField] private float curThirst;                           // 현재 갈증
+    [SerializeField] private float maxThirst;                           // 최대 갈증
     public float thirstRatio => curThirst / maxThirst;                  // 갈증 비율
+
+    [SerializeField] private float hungerAndThirstDereaseDelayTime;     // 허기, 갈증 감소 딜레이 시간
+    [SerializeField] private float hungerAndThirstDecreaseAmount;       // 허기, 갈증 감소량
 
     [Header("스탯 제한 관련")]
     [SerializeField] private float maxInteractDistance;                 // 최대 상호작용 거리
@@ -78,7 +81,15 @@ public class PlayerStat : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        // 스테미나 회복
         RegenStamina();
+        // 허기, 갈증 감소
+        DecreaseHungerAndThirst();
+    }
+
+    public void UpdateCombatStat(float attack, float defense)
+    {
+
     }
 
     // 피격 함수
@@ -127,4 +138,35 @@ public class PlayerStat : MonoBehaviour, IDamageable
 
     // 현재 무게 갱신 함수
     public void UpdateCurrentWeight(float weight) => curWeight = weight;
+
+    // 허기, 갈증 감소 함수
+    private void DecreaseHungerAndThirst()
+    {
+        // 마지막 허기, 갈증 소모 시간에서 허기, 갈증 소모 딜레이 시간만큼 지나지 않았다면
+        if (Time.time - lastDecreaseHungerAndThirstTime <= hungerAndThirstDereaseDelayTime)
+            // 종료
+            return;
+
+        // 허기 감소
+        curHunger = Mathf.Max(curHunger - hungerAndThirstDecreaseAmount, 0);
+        // 갈증 감소
+        curThirst = Mathf.Max(curThirst - hungerAndThirstDecreaseAmount, 0);
+        // 마지막 허기, 갈증 소모 시간 저장
+        lastDecreaseHungerAndThirstTime = Time.time;
+    }
+
+    // 아이템 효과 적용 함수
+    public void ApplyItemEffect(float hungerChange, float thirstChange)
+    {
+        // 허기
+        curHunger = Mathf.Clamp(curHunger + hungerChange, 0, maxHunger);
+        // 갈증
+        curThirst = Mathf.Clamp(curThirst + thirstChange, 0, maxThirst);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, maxInteractDistance);
+    }
 }

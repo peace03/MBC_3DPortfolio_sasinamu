@@ -131,27 +131,15 @@ public class EnemyBT : MonoBehaviour
     // 적 피격 함수
     private BT_NodeStatus DamagedEnemy()
     {
-        // 현재 애니메이션이 피격 애니메이션이 아니라면
-        if (controller.CurAnimState != AnimState.Damaged)
+        // 피격 상태가 되었다면
+        if (controller.IsDamaged)
         {
-            Debug.Log("피격 애니메이션으로 변경");
             // 마지막 피격 시간 저장
             lastDamagedTime = Time.time;
             // 피격 상태 초기화
             controller.Stat.ResetDamagedState();
-            // 애니메이션 변경
-            controller.ChangeAnimation(AnimState.Damaged);
-        }
-        // 현재 애니메이션이 피격 애니메이션인데, 피격 상태가 되었다면
-        else if (controller.IsDamaged)
-        {
-            Debug.Log("다시 맞음");
-            // 마지막 피격 시간 저장
-            lastDamagedTime = Time.time;
-            // 피격 상태 초기화
-            controller.Stat.ResetDamagedState();
-            // 피격 애니메이션 다시 실행
-            controller.ReplayDamagedAnimation();
+            // 피격 애니메이션 실행
+            controller.PlayDamagedAnimation();
         }
 
         // 진행 중 반환
