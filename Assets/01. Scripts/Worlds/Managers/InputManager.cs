@@ -9,21 +9,23 @@ public class InputManager : MonoBehaviour
 
     private List<InputAction> allActionsList;       // 모든 액션들 리스트
 
-    /* 액션 맵 - 플레이어 */
+    #region 액션 맵 - 플레이어
     private DuckovInputActions inputActions;        // 인풋 시스템
     private InputAction moveAction;                 // 이동 액션(WASD)
     private InputAction runAction;                  // 달리기 액션(Shift)
     private InputAction rollAction;                 // 구르기 액션(Space)
     private InputAction interactAction;             // 상호작용 액션(E)
     private InputAction cancelAction;               // 취소 액션(ESC)
-    private InputAction fireAction;                 // 사격 액션
-    private InputAction fireModeAction;             // 사격 모드 변경 액션
-    private InputAction reloadAction;               // 장전 액션
-    private InputAction inventoryAction;            // 가방 액션
-    private InputAction mapAction;                  // 지도 액션
-    private InputAction showControlsAction;         // 조작 설명 액션
+    private InputAction breakAction;                // 중지 액션(X)
+    private InputAction fireAction;                 // 사격 액션(마우스 좌클릭)
+    private InputAction fireModeAction;             // 사격 모드 변경 액션(B)
+    private InputAction reloadAction;               // 장전 액션(R)
+    private InputAction inventoryAction;            // 가방 액션(Tab)
+    private InputAction mapAction;                  // 지도 액션(M)
+    private InputAction showControlsAction;         // 조작 설명 액션(O)
+    private InputAction quickSlotAction;            // 퀵슬롯 액션(1 ~ 8)
+    #endregion
 
-    /* 액션 맵 - 카메라 */
     private InputAction mousePosAction;             // 마우스 위치 액션
 
     private Vector2 curMousePos;                    // 현재 마우스 위치
@@ -47,9 +49,12 @@ public class InputManager : MonoBehaviour
         // 상호작용
         interactAction = inputActions.Player.Interact;
         allActionsList.Add(interactAction);
-        // ESC
+        // 취소
         cancelAction = inputActions.Player.Cancel;
         allActionsList.Add(cancelAction);
+        // 중지
+        breakAction = inputActions.Player.Break;
+        allActionsList.Add(breakAction);
         // 사격
         fireAction = inputActions.Player.Fire;
         allActionsList.Add(fireAction);
@@ -68,6 +73,9 @@ public class InputManager : MonoBehaviour
         // 조작 설명
         showControlsAction = inputActions.Player.ShowControls;
         allActionsList.Add(showControlsAction);
+        // 퀵슬롯
+        quickSlotAction = inputActions.Player.QuickSlot;
+        allActionsList.Add(quickSlotAction);
         // 마우스 위치
         mousePosAction = inputActions.Camera.MousePosition;
     }
@@ -172,6 +180,14 @@ public class InputManager : MonoBehaviour
                 // 이벤트 발생
                 EventBus<InteractEvent>.Publish(new InteractEvent());
         }
+        // 입력된 액션이 중지 액션일 때
+        else if (context.action == breakAction)
+        {
+            // 키를 눌렀을 때
+            if (context.performed)
+                // 이벤트 발생
+                EventBus<BreakEvent>.Publish(new BreakEvent());
+        }
         // 입력된 액션이 사격 액션일 때
         else if (context.action == fireAction)
             // 이벤트 발생
@@ -217,12 +233,20 @@ public class InputManager : MonoBehaviour
             }
         }
         // 입력된 액션이 조작 설명 액션일 때
-        else if(context.action == showControlsAction)
+        else if (context.action == showControlsAction)
         {
             // 키를 눌렀을 때
             if (context.performed)
                 // 이벤트 발생
                 EventBus<ShowControlsEvent>.Publish(new ShowControlsEvent());
+        }
+        // 입력된 액션이 퀵슬롯 액션일 때
+        else if (context.action == quickSlotAction)
+        {
+            // 키를 눌렀을 때
+            if (context.performed)
+                // 이벤트 발생
+                EventBus<QuickSlotEvent>.Publish(new QuickSlotEvent(context.ReadValue<int>()));
         }
     }
 }

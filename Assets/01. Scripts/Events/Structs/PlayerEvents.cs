@@ -24,6 +24,8 @@ public struct InteractEvent : IEvent {}
 
 public struct CancelEvent : IEvent {}
 
+public struct BreakEvent : IEvent {}
+
 public struct FireEvent : IEvent
 {
     public bool isPressed;
@@ -33,3 +35,9 @@ public struct FireEvent : IEvent
 public struct FireModeEvent : IEvent {}
 
 public struct ReloadEvent : IEvent {}
+
+public struct QuickSlotEvent : IEvent
+{
+    public int slotNumber;
+    public QuickSlotEvent(int value) => slotNumber = value;
+}

@@ -29,10 +29,14 @@ public class Bullet : MonoBehaviour
 
     private void OnDisable()
     {
-        // 총알 반납 코루틴 정지
-        StopCoroutine(returnToPoolCoroutine);
-        // 총알 반납 코루틴 초기화
-        returnToPoolCoroutine = null;
+        // 총알 반납 코루틴이 비어있지 않다면
+        if (returnToPoolCoroutine != null)
+        {
+            // 총알 반납 코루틴 정지
+            StopCoroutine(returnToPoolCoroutine);
+            // 총알 반납 코루틴 초기화
+            returnToPoolCoroutine = null;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

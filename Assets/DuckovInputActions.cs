@@ -190,6 +190,24 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Break"",
+                    ""type"": ""Button"",
+                    ""id"": ""d6d3a9a6-448d-4572-99f1-d064fc4b70df"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""QuickSlot"",
+                    ""type"": ""Value"",
+                    ""id"": ""f599e158-9e17-42fa-8fc2-5701d8add612"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -357,6 +375,105 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""FireMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cbc398ed-5ef4-47e5-a5b5-82fde69890e8"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Break"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e55da47-29ca-4251-abd6-2a2b05b37845"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0f108692-d820-4fc6-a436-ea87da49162e"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""83df1883-bed0-41ef-9b03-ba7ea2b55cdf"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a92a912e-bb99-4ebe-9beb-9d8e3f4b7005"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""577a1c75-eec9-4805-bfa5-d9a43d2234ea"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61406599-29b4-48b6-a7a1-a6552ad4c29d"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f826c695-ad93-4009-8439-ad68864d17a2"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8879046a-3ea2-4c90-829a-135ab7d221ae"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -404,6 +521,8 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_ShowControls = m_Player.FindAction("ShowControls", throwIfNotFound: true);
         m_Player_FireMode = m_Player.FindAction("FireMode", throwIfNotFound: true);
+        m_Player_Break = m_Player.FindAction("Break", throwIfNotFound: true);
+        m_Player_QuickSlot = m_Player.FindAction("QuickSlot", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_MousePosition = m_Camera.FindAction("MousePosition", throwIfNotFound: true);
@@ -499,6 +618,8 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_ShowControls;
     private readonly InputAction m_Player_FireMode;
+    private readonly InputAction m_Player_Break;
+    private readonly InputAction m_Player_QuickSlot;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -554,6 +675,14 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/FireMode".
         /// </summary>
         public InputAction @FireMode => m_Wrapper.m_Player_FireMode;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Break".
+        /// </summary>
+        public InputAction @Break => m_Wrapper.m_Player_Break;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/QuickSlot".
+        /// </summary>
+        public InputAction @QuickSlot => m_Wrapper.m_Player_QuickSlot;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -613,6 +742,12 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             @FireMode.started += instance.OnFireMode;
             @FireMode.performed += instance.OnFireMode;
             @FireMode.canceled += instance.OnFireMode;
+            @Break.started += instance.OnBreak;
+            @Break.performed += instance.OnBreak;
+            @Break.canceled += instance.OnBreak;
+            @QuickSlot.started += instance.OnQuickSlot;
+            @QuickSlot.performed += instance.OnQuickSlot;
+            @QuickSlot.canceled += instance.OnQuickSlot;
         }
 
         /// <summary>
@@ -657,6 +792,12 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             @FireMode.started -= instance.OnFireMode;
             @FireMode.performed -= instance.OnFireMode;
             @FireMode.canceled -= instance.OnFireMode;
+            @Break.started -= instance.OnBreak;
+            @Break.performed -= instance.OnBreak;
+            @Break.canceled -= instance.OnBreak;
+            @QuickSlot.started -= instance.OnQuickSlot;
+            @QuickSlot.performed -= instance.OnQuickSlot;
+            @QuickSlot.canceled -= instance.OnQuickSlot;
         }
 
         /// <summary>
@@ -870,6 +1011,20 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFireMode(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Break" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBreak(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "QuickSlot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnQuickSlot(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Camera" which allows adding and removing callbacks.

@@ -125,4 +125,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9ed7b7b0c34344da8f870f976e293e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneChanger
+  startChangeTime: 0
+  changeDelayTime: 5
   nextScene: 2

@@ -90,8 +90,8 @@ public class PlayerMove : MonoBehaviour
         Vector3 dir = CalculateMoveDirection();
         // 달리기 키를 눌렀고 스테미나가 있다면 ? 이동 속도 * 달리기 * 무게 : 이동 속도 * 무게
         float finalSpeed = (pressedRunKey && manager.Stat.UseStamina(runStamRate * Time.deltaTime)) ?
-                                moveSpeed * runSpeedMultiplier * manager.Stat.CurWeightSpeedMultiplier
-                                                    : moveSpeed * manager.Stat.CurWeightSpeedMultiplier;
+                                moveSpeed * runSpeedMultiplier * manager.Stat.SpeedMultiplierCurInvWeight
+                                                    : moveSpeed * manager.Stat.SpeedMultiplierCurInvWeight;
         // 캐릭터 컨트롤러는 중력이 없으니 y축 눌러주기
         float yVelocity = 0f;
 

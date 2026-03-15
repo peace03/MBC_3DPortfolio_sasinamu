@@ -32,11 +32,11 @@ public class PlayerStat : MonoBehaviour, IDamageable
     public float DefensePower => defensePower;
 
     [Space(10)]
-    [SerializeField] private float curWeight;                           // 현재 무게
-    [SerializeField] private float maxWeight;                           // 최대 무게
-    [SerializeField] private float minWeightSpeedMultiplier;            // 최소 무게 속도 배율
-    public float CurWeightSpeedMultiplier                               // 현재 무게 속도 배율
-    { get { return Mathf.Lerp(1, minWeightSpeedMultiplier, curWeight / maxWeight); } }
+    [SerializeField] private float curInvWeight;                        // 현재 가방 무게
+    [SerializeField] private float maxInvWeight;                        // 최대 가방 무게
+    [SerializeField] private float speedMultiplierMaxInvWeight;         // 최대 가방 무게의 속도 배율
+    public float SpeedMultiplierCurInvWeight                            // 현재 가방 무게의 속도 배율
+    { get { return Mathf.Lerp(1, speedMultiplierMaxInvWeight, curInvWeight / maxInvWeight); } }
 
     [Space(10)]
     [SerializeField] private float curHunger;                           // 현재 허기
@@ -87,9 +87,24 @@ public class PlayerStat : MonoBehaviour, IDamageable
         DecreaseHungerAndThirst();
     }
 
-    public void UpdateCombatStat(float attack, float defense)
+    // 공격력, 방어력 갱신 함수
+    public void UpdateAttackAndDefensePowers(float attack, float defense)
     {
+        Debug.Log($"[변경 전] 공격력 : {attackPower} / 방어력 : {defensePower}");
+        // 공격력
+        attackPower = attack;
+        // 방어력
+        defensePower = defense;
+        Debug.Log($"[변경 후] 공격력 : {attackPower} / 방어력 : {defensePower}");
+    }
 
+    // 현재 가방 무게 갱신 함수
+    public void UpdateCurrentInventoryWeight(float weight)
+    {
+        Debug.Log($"[변경 전] 가방 무게 : {curInvWeight}");
+        // 현재 가방 무게
+        curInvWeight = weight;
+        Debug.Log($"[변경 후] 가방 무게 : {curInvWeight}");
     }
 
     // 피격 함수
@@ -100,8 +115,12 @@ public class PlayerStat : MonoBehaviour, IDamageable
 
         // 죽었다면
         if (curHp <= 0)
+        {
+            // UI 열린 상태임
+            EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
             // 플레이어 죽음
             EventBus<DeadEvent>.Publish(new DeadEvent(true));
+        }
 
         // 피격 이벤트 발생
         EventBus<DamagedEvent>.Publish(data);
@@ -137,7 +156,7 @@ public class PlayerStat : MonoBehaviour, IDamageable
     }
 
     // 현재 무게 갱신 함수
-    public void UpdateCurrentWeight(float weight) => curWeight = weight;
+    public void UpdateCurrentWeight(float weight) => curInvWeight = weight;
 
     // 허기, 갈증 감소 함수
     private void DecreaseHungerAndThirst()
