@@ -129,7 +129,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Cancel"",
+                    ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""00a93300-d452-4ef2-b94a-d84990817715"",
                     ""expectedControlType"": """",
@@ -192,7 +192,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Break"",
+                    ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""d6d3a9a6-448d-4572-99f1-d064fc4b70df"",
                     ""expectedControlType"": """",
@@ -306,7 +306,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cancel"",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -383,7 +383,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Break"",
+                    ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -514,14 +514,14 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
         m_Player_Map = m_Player.FindAction("Map", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_ShowControls = m_Player.FindAction("ShowControls", throwIfNotFound: true);
         m_Player_FireMode = m_Player.FindAction("FireMode", throwIfNotFound: true);
-        m_Player_Break = m_Player.FindAction("Break", throwIfNotFound: true);
+        m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
         m_Player_QuickSlot = m_Player.FindAction("QuickSlot", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
@@ -611,14 +611,14 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_Roll;
     private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_Cancel;
+    private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Inventory;
     private readonly InputAction m_Player_Map;
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_ShowControls;
     private readonly InputAction m_Player_FireMode;
-    private readonly InputAction m_Player_Break;
+    private readonly InputAction m_Player_Cancel;
     private readonly InputAction m_Player_QuickSlot;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
@@ -648,9 +648,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Cancel".
+        /// Provides access to the underlying input action "Player/Pause".
         /// </summary>
-        public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         /// <summary>
         /// Provides access to the underlying input action "Player/Fire".
         /// </summary>
@@ -676,9 +676,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @FireMode => m_Wrapper.m_Player_FireMode;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Break".
+        /// Provides access to the underlying input action "Player/Cancel".
         /// </summary>
-        public InputAction @Break => m_Wrapper.m_Player_Break;
+        public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
         /// <summary>
         /// Provides access to the underlying input action "Player/QuickSlot".
         /// </summary>
@@ -721,9 +721,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
-            @Cancel.started += instance.OnCancel;
-            @Cancel.performed += instance.OnCancel;
-            @Cancel.canceled += instance.OnCancel;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
@@ -742,9 +742,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             @FireMode.started += instance.OnFireMode;
             @FireMode.performed += instance.OnFireMode;
             @FireMode.canceled += instance.OnFireMode;
-            @Break.started += instance.OnBreak;
-            @Break.performed += instance.OnBreak;
-            @Break.canceled += instance.OnBreak;
+            @Cancel.started += instance.OnCancel;
+            @Cancel.performed += instance.OnCancel;
+            @Cancel.canceled += instance.OnCancel;
             @QuickSlot.started += instance.OnQuickSlot;
             @QuickSlot.performed += instance.OnQuickSlot;
             @QuickSlot.canceled += instance.OnQuickSlot;
@@ -771,9 +771,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
-            @Cancel.started -= instance.OnCancel;
-            @Cancel.performed -= instance.OnCancel;
-            @Cancel.canceled -= instance.OnCancel;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
@@ -792,9 +792,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             @FireMode.started -= instance.OnFireMode;
             @FireMode.performed -= instance.OnFireMode;
             @FireMode.canceled -= instance.OnFireMode;
-            @Break.started -= instance.OnBreak;
-            @Break.performed -= instance.OnBreak;
-            @Break.canceled -= instance.OnBreak;
+            @Cancel.started -= instance.OnCancel;
+            @Cancel.performed -= instance.OnCancel;
+            @Cancel.canceled -= instance.OnCancel;
             @QuickSlot.started -= instance.OnQuickSlot;
             @QuickSlot.performed -= instance.OnQuickSlot;
             @QuickSlot.canceled -= instance.OnQuickSlot;
@@ -963,12 +963,12 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCancel(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Fire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1012,12 +1012,12 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFireMode(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Break" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnBreak(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "QuickSlot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

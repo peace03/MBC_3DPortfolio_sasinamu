@@ -31,17 +31,11 @@ public class SystemFacade : MonoBehaviour
         sceneRegistry = new SceneRegistry();
     }
 
-    // 마우스 위치 반환 함수
-    public Vector2 GetMousePosition()
-    {
-        return inputManager.CurMousePos;
-    }
-
     // 씬 전환 함수
     public void ChangeScene(SceneType scene)
     {
         // 존재하는 씬이라면
-        if(sceneRegistry.GetSceneName(scene, out string sceneName))
+        if (sceneRegistry.GetSceneName(scene, out string sceneName))
         {
             // 나중에 UI도 해야함
 

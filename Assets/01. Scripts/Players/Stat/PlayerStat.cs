@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.UIElements;
 
 public class PlayerStat : MonoBehaviour, IDamageable
 {
@@ -108,22 +110,16 @@ public class PlayerStat : MonoBehaviour, IDamageable
     }
 
     // 피격 함수
-    public void Damaged(DamagedEvent data)
+    public void Damaged(float amount)
     {
-        // Hp 반영
-        curHp -= data.amount;
+        // 데미지 입음
+        curHp -= amount;
 
         // 죽었다면
         if (curHp <= 0)
         {
-            // UI 열린 상태임
-            EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
-            // 플레이어 죽음
-            EventBus<DeadEvent>.Publish(new DeadEvent(true));
+            // 플레이어 죽음 이벤트 발행
         }
-
-        // 피격 이벤트 발생
-        EventBus<DamagedEvent>.Publish(data);
     }
 
     // 스테미나 회복 함수

@@ -5,21 +5,24 @@ using UnityEngine.UI;
 public class GameOverUI : MonoBehaviour
 {
     [Header("버튼")]
-    [SerializeField] private Button continueBtn;     // 계속하기 버튼
+    [SerializeField] private Button continueButton;     // 계속하기 버튼
 
     private void Awake()
     {
-        // 계속하기 버튼이 버이있지 않다면
-        if (continueBtn != null)
+        // 계속하기 버튼이 비어있지 않다면
+        if (continueButton != null)
             // 계속하기 버튼에 클릭 기능 추가
-            continueBtn.onClick.AddListener(ContinueGame);
+            continueButton.onClick.AddListener(ContinueGame);
     }
 
     // 게임 계속하기 함수
     private void ContinueGame()
     {
-        Debug.Log("게임 계속하기");
+        // 게임 오버 UI 닫기
+        gameObject.SetActive(false);
+        // UI가 닫힌 상태임
         EventBus<UIStateEvent>.Publish(new UIStateEvent(false));
+        // 벙커 씬으로 이동
         SceneManager.LoadScene("BunkerScene");
     }
 }

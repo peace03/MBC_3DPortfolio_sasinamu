@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviour, IPlayerMoveHandler, IPlayerRunHandler, IPlayerRollHandler
 {
     [Header("정보")]
     [SerializeField] private bool pressedRunKey;            // 달리기 키 누름 여부
@@ -26,11 +26,11 @@ public class PlayerMove : MonoBehaviour
     private void OnEnable()
     {
         // 이동 이벤트 구독
-        EventBus<MoveEvent>.OnEvent += SetMoveInput;
+        Subject<IPlayerMoveHandler>.Attach(this);
         // 달리기 이벤트 구독
-        EventBus<RunEvent>.OnEvent += SetPressedRunKey;
+        Subject<IPlayerRunHandler>.Attach(this);
         // 구르기 이벤트 구독
-        EventBus<RollEvent>.OnEvent += PressedRollKey;
+        Subject<IPlayerRollHandler>.Attach(this);
     }
 
     private void FixedUpdate()
@@ -44,11 +44,11 @@ public class PlayerMove : MonoBehaviour
     private void OnDisable()
     {
         // 이동 이벤트 구독 해제
-        EventBus<MoveEvent>.OnEvent -= SetMoveInput;
+        Subject<IPlayerMoveHandler>.Detach(this);
         // 달리기 이벤트 구독 해제
-        EventBus<RunEvent>.OnEvent -= SetPressedRunKey;
+        Subject<IPlayerRunHandler>.Detach(this);
         // 구르기 이벤트 구독 해제
-        EventBus<RollEvent>.OnEvent -= PressedRollKey;
+        Subject<IPlayerRollHandler>.Detach(this);
     }
 
     // 초기화 함수
@@ -60,13 +60,13 @@ public class PlayerMove : MonoBehaviour
     }
 
     // 이동 입력 값 설정 함수
-    private void SetMoveInput(MoveEvent data) => moveInput = data.moveInput;
+    public void OnMove(Vector2 input) => moveInput = input;
 
-    // 달리기 키 입력 값 설정 함수
-    private void SetPressedRunKey(RunEvent data) => pressedRunKey = data.isPressed;
+    // 달리기 입력 값 설정 함수
+    public void OnRun(bool isPressed) => pressedRunKey = isPressed;
 
-    // 구르기 키 입력 함수
-    private void PressedRollKey(RollEvent data)
+    // 구르기 입력 함수
+    public void OnRoll()
     {
         // 구르는 중이거나, 현재 스테미나가 구르기 스테미나 소모량보다 적다면
         if (isRolling || !manager.Stat.UseStamina(rollStamAmount))

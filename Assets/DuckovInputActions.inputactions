@@ -43,7 +43,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Cancel",
+                    "name": "Pause",
                     "type": "Button",
                     "id": "00a93300-d452-4ef2-b94a-d84990817715",
                     "expectedControlType": "",
@@ -106,7 +106,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Break",
+                    "name": "Cancel",
                     "type": "Button",
                     "id": "d6d3a9a6-448d-4572-99f1-d064fc4b70df",
                     "expectedControlType": "",
@@ -220,7 +220,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cancel",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -297,7 +297,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Break",
+                    "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

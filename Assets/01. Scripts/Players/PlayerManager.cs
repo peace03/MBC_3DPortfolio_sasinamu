@@ -10,8 +10,8 @@ public class PlayerManager : MonoBehaviour
     public PlayerStat Stat => stat;
 
     private PlayerMove move;                        // 이동
-    private PlayerInteract interact;                // 상호작용
-    private PlayerFire fire;                        // 발사
+    //private PlayerInteract interact;                // 상호작용
+    //private PlayerFire fire;                        // 발사
 
     private void Awake()
     {
@@ -19,9 +19,9 @@ public class PlayerManager : MonoBehaviour
         stat = player.GetComponent<PlayerStat>();
         move = player.GetComponent<PlayerMove>();
         move.Init(this);
-        interact = player.GetComponent<PlayerInteract>();
-        interact.Init(this);
-        fire = player.GetComponent<PlayerFire>();
-        fire.Init(this);
+        //interact = player.GetComponent<PlayerInteract>();
+        //interact.Init(this);
+        //fire = player.GetComponent<PlayerFire>();
+        //fire.Init(this);
     }
 }

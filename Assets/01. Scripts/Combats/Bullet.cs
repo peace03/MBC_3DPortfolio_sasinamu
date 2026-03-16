@@ -1,102 +1,102 @@
-using System.Collections;
-using UnityEngine;
-using UnityEngine.Pool;
+//using System.Collections;
+//using UnityEngine;
+//using UnityEngine.Pool;
 
-public class Bullet : MonoBehaviour
-{
-    [Header("스탯")]
-    [SerializeField] private float bulletSpeed;     // 총알 속도
-    [SerializeField] private float returnTime;      // 총알 반납 시간(총알 비활성화 시점)
+//public class Bullet : MonoBehaviour
+//{
+//    [Header("스탯")]
+//    [SerializeField] private float bulletSpeed;     // 총알 속도
+//    [SerializeField] private float returnTime;      // 총알 반납 시간(총알 비활성화 시점)
 
-    private IObjectPool<Bullet> poolRef;            // 총알 오브젝트 풀 주소
+//    private IObjectPool<Bullet> poolRef;            // 총알 오브젝트 풀 주소
 
-    private Rigidbody rb;                           // 총알 리지드바디
-    private Coroutine returnToPoolCoroutine;        // 총알 반납 코루틴
+//    private Rigidbody rb;                           // 총알 리지드바디
+//    private Coroutine returnToPoolCoroutine;        // 총알 반납 코루틴
 
-    private DamagedEvent bulletInfo;                // 총알 정보(쏜 사람, 맞은 사람, 데미지)
+//    private DamagedEvent bulletInfo;                // 총알 정보(쏜 사람, 맞은 사람, 데미지)
 
-    private void Awake()
-    {
-        // 초기화
-        rb = GetComponent<Rigidbody>();
-    }
+//    private void Awake()
+//    {
+//        // 초기화
+//        rb = GetComponent<Rigidbody>();
+//    }
 
-    private void OnEnable()
-    {
-        // 초기화
-        rb.linearVelocity = Vector3.zero;
-    }
+//    private void OnEnable()
+//    {
+//        // 초기화
+//        rb.linearVelocity = Vector3.zero;
+//    }
 
-    private void OnDisable()
-    {
-        // 총알 반납 코루틴이 비어있지 않다면
-        if (returnToPoolCoroutine != null)
-        {
-            // 총알 반납 코루틴 정지
-            StopCoroutine(returnToPoolCoroutine);
-            // 총알 반납 코루틴 초기화
-            returnToPoolCoroutine = null;
-        }
-    }
+//    private void OnDisable()
+//    {
+//        // 총알 반납 코루틴이 비어있지 않다면
+//        if (returnToPoolCoroutine != null)
+//        {
+//            // 총알 반납 코루틴 정지
+//            StopCoroutine(returnToPoolCoroutine);
+//            // 총알 반납 코루틴 초기화
+//            returnToPoolCoroutine = null;
+//        }
+//    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        // 공격 오브젝트의 레이어와 닿은 오브젝트의 레이어가 같다면
-        if (bulletInfo.attacker.LayerNumber == other.gameObject.layer)
-            // 종료
-            return;
+//    private void OnTriggerEnter(Collider other)
+//    {
+//        // 공격 오브젝트의 레이어와 닿은 오브젝트의 레이어가 같다면
+//        if (bulletInfo.attacker.LayerNumber == other.gameObject.layer)
+//            // 종료
+//            return;
 
-        // 총알과 닿은 콜라이더가 데미지를 입을 수 있는 인터페이스를 가지고 있다면
-        if (other.TryGetComponent(out IDamageable target))
-        {
-            // 타겟(닿은 오브젝트) 설정
-            bulletInfo.target = target;
-            // 데미지 전달하기
-            target.Damaged(bulletInfo);
-        }
+//        // 총알과 닿은 콜라이더가 데미지를 입을 수 있는 인터페이스를 가지고 있다면
+//        if (other.TryGetComponent(out IDamageable target))
+//        {
+//            // 타겟(닿은 오브젝트) 설정
+//            bulletInfo.target = target;
+//            // 데미지 전달하기
+//            target.Damaged(bulletInfo);
+//        }
 
-        // 총알 반납
-        poolRef.Release(this);
-    }
+//        // 총알 반납
+//        poolRef.Release(this);
+//    }
 
-    // 오브젝트 풀 주소 설정 함수
-    public void SetPoolReference(IObjectPool<Bullet> pool) => poolRef = pool;
+//    // 오브젝트 풀 주소 설정 함수
+//    public void SetPoolReference(IObjectPool<Bullet> pool) => poolRef = pool;
 
-    // 총알 발사 함수
-    public void FireBullet(DamagedEvent data, Vector3 pos, Quaternion rot)
-    {
-        // 총알 정보 설정
-        bulletInfo = data;
-        // 총알 위치, 각도 설정
-        transform.SetPositionAndRotation(pos, rot);
-        // 총알 발사
-        rb.AddForce(transform.forward * bulletSpeed, ForceMode.Impulse);
-        // 총알 반납 코루틴 시작
-        ReturnBulletToPool();
-    }
+//    // 총알 발사 함수
+//    public void FireBullet(DamagedEvent data, Vector3 pos, Quaternion rot)
+//    {
+//        // 총알 정보 설정
+//        bulletInfo = data;
+//        // 총알 위치, 각도 설정
+//        transform.SetPositionAndRotation(pos, rot);
+//        // 총알 발사
+//        rb.AddForce(transform.forward * bulletSpeed, ForceMode.Impulse);
+//        // 총알 반납 코루틴 시작
+//        ReturnBulletToPool();
+//    }
 
-    // 총알 반납 함수
-    private void ReturnBulletToPool()
-    {
-        // 총알 반납 코루틴이 비어있지 않다면
-        if (returnToPoolCoroutine != null)
-        {
-            // 총알 반납 코루틴 정지
-            StopCoroutine(returnToPoolCoroutine);
-            // 총알 반납 코루틴 초기화
-            returnToPoolCoroutine = null;
-        }
+//    // 총알 반납 함수
+//    private void ReturnBulletToPool()
+//    {
+//        // 총알 반납 코루틴이 비어있지 않다면
+//        if (returnToPoolCoroutine != null)
+//        {
+//            // 총알 반납 코루틴 정지
+//            StopCoroutine(returnToPoolCoroutine);
+//            // 총알 반납 코루틴 초기화
+//            returnToPoolCoroutine = null;
+//        }
 
-        // 총알 반납 코루틴 저장 및 시작
-        returnToPoolCoroutine = StartCoroutine(ReturnToPoolCoroutine());
-    }
+//        // 총알 반납 코루틴 저장 및 시작
+//        returnToPoolCoroutine = StartCoroutine(ReturnToPoolCoroutine());
+//    }
 
-    // 총알 반납 코루틴 함수
-    private IEnumerator ReturnToPoolCoroutine()
-    {
-        // 총알 반납 시간만큼 대기
-        yield return new WaitForSeconds(returnTime);
-        // 총알 반납
-        poolRef.Release(this);
-    }
-}
+//    // 총알 반납 코루틴 함수
+//    private IEnumerator ReturnToPoolCoroutine()
+//    {
+//        // 총알 반납 시간만큼 대기
+//        yield return new WaitForSeconds(returnTime);
+//        // 총알 반납
+//        poolRef.Release(this);
+//    }
+//}
