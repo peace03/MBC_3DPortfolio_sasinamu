@@ -4,24 +4,36 @@ using UnityEngine.UIElements;
 public class PlayerManager : MonoBehaviour
 {
     [Header("플레이어")]
-    [SerializeField] private Transform player;      // 플레이어
+    [SerializeField] private Transform player;                  // 플레이어
 
-    private PlayerStat stat;                        // 스탯
+    [Header("매니저")]
+    [SerializeField] private InputManager inputManager;         // 인풋 매니저
+    public InputManager InputManager => inputManager;
+
+    [Header("총알")]
+    [SerializeField] private BulletFactory bulletFactory;       // 총알 공장
+    public BulletFactory BulletFactory => bulletFactory;
+
+    private PlayerStat stat;                                    // 스탯
     public PlayerStat Stat => stat;
 
-    private PlayerMove move;                        // 이동
-    //private PlayerInteract interact;                // 상호작용
-    //private PlayerFire fire;                        // 발사
+    private PlayerMove move;                                    // 이동
+    private PlayerRotate rotate;                                // 회전
+    private PlayerInteract interact;                            // 상호작용
+    private PlayerFire fire;                                    // 발사
 
     private void Awake()
     {
         // 초기화
         stat = player.GetComponent<PlayerStat>();
         move = player.GetComponent<PlayerMove>();
+        rotate = player.GetComponent<PlayerRotate>();
+        interact = player.GetComponent<PlayerInteract>();
+        fire = player.GetComponent<PlayerFire>();
+
         move.Init(this);
-        //interact = player.GetComponent<PlayerInteract>();
-        //interact.Init(this);
-        //fire = player.GetComponent<PlayerFire>();
-        //fire.Init(this);
+        rotate.Init(this);
+        interact.Init(this);
+        fire.Init(this);
     }
 }

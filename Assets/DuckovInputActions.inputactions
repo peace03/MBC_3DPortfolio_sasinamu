@@ -392,11 +392,11 @@
             ]
         },
         {
-            "name": "Camera",
+            "name": "Mouse",
             "id": "04e5dddc-5167-457e-ad72-005f4e3774a8",
             "actions": [
                 {
-                    "name": "MousePosition",
+                    "name": "Position",
                     "type": "PassThrough",
                     "id": "10b277aa-d8bb-4800-ac0f-f44e6fa702f7",
                     "expectedControlType": "Vector2",
@@ -413,7 +413,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MousePosition",
+                    "action": "Position",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

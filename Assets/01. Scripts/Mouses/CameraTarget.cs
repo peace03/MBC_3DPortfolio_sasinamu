@@ -3,63 +3,73 @@ using UnityEngine;
 public class CameraTarget : MonoBehaviour
 {
     [Header("플레이어")]
-    [SerializeField] private Transform player;      // 플레이어
+    [SerializeField] private Transform player;              // 플레이어
+
+    [Header("매니저")]
+    [SerializeField] private InputManager inputManager;     // 인풋 매니저
 
     [Header("카메라 제한")]
-    [SerializeField] private float maxX;            // 최대 좌우 값
-    [SerializeField] private float maxZ;            // 최대 상하 값
+    [SerializeField] private float maxX;                    // 최대 좌우 값
+    [SerializeField] private float maxZ;                    // 최대 상하 값
+    [SerializeField] private float verticalWeight;          // 쿼터뷰 보정 값(위, 아래 시야 확장)
 
-    private Camera mainCam;                         // 메인 카메라
-
-    private void Awake()
+    private void Start()
     {
         // 초기화
-        mainCam = Camera.main;
+        CalculateVerticalWeight();
     }
 
     private void LateUpdate()
     {
-        // 마우스의 뷰 포트 값 가져오기
-        Vector3 mousePos = GetMouseViewportPosition();
-        // 이동할 방향 값 가져오기
-        Vector3 moveDir = CalculateWorldMoveDirection(mousePos);
-        // 이동
-        transform.position = player.position + moveDir;
+        Debug.Log(inputManager.GetMouseOffsetRatio());
+        // 이게 -1 ~ 1이고, 내가 원하는 거는 어떻게 보면? 10 * 10 이라는 최대 사각형 크기만큼만 움직였으면 하니까?
+        // 이 마우스 좌표에 최대 크기를 곱해주고?
+        // 그걸 카메라의 forward랑 right를 조합해서 transform.position을 움직여주면? 내가 원하는 움직임 나올 것 같은데?
+
+        // 이동(플레이어 위치 기반)
+        //transform.position = player.position + GetMoveDirection();
+        //Vector2 test = inputManager.GetMouseOffsetRatio();
+        //var test = Camera.main.transform.forward;
+        //test.y = 0f;
+        //transform.position = player.position + test * maxZ;
     }
 
-    // 뷰 포트로 바꾼 마우스 위치 반환 함수
-    private Vector3 GetMouseViewportPosition()
-    {
-        // 마우스 위치를 0(왼쪽, 아래) ~ 1(오른쪽, 위)의 값으로 변환
-        Vector3 mousePos = mainCam.ScreenToViewportPoint(SystemFacade.instance.GetMousePosition());
-        // 마우스 값을 중앙에 맞게 설정
-        mousePos.x -= 0.5f;
-        mousePos.y -= 0.5f;
-        // 최대 카메라 값과 비교할 수 있게 설정
-        mousePos.x *= (maxX * 2f);
-        mousePos.y *= (maxZ * 2f);
-        // 마우스의 좌우 값 제한
-        mousePos.x = Mathf.Clamp(mousePos.x, -maxX, maxX);
-        // 마우스의 상하 값 제한
-        mousePos.y = Mathf.Clamp(mousePos.y, -maxZ, maxZ);
-        // 마우스 값 반환
-        return mousePos;
-    }
-
-    // 마우스 위치에 따른 이동 방향 반환 함수
-    private Vector3 CalculateWorldMoveDirection(Vector3 mousePos)
+    public void Test()
     {
         // 메인 카메라의 정면 값 저장
-        Vector3 camForward = mainCam.transform.forward;
+        Vector3 camForward = Camera.main.transform.forward;
         // 메인 카메라의 우측 값 저장
-        Vector3 camRight = mainCam.transform.right;
+        Vector3 camRight = Camera.main.transform.right;
         // 메인 카메라의 높이 값 초기화
         camForward.y = camRight.y = 0f;
         // 메인 카메라 정면 값 정리
         camForward.Normalize();
         // 메인 카메라 우측 값 정리
         camRight.Normalize();
+    }
+
+    // 쿼터뷰 보정 값 계산 함수
+    public void CalculateVerticalWeight()
+    {
+        // 카메라의 상하 각도 값 저장
+        float angle = Camera.main.transform.eulerAngles.x;
+        // 각도(한바퀴를 360으로 나눈 것)를 라디안(한 바퀴를 2π로 나눈 것)으로 변환 후,
+        // Sin 함수를 이용해 기울어진 각도에 따른 높이(비율) 저장
+        float sinValue = Mathf.Sin(angle * Mathf.Deg2Rad);
+        // 쿼터뷰 보정 값 저장(0으로 나눌 순 없으므로 보정)
+        verticalWeight = 1f / Mathf.Max(sinValue, 0.01f);
+    }
+
+    // 이동 방향 반환 함수
+    private Vector3 GetMoveDirection()
+    {
+        // 화면 전체 크기에서 현재 마우스 위치 비율 값 저장
+        Vector2 ratio = inputManager.GetMouseOffsetRatio();
+        // 최대 좌우 값 반영
+        float moveX = ratio.x * maxX;
+        // 최대 상하 값과 쿼터뷰 보정 값 반영
+        float moveZ = ratio.y * maxZ * verticalWeight;
         // 이동 방향 반환
-        return camForward * mousePos.y + camRight * mousePos.x;
+        return new Vector3(moveX, 0, moveZ);
     }
 }

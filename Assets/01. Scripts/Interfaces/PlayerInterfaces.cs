@@ -1,9 +1,3 @@
-// 플레이어 이동 관리 인터페이스
-public interface IPlayerMoveHandler
-{
-    public void OnMove(UnityEngine.Vector2 input);
-}
-
 // 플레이어 달리기 관리 인터페이스
 public interface IPlayerRunHandler
 {
@@ -31,7 +25,7 @@ public interface IPlayerFireHandler
 // 플레이어 발사 모드 변경 관리 인터페이스
 public interface IPlayerFireModeHandler
 {
-    public void OnFireMode(FireMode mode);
+    public void OnFireMode();
 }
 
 // 플레이어 재장전 관리 인터페이스

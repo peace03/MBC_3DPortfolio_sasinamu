@@ -10,24 +10,8 @@ public interface IInteractable
 // 데미지 입을 수 있는 대상 인터페이스
 public interface IDamageable
 {
-    // 객체 구분을 위한 레이어 번호(플레이어/적)
-    public int LayerNumber { get; }
-    // HP 비율
-    public float HpRatio { get; }
     // 데미지 반영 함수
     public void Damaged(float amount);
-}
-
-// 마우스 위치 관리 인터페이스
-public interface IMouseMoveHandler
-{
-    public void OnMouseMove(Vector2 pos);
-}
-
-// 공격, 피격 이벤트 관리 인터페이스
-public interface IDamageEventHandler
-{
-    public void OnDamage(IDamageable target, float amount, float hpRatio);
 }
 
 // 플레이어 죽음 관리 인터페이스

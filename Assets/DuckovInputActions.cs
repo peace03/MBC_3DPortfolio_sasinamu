@@ -478,11 +478,11 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Camera"",
+            ""name"": ""Mouse"",
             ""id"": ""04e5dddc-5167-457e-ad72-005f4e3774a8"",
             ""actions"": [
                 {
-                    ""name"": ""MousePosition"",
+                    ""name"": ""Position"",
                     ""type"": ""PassThrough"",
                     ""id"": ""10b277aa-d8bb-4800-ac0f-f44e6fa702f7"",
                     ""expectedControlType"": ""Vector2"",
@@ -499,7 +499,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MousePosition"",
+                    ""action"": ""Position"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -523,15 +523,15 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         m_Player_FireMode = m_Player.FindAction("FireMode", throwIfNotFound: true);
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
         m_Player_QuickSlot = m_Player.FindAction("QuickSlot", throwIfNotFound: true);
-        // Camera
-        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
-        m_Camera_MousePosition = m_Camera.FindAction("MousePosition", throwIfNotFound: true);
+        // Mouse
+        m_Mouse = asset.FindActionMap("Mouse", throwIfNotFound: true);
+        m_Mouse_Position = m_Mouse.FindAction("Position", throwIfNotFound: true);
     }
 
     ~@DuckovInputActions()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, DuckovInputActions.Player.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Camera.enabled, "This will cause a leak and performance issues, DuckovInputActions.Camera.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Mouse.enabled, "This will cause a leak and performance issues, DuckovInputActions.Mouse.Disable() has not been called.");
     }
 
     /// <summary>
@@ -832,29 +832,29 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
 
-    // Camera
-    private readonly InputActionMap m_Camera;
-    private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
-    private readonly InputAction m_Camera_MousePosition;
+    // Mouse
+    private readonly InputActionMap m_Mouse;
+    private List<IMouseActions> m_MouseActionsCallbackInterfaces = new List<IMouseActions>();
+    private readonly InputAction m_Mouse_Position;
     /// <summary>
-    /// Provides access to input actions defined in input action map "Camera".
+    /// Provides access to input actions defined in input action map "Mouse".
     /// </summary>
-    public struct CameraActions
+    public struct MouseActions
     {
         private @DuckovInputActions m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public CameraActions(@DuckovInputActions wrapper) { m_Wrapper = wrapper; }
+        public MouseActions(@DuckovInputActions wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Camera/MousePosition".
+        /// Provides access to the underlying input action "Mouse/Position".
         /// </summary>
-        public InputAction @MousePosition => m_Wrapper.m_Camera_MousePosition;
+        public InputAction @Position => m_Wrapper.m_Mouse_Position;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Camera; }
+        public InputActionMap Get() { return m_Wrapper.m_Mouse; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -862,9 +862,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="CameraActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="MouseActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(MouseActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -872,14 +872,14 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="CameraActions" />
-        public void AddCallbacks(ICameraActions instance)
+        /// <seealso cref="MouseActions" />
+        public void AddCallbacks(IMouseActions instance)
         {
-            if (instance == null || m_Wrapper.m_CameraActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_CameraActionsCallbackInterfaces.Add(instance);
-            @MousePosition.started += instance.OnMousePosition;
-            @MousePosition.performed += instance.OnMousePosition;
-            @MousePosition.canceled += instance.OnMousePosition;
+            if (instance == null || m_Wrapper.m_MouseActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MouseActionsCallbackInterfaces.Add(instance);
+            @Position.started += instance.OnPosition;
+            @Position.performed += instance.OnPosition;
+            @Position.canceled += instance.OnPosition;
         }
 
         /// <summary>
@@ -888,21 +888,21 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="CameraActions" />
-        private void UnregisterCallbacks(ICameraActions instance)
+        /// <seealso cref="MouseActions" />
+        private void UnregisterCallbacks(IMouseActions instance)
         {
-            @MousePosition.started -= instance.OnMousePosition;
-            @MousePosition.performed -= instance.OnMousePosition;
-            @MousePosition.canceled -= instance.OnMousePosition;
+            @Position.started -= instance.OnPosition;
+            @Position.performed -= instance.OnPosition;
+            @Position.canceled -= instance.OnPosition;
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="CameraActions.UnregisterCallbacks(ICameraActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="MouseActions.UnregisterCallbacks(IMouseActions)" />.
         /// </summary>
-        /// <seealso cref="CameraActions.UnregisterCallbacks(ICameraActions)" />
-        public void RemoveCallbacks(ICameraActions instance)
+        /// <seealso cref="MouseActions.UnregisterCallbacks(IMouseActions)" />
+        public void RemoveCallbacks(IMouseActions instance)
         {
-            if (m_Wrapper.m_CameraActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_MouseActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -912,21 +912,21 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="CameraActions.AddCallbacks(ICameraActions)" />
-        /// <seealso cref="CameraActions.RemoveCallbacks(ICameraActions)" />
-        /// <seealso cref="CameraActions.UnregisterCallbacks(ICameraActions)" />
-        public void SetCallbacks(ICameraActions instance)
+        /// <seealso cref="MouseActions.AddCallbacks(IMouseActions)" />
+        /// <seealso cref="MouseActions.RemoveCallbacks(IMouseActions)" />
+        /// <seealso cref="MouseActions.UnregisterCallbacks(IMouseActions)" />
+        public void SetCallbacks(IMouseActions instance)
         {
-            foreach (var item in m_Wrapper.m_CameraActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_MouseActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_CameraActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_MouseActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="CameraActions" /> instance referencing this action map.
+    /// Provides a new <see cref="MouseActions" /> instance referencing this action map.
     /// </summary>
-    public CameraActions @Camera => new CameraActions(this);
+    public MouseActions @Mouse => new MouseActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player" which allows adding and removing callbacks.
     /// </summary>
@@ -1027,18 +1027,18 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         void OnQuickSlot(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Camera" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Mouse" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="CameraActions.AddCallbacks(ICameraActions)" />
-    /// <seealso cref="CameraActions.RemoveCallbacks(ICameraActions)" />
-    public interface ICameraActions
+    /// <seealso cref="MouseActions.AddCallbacks(IMouseActions)" />
+    /// <seealso cref="MouseActions.RemoveCallbacks(IMouseActions)" />
+    public interface IMouseActions
     {
         /// <summary>
-        /// Method invoked when associated input action "MousePosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Position" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMousePosition(InputAction.CallbackContext context);
+        void OnPosition(InputAction.CallbackContext context);
     }
 }

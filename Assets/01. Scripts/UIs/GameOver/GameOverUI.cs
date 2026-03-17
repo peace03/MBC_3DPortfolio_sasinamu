@@ -21,7 +21,7 @@ public class GameOverUI : MonoBehaviour
         // 게임 오버 UI 닫기
         gameObject.SetActive(false);
         // UI가 닫힌 상태임
-        EventBus<UIStateEvent>.Publish(new UIStateEvent(false));
+        //EventBus<UIStateEvent>.Publish(new UIStateEvent(false));
         // 벙커 씬으로 이동
         SceneManager.LoadScene("BunkerScene");
     }

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerMove : MonoBehaviour, IPlayerMoveHandler, IPlayerRunHandler, IPlayerRollHandler
+public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
 {
     [Header("정보")]
     [SerializeField] private bool pressedRunKey;            // 달리기 키 누름 여부
@@ -18,15 +18,18 @@ public class PlayerMove : MonoBehaviour, IPlayerMoveHandler, IPlayerRunHandler, 
     [SerializeField] private float rollStamAmount;          // 구르기 스테미나 소모량
 
     private CharacterController cc;                         // 캐릭터 컨트롤러
-    private Transform mainCamTransform;                     // 메인 카메라 트랜스폼
-    private PlayerManager manager;                          // 플레이어 매니저
+    private PlayerStat stat;                                // 플레이어 스탯
+    private InputManager inputManager;                      // 입력 매니저
 
-    private Vector2 moveInput;                              // 입력 값
+    private Vector2 curMoveInput;                           // 현재 이동 입력 값
+
+    private void Awake()
+    {
+        cc = GetComponent<CharacterController>();
+    }
 
     private void OnEnable()
     {
-        // 이동 이벤트 구독
-        Subject<IPlayerMoveHandler>.Attach(this);
         // 달리기 이벤트 구독
         Subject<IPlayerRunHandler>.Attach(this);
         // 구르기 이벤트 구독
@@ -35,16 +38,14 @@ public class PlayerMove : MonoBehaviour, IPlayerMoveHandler, IPlayerRunHandler, 
 
     private void FixedUpdate()
     {
-        // 입력 값이 있고, 구르는 중이 아니라면
-        if (moveInput.magnitude > 0 && !isRolling)
-            // 이동
-            HandleMove();
+        // 현재 이동 입력 값 저장
+        curMoveInput = inputManager.LastMoveInput;
+        // 이동
+        HandleMove();
     }
 
     private void OnDisable()
     {
-        // 이동 이벤트 구독 해제
-        Subject<IPlayerMoveHandler>.Detach(this);
         // 달리기 이벤트 구독 해제
         Subject<IPlayerRunHandler>.Detach(this);
         // 구르기 이벤트 구독 해제
@@ -54,44 +55,24 @@ public class PlayerMove : MonoBehaviour, IPlayerMoveHandler, IPlayerRunHandler, 
     // 초기화 함수
     public void Init(PlayerManager manager)
     {
-        this.manager = manager;
-        cc = transform.GetComponent<CharacterController>();
-        mainCamTransform = Camera.main.transform;
-    }
-
-    // 이동 입력 값 설정 함수
-    public void OnMove(Vector2 input) => moveInput = input;
-
-    // 달리기 입력 값 설정 함수
-    public void OnRun(bool isPressed) => pressedRunKey = isPressed;
-
-    // 구르기 입력 함수
-    public void OnRoll()
-    {
-        // 구르는 중이거나, 현재 스테미나가 구르기 스테미나 소모량보다 적다면
-        if (isRolling || !manager.Stat.UseStamina(rollStamAmount))
-            // 종료
-            return;
-
-        // 방향키 입력 값이 있다면
-        if (moveInput.magnitude > 0)
-            // 움직이는 방향으로 구르기
-            StartCoroutine(RollingCoroutine(CalculateMoveDirection()));
-        // 방향키 입력 값이 없다면
-        else
-            // 플레이어가 바라보는 방향으로 구르기
-            StartCoroutine(RollingCoroutine(transform.forward));
+        stat = manager.Stat;
+        inputManager = manager.InputManager;
     }
 
     // 이동 관리 함수
     private void HandleMove()
     {
+        // 현재 이동 입력 값이 없거나 구르는 중이라면
+        if (curMoveInput.magnitude <= 0 || isRolling)
+            // 종료
+            return;
+
         // 움직일 방향 저장
         Vector3 dir = CalculateMoveDirection();
         // 달리기 키를 눌렀고 스테미나가 있다면 ? 이동 속도 * 달리기 * 무게 : 이동 속도 * 무게
-        float finalSpeed = (pressedRunKey && manager.Stat.UseStamina(runStamRate * Time.deltaTime)) ?
-                                moveSpeed * runSpeedMultiplier * manager.Stat.SpeedMultiplierCurInvWeight
-                                                    : moveSpeed * manager.Stat.SpeedMultiplierCurInvWeight;
+        float finalSpeed = (pressedRunKey && stat.UseStamina(runStamRate * Time.deltaTime)) ?
+                                moveSpeed * runSpeedMultiplier * stat.SpeedMultiplierCurInvWeight
+                                                    : moveSpeed * stat.SpeedMultiplierCurInvWeight;
         // 캐릭터 컨트롤러는 중력이 없으니 y축 눌러주기
         float yVelocity = 0f;
 
@@ -104,16 +85,15 @@ public class PlayerMove : MonoBehaviour, IPlayerMoveHandler, IPlayerRunHandler, 
         dir.y = yVelocity;
         // 이동(방향 * 속도 * 시간)
         cc.Move(dir * finalSpeed * Time.fixedDeltaTime);
-
     }
 
     // 움직일 방향 계산해서 반환하는 함수
     private Vector3 CalculateMoveDirection()
     {
         // 메인 카메라의 정면 값 저장
-        Vector3 camForward = mainCamTransform.forward;
+        Vector3 camForward = Camera.main.transform.forward;
         // 메인 카메라의 우측 값 저장
-        Vector3 camRight = mainCamTransform.right;
+        Vector3 camRight = Camera.main.transform.right;
         // 메인 카메라의 높이 값 초기화
         camForward.y = camRight.y = 0f;
         // 메인 카메라 정면 값 정리
@@ -121,7 +101,28 @@ public class PlayerMove : MonoBehaviour, IPlayerMoveHandler, IPlayerRunHandler, 
         // 메인 카메라 우측 값 정리
         camRight.Normalize();
         // 움직일 방향 반환
-        return (camForward * moveInput.y + camRight * moveInput.x).normalized;
+        return (camForward * curMoveInput.y + camRight * curMoveInput.x).normalized;
+    }
+
+    // 달리기 입력 값 설정 함수
+    public void OnRun(bool isPressed) => pressedRunKey = isPressed;
+
+    // 구르기 입력 함수
+    public void OnRoll()
+    {
+        // 구르는 중이거나, 현재 스테미나가 구르기 스테미나 소모량보다 적다면
+        if (isRolling || !stat.UseStamina(rollStamAmount))
+            // 종료
+            return;
+
+        // 현재 이동 입력 값이 있다면
+        if (curMoveInput.magnitude > 0)
+            // 움직이는 방향으로 구르기
+            StartCoroutine(RollingCoroutine(CalculateMoveDirection()));
+        // 현재 이동 입력 값이 없다면
+        else
+            // 플레이어가 바라보는 방향으로 구르기
+            StartCoroutine(RollingCoroutine(transform.forward));
     }
 
     // 구르기 코루틴 함수
@@ -130,7 +131,7 @@ public class PlayerMove : MonoBehaviour, IPlayerMoveHandler, IPlayerRunHandler, 
         // 구르는 중임
         isRolling = true;
         // 스테미나 사용
-        manager.Stat.UseStamina(rollStamAmount);
+        stat.UseStamina(rollStamAmount);
         // 속도 저장
         float speed = rollDistance / rollTime;
         // 진행률
