@@ -21,10 +21,20 @@ public class CameraTarget : MonoBehaviour
 
     private void LateUpdate()
     {
-        Debug.Log(inputManager.GetMouseOffsetRatio());
         // 이게 -1 ~ 1이고, 내가 원하는 거는 어떻게 보면? 10 * 10 이라는 최대 사각형 크기만큼만 움직였으면 하니까?
         // 이 마우스 좌표에 최대 크기를 곱해주고?
         // 그걸 카메라의 forward랑 right를 조합해서 transform.position을 움직여주면? 내가 원하는 움직임 나올 것 같은데?
+
+        Vector2 mousePos = inputManager.GetMouseOffsetRatio();
+        //Debug.Log(mousePos);
+        mousePos.x *= maxX;
+        mousePos.y *= maxZ;
+        Vector3 forward = Camera.main.transform.forward;
+        Vector3 right = Camera.main.transform.right;
+        forward.y = right.y = 0f;
+        Vector3 dir = (forward * mousePos.y + right * mousePos.x);
+        //Debug.Log(dir);
+        transform.position = player.position + dir;
 
         // 이동(플레이어 위치 기반)
         //transform.position = player.position + GetMoveDirection();

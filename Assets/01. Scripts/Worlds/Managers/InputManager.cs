@@ -165,10 +165,23 @@ public class InputManager : MonoBehaviour
     {
         // 마우스의 위치를 0 ~ 1로 정규화(Screen.width : 0 ~ 1920)하고,
         // 화면 중앙을 (0, 0)으로 변환 후, 범위를 -1 ~ 1 사이로 제한을 두고 마우스 위치 비율 저장
+        Debug.Log($"X {curMousePos.x} , Y {curMousePos.y}");
         float xRatio = (curMousePos.x / Screen.width - 0.5f) * 2f;
         float yRatio = (curMousePos.y / Screen.height - 0.5f) * 2f;
         // 마우스 위치 비율 반환
         return new Vector2(xRatio, yRatio);
+
+        //// 1. 현재 마우스 위치를 0~1 사이로 정규화 (0.5가 중앙)
+        //float xNormalized = curMousePos.x / Screen.width;
+        //float yNormalized = curMousePos.y / Screen.height;
+
+        //// 2. 0~1 범위를 -1 ~ 1 범위로 변환
+        //// (value - 0.5f) * 2f 도 맞지만, 아래 방식이 더 직관적일 때가 있습니다.
+        //float xRatio = Mathf.Lerp(-1f, 1f, xNormalized);
+        //float yRatio = Mathf.Lerp(-1f, 1f, yNormalized);
+
+        //// 3. 화면 밖으로 나가는 예외 상황 방지 (필수!)
+        //return new Vector2(Mathf.Clamp(xRatio, -1f, 1f), Mathf.Clamp(yRatio, -1f, 1f));
     }
 
     // 일시정지 기능 함수
