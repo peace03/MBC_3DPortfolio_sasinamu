@@ -13,7 +13,7 @@ public class PlayerRotate : MonoBehaviour
     }
 
     // 초기화 함수
-    public void Init(PlayerManager manager) => inputManager = manager.InputManager;
+    public void Init(InputManager manager) => inputManager = manager;
 
     // 회전 관리 함수
     public void HandleRotate()

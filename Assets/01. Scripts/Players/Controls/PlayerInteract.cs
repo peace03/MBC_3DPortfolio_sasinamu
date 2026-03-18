@@ -27,7 +27,7 @@ public class PlayerInteract : MonoBehaviour, IPlayerInteractHandler
     }
 
     // 초기화 함수
-    public void Init(PlayerManager manager) => stat = manager.Stat;
+    public void Init(PlayerStat stat) => this.stat = stat;
 
     // 상호작용 가능한 타겟 설정하는 함수
     private void SetInteractableTarget()

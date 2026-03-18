@@ -53,10 +53,10 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
     }
 
     // 초기화 함수
-    public void Init(PlayerManager manager)
+    public void Init(PlayerStat stat, InputManager manager)
     {
-        stat = manager.Stat;
-        inputManager = manager.InputManager;
+        this.stat = stat;
+        inputManager = manager;
     }
 
     // 이동 관리 함수

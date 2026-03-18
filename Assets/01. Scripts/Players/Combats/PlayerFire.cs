@@ -42,10 +42,10 @@ public class PlayerFire : MonoBehaviour, IPlayerFireHandler, IPlayerFireModeHand
     }
 
     // 초기화 함수
-    public void Init(PlayerManager manager)
+    public void Init(PlayerStat stat, BulletFactory factory)
     {
-        stat = manager.Stat;
-        bulletFactory = manager.BulletFactory;
+        this.stat = stat;
+        bulletFactory = factory;
     }
 
     // 사격 모드 변경 함수

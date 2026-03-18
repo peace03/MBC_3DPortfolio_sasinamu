@@ -8,11 +8,9 @@ public class PlayerManager : MonoBehaviour
 
     [Header("매니저")]
     [SerializeField] private InputManager inputManager;         // 인풋 매니저
-    public InputManager InputManager => inputManager;
 
     [Header("총알")]
     [SerializeField] private BulletFactory bulletFactory;       // 총알 공장
-    public BulletFactory BulletFactory => bulletFactory;
 
     private PlayerStat stat;                                    // 스탯
     public PlayerStat Stat => stat;
@@ -31,9 +29,9 @@ public class PlayerManager : MonoBehaviour
         interact = player.GetComponent<PlayerInteract>();
         fire = player.GetComponent<PlayerFire>();
 
-        move.Init(this);
-        rotate.Init(this);
-        interact.Init(this);
-        fire.Init(this);
+        move.Init(stat, inputManager);
+        rotate.Init(inputManager);
+        interact.Init(stat);
+        fire.Init(stat, bulletFactory);
     }
 }
