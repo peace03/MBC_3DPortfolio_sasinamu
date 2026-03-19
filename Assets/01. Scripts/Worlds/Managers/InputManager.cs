@@ -137,8 +137,8 @@ public class InputManager : MonoBehaviour
         inputActions.Mouse.Disable();
     }
 
-    // 마우스 위치(Vector2)를 월드 좌표(Vector3)로 변환하고 반환하는 함수
-    public Vector3 GetWorldMousePosition(float playerCenterHeight)
+    // 마우스 위치(Vector2)를 월드 좌표(Vector3)로 바꾸고 반환하는 함수
+    public Vector3 GetMouseWorldPosition(float playerCenterHeight)
     {
         // 플레이어의 중간 높이에서 위를 바라보는 보이지 않는 평면 생성
         Plane groundPlane = new(Vector3.up, new Vector3(0, playerCenterHeight, 0));

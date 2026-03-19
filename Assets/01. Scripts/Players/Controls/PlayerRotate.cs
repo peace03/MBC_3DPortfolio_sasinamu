@@ -19,7 +19,7 @@ public class PlayerRotate : MonoBehaviour
     public void HandleRotate()
     {
         // 마우스 위치 받아오기
-        Vector3 mousePos = inputManager.GetWorldMousePosition(transform.position.y);
+        Vector3 mousePos = inputManager.GetMouseWorldPosition(transform.position.y);
         
         // 마우스 위치가 0이라면
         if (mousePos == Vector3.zero)
