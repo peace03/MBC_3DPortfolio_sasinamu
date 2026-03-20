@@ -12,11 +12,11 @@ TagManager:
   - Water
   - UI
   - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - Bullet
   - Interactable
-  - 
+  - Fading
   - 
   - 
   - 
