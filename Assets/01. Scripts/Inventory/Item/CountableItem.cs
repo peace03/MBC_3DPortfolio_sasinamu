@@ -10,5 +10,5 @@ public class CountableItem : Item
         _curAmount = curAmount;
     }
 
-    public int MaxAmount => (_data as CountableData).maxAmount;
+    public int MaxAmount => (_data as CountableData).MaxAmount;
 }

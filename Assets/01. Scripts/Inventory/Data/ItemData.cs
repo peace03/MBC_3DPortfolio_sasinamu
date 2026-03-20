@@ -4,10 +4,16 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
     [Header("기본 정보")]
-    public Sprite sprite; //인벤토리에 표시될 이미지
-    public GameObject objectPrefab; //3D 모델
-    public int _id;
-    public string _name;
-    public float _weight;
-    public string _explain;
+    [SerializeField] private Sprite sprite; //인벤토리에 표시될 이미지
+    [SerializeField] private GameObject objectPrefab; //3D 모델
+    [SerializeField] private int _id;
+    [SerializeField] private string _name;
+    [SerializeField] private float _weight;
+    [SerializeField] private string _explain;
+
+    public Sprite Sprite => sprite;
+    public int ID => _id;
+    public string Name => _name;
+    public float Weight => _weight;
+    public string Explain => _explain;
 }

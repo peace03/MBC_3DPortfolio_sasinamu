@@ -76,12 +76,12 @@ public class InventoryView : MonoBehaviour
             }
             else if(slots[i] is CountableItem countableSlot) //countable 아이템일 때
             {
-                _bagSlots[i].SetSlot(countableSlot._data.sprite, countableSlot._data._name,
+                _bagSlots[i].SetSlot(countableSlot._data.Sprite, countableSlot._data.Name,
                     countableSlot._curAmount.ToString());
             }
             else //UnCountable 아이템일 때
             {
-                _bagSlots[i].SetSlot(slots[i]._data.sprite, slots[i]._data._name);
+                _bagSlots[i].SetSlot(slots[i]._data.Sprite, slots[i]._data.Name);
             }
         }
     }
@@ -90,14 +90,14 @@ public class InventoryView : MonoBehaviour
     public void UpdateEquipSlot_Single(int index, Item item)
     {
         if (item == null) _equipSlots[index].SetSlot();
-        else _equipSlots[index].SetSlot(item._data.sprite, item._data._name);
+        else _equipSlots[index].SetSlot(item._data.Sprite, item._data.Name);
     }
     //가방 인벤토리 슬롯 한개만 업데이트
     public void UpdateBagSlot_Single(int index, Item item)
     {
         if (item is CountableItem countableItem)
         {
-            _bagSlots[index].SetSlot(countableItem._data.sprite, countableItem._data._name,
+            _bagSlots[index].SetSlot(countableItem._data.Sprite, countableItem._data.Name,
                 countableItem._curAmount.ToString());
             //Debug.Log("카운터블 뷰 업뎃");
         }
@@ -109,7 +109,7 @@ public class InventoryView : MonoBehaviour
         else
         {
             //Debug.Log("넌카운터블 뷰 업뎃");
-            _bagSlots[index].SetSlot(item._data.sprite, item._data._name);
+            _bagSlots[index].SetSlot(item._data.Sprite, item._data.Name);
         }
     }
 

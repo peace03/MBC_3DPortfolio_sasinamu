@@ -19,5 +19,5 @@ MonoBehaviour:
   _weight: 0.1
   _explain: "\uC2F8\uAD6C\uB824 \uCD1D\uC54C\uC774\uB2E4"
   maxAmount: 100
-  Damage: 9
-  DurabilityDamage: 5
+  damage: 9
+  durabilityDamage: 15

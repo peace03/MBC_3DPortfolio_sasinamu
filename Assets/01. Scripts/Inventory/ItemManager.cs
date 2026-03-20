@@ -39,11 +39,11 @@ public class ItemManager : MonoBehaviour
             case CountableData countableData:
                 return new CountableItem(countableData, 3);
             case CureKitData cureKitData:
-                return new CureKitItem(cureKitData, cureKitData.maxDurability);
+                return new CureKitItem(cureKitData, cureKitData.MaxDurability);
             case GunData gunData:
-                return new GunItem(gunData, Random.Range(1, gunData.maxAmmo), gunData.maxDurability);
+                return new GunItem(gunData, Random.Range(1, gunData.MaxAmmo), gunData.MaxDurability);
             case ConsumableData consumableData:
-                return new ConsumableItem(consumableData, consumableData.maxDurability);
+                return new ConsumableItem(consumableData, consumableData.MaxDurability);
             case FoodData foodData:
                 return new FoodItem(foodData);
             case BagData bagData:
@@ -61,7 +61,7 @@ public class ItemManager : MonoBehaviour
     {
         foreach (var itemdata in _itemDatas)
         {
-            if (itemdata._id == id) return itemdata;
+            if (itemdata.ID == id) return itemdata;
         }
         return null;
 

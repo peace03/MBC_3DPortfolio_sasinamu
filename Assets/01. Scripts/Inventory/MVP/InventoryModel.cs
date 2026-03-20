@@ -35,7 +35,7 @@ public class InventoryModel
         if (fromIndex > 1 || toIndex > 1) return false;
         else
         {
-            Debug.Log("EquipToEquip 실행");
+            // Debug.Log("EquipToEquip 실행");
             Item temp = _equipSlots[fromIndex];
             _equipSlots[fromIndex] = _equipSlots[toIndex];
             _equipSlots[toIndex] = temp;
@@ -110,7 +110,7 @@ public class InventoryModel
         foreach(var item in _bagSlots) //linq 사용 피드백
         {
             //동일 아이템이 있다면
-            if (item is CountableItem Citem && Citem._data._id == newCountableItem._data._id)
+            if (item is CountableItem Citem && Citem._data.ID == newCountableItem._data.ID)
             {
                 //Debug.Log("동일 아이템 발견");
                 totalCount = Citem._curAmount + newCountableItem._curAmount;

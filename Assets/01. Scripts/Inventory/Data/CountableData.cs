@@ -4,5 +4,7 @@ using UnityEngine;
 public class CountableData : ItemData
 {
     [Header("스택 정보")]
-    public int maxAmount;
+    [SerializeField] private int maxAmount;
+
+    public int MaxAmount => maxAmount;
 }

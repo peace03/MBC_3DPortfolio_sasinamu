@@ -4,5 +4,6 @@ using UnityEngine;
 public class BagData : ItemData
 {
     [Header("가방 정보")]
-    public int addSlotNum; //추가 슬롯 개수
+    [SerializeField] private int addSlotNum; //추가 슬롯 개수
+    public int AddSlotNum => addSlotNum;
 }

@@ -10,7 +10,7 @@ public class StatTextLine : MonoBehaviour
     private void Awake()
     {
         _statName = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        _statValue = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        _statValue = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
     }
 
     public void SetStatText(string statName, string statValue)
