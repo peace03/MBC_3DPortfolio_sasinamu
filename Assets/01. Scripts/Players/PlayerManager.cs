@@ -23,12 +23,19 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         // 초기화
+        InitPlayer();
+    }
+
+    private void InitPlayer()
+    {
+        // 플레이어 컴포넌트 받아오기
         stat = player.GetComponent<PlayerStat>();
         move = player.GetComponent<PlayerMove>();
         rotate = player.GetComponent<PlayerRotate>();
         interact = player.GetComponent<PlayerInteract>();
         fire = player.GetComponent<PlayerFire>();
 
+        // 컴포넌트 초기화
         move.Init(stat, inputManager);
         rotate.Init(inputManager);
         interact.Init(stat);

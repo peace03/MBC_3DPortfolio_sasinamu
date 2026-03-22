@@ -4,14 +4,14 @@ using UnityEngine;
 public class Box : MonoBehaviour, IInteractable
 {
     [Header("정보")]
-    [SerializeField] private string boxName;        // 상자 이름
+    // GameObject 대신 아이템 객체(아마... Item?)로 바꾸시기!
+    // 바꾸시면서 Interfaces/SystemInterfaces.cs에 IBoxHandler고치기
+    [SerializeField] private List<GameObject> boxItems = new();     // 상자 아이템들
 
     // 상호작용 함수
     public void Interact()
     {
-        // UI 활성화 이벤트 발생
-        //EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
-        // UI에 전리품 상자 정보 넘겨주기
-        //EventBus<BoxEvent>.Publish(new BoxEvent(boxName));
+        // 상자 이벤트 발생(상자 아이템들 정보 전달)
+        Subject<IBoxHandler>.Publish(h => h.OnBox(boxItems));
     }
 }

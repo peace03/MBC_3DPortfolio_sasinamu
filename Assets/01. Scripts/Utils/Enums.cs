@@ -27,8 +27,7 @@ public enum SceneType
 // UI 종류
 public enum UIType
 {
-    None,           // 열린 UI 없음
+    Pause,          // 일시정지 UI
     GameOver,       // 게임오버 UI
-    Box,            // 상자 UI
-    Pause           // 일시정지 UI
+    Box             // 상자 UI
 }

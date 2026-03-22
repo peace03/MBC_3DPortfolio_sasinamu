@@ -1,4 +1,6 @@
 // 플레이어 달리기 관리 인터페이스
+using UnityEngine;
+
 public interface IPlayerRunHandler
 {
     public void OnRun(bool isPressed);
@@ -10,10 +12,22 @@ public interface IPlayerRollHandler
     public void OnRoll();
 }
 
+// 플레이어 죽음 관리 인터페이스
+public interface IPlayerDeadHandler
+{
+    public void OnPlayerDead(GameObject killer);
+}
+
 // 플레이어 상호작용 관리 인터페이스
 public interface IPlayerInteractHandler
 {
     public void OnInteract();
+}
+
+// 플레이어 취소 관리 인터페이스
+public interface IPlayerCancelHandler
+{
+    public void OnCancel();
 }
 
 // 플레이어 총알 발사 관리 인터페이스

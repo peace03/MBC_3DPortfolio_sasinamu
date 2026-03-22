@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.UIElements;
 
 public class PlayerStat : MonoBehaviour, IDamageable
 {
@@ -119,6 +117,7 @@ public class PlayerStat : MonoBehaviour, IDamageable
         if (curHp <= 0)
         {
             // 플레이어 죽음 이벤트 발행
+            Debug.Log("플레이어 죽음");
         }
     }
 
