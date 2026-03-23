@@ -12,19 +12,25 @@ public interface IInteractable
 public interface IDamageable
 {
     // 데미지 반영 함수
-    public void Damaged(float amount);
+    public void Damaged(string name, float amount);
 }
 
 // 적 죽음 관리 인터페이스
 public interface IEnemyDeadHandler
 {
-    public void OnEnemyDead(IDamageable enemy, GameObject killer);
+    public void OnEnemyDead(Vector3 position);
+}
+
+// 적 일시정지 관리 인터페이스
+public interface IEnemyPauseHandler
+{
+    public void OnEnemyPause(bool state);
 }
 
 // 일시정지 관리 인터페이스
 public interface IGamePauseHandler
 {
-    public void OnPause();
+    public void OnGamePause();
 }
 
 // UI 상태 관리 인터페이스
@@ -40,5 +46,10 @@ public interface IBoxHandler
 }
 
 // 가방 관리 인터페이스
+public interface IInventoryHandler
+{
+    public void OnInventory();
+}
+
 // 지도 관리 인터페이스
 // 조작설명 관리 인터페이스

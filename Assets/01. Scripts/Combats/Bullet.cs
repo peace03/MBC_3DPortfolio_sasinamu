@@ -5,7 +5,8 @@ using UnityEngine.Pool;
 public class Bullet : MonoBehaviour
 {
     [Header("정보")]
-    [SerializeField] private LayerMask attackerLayer;       // 발사 주체(플레이어, 적)의 레이어
+    [SerializeField] private string attackerName;           // 사격자 이름
+    [SerializeField] private LayerMask attackerLayer;       // 사격자(플레이어, 적)의 레이어
 
     [Header("스탯")]
     [SerializeField] private float bulletSpeed;             // 총알 속도
@@ -43,6 +44,11 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // 비활성화 중이라면
+        if (!gameObject.activeSelf)
+            // 종료
+            return;
+
         // 발사 주체의 레이어와 닿은 오브젝트의 레이어가 같다면(아군이라면)
         if (attackerLayer == other.gameObject.layer)
             // 종료
@@ -51,20 +57,25 @@ public class Bullet : MonoBehaviour
         // 총알과 닿은 콜라이더가 데미지를 입을 수 있는 인터페이스를 가지고 있다면
         if (other.TryGetComponent(out IDamageable target))
             // 데미지 전달하기
-            target.Damaged(bulletAttackPower);
+            target.Damaged(attackerName, bulletAttackPower);
 
         // 총알 반납
         poolRef.Release(this);
     }
 
+    // 총알 데미지 설정 함수
+    public void SetBulletAttackPower(float power) => bulletAttackPower = power;
+
     // 오브젝트 풀 주소 설정 함수
     public void SetPoolReference(IObjectPool<Bullet> pool) => poolRef = pool;
 
     // 총알 발사 함수
-    public void FireBullet(LayerMask layer, Vector3 pos, Quaternion rot)
+    public void FireBullet(string name, LayerMask layer, Vector3 pos, Quaternion rot)
     {
+        // 이름 설정
+        attackerName = name;
         // 총알 정보 설정
-        InitBulletInfo(layer);
+        attackerLayer = layer;
         // 총알 위치, 각도 설정
         transform.SetPositionAndRotation(pos, rot);
         // 총알 발사
@@ -72,9 +83,6 @@ public class Bullet : MonoBehaviour
         // 총알 반납 코루틴 시작
         ReturnBulletToPool();
     }
-
-    // 총알 정보 초기화 함수
-    private void InitBulletInfo(LayerMask layer) => attackerLayer = layer;
 
     // 총알 반납 함수
     private void ReturnBulletToPool()

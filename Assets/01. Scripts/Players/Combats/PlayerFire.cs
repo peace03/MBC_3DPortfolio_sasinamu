@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class PlayerFire : MonoBehaviour,
@@ -15,7 +14,6 @@ public class PlayerFire : MonoBehaviour,
     [SerializeField] private FireMode curFireMode;          // 현재 사격 모드
     [SerializeField] private float curFireDelayTime;        // 현재 사격 딜레이 시간
     [SerializeField] private float reloadingTime;           // 사격 진행 시간
-
 
     private PlayerStat stat;                                // 플레이어 스탯
     private BulletFactory bulletFactory;                    // 총알 공장
@@ -79,8 +77,8 @@ public class PlayerFire : MonoBehaviour,
 
         // S형 총알 받아오기
         Bullet bullet = bulletFactory.SmallBulletPool.Get();
-        // 공격 주체의 레이어 번호, 발사 위치, 발사 각도 설정 후 총알 발사
-        bullet.FireBullet(gameObject.layer, firePoint.position, firePoint.rotation);
+        // 사격(플레이어 이름, 플레이어 레이어, 사격 위치, 사격 각도)
+        bullet.FireBullet(name, gameObject.layer, firePoint.position, firePoint.rotation);
         // 마지막 사격 시간 갱신
         lastFireTime = Time.time;
 

@@ -66,8 +66,6 @@ public class PlayerStat : MonoBehaviour, IDamageable
 
     [SerializeField] private float autoFireDelayTime;                   // 연발 발사 딜레이 시간
     public float AutoFireDelayTime => autoFireDelayTime;
-
-    public int LayerNumber => gameObject.layer;                         // 레이어 번호
     #endregion
 
     private void Awake()
@@ -108,17 +106,15 @@ public class PlayerStat : MonoBehaviour, IDamageable
     }
 
     // 피격 함수
-    public void Damaged(float amount)
+    public void Damaged(string name, float amount)
     {
         // 데미지 입음
         curHp -= amount;
 
         // 죽었다면
         if (curHp <= 0)
-        {
             // 플레이어 죽음 이벤트 발행
-            Debug.Log("플레이어 죽음");
-        }
+            Subject<IPlayerDeadHandler>.Publish(h => h.OnPlayerDead(name));
     }
 
     // 스테미나 회복 함수

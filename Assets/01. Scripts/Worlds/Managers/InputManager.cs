@@ -181,8 +181,19 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         {
             // 키를 눌렀을 때
             if (context.performed)
-                // 이벤트 발생
-                Subject<IGamePauseHandler>.Publish(h => h.OnPause());
+                // 이벤트 발생(UI 활성화(UI 모두 닫기), UI 비활성화(일시정지 UI 활성화))
+                Subject<IGamePauseHandler>.Publish(h => h.OnGamePause());
+
+            // 종료
+            return;
+        }
+        // 입력된 액션이 가방 액션일 때
+        else if (context.action == inventoryAction)
+        {
+            // 키를 눌렀을 때
+            if (context.performed)
+                // 이벤트 발생(UI 활성화(UI 모두(일시정지 제외) 닫기), UI 비활성화(가방 UI 활성화))
+                Subject<IInventoryHandler>.Publish(h => h.OnInventory());
 
             // 종료
             return;
@@ -239,7 +250,7 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         {
             // 키를 눌렀을 때
             if (context.performed)
-                // 이벤트 발생
+                // 이벤트 발생(로딩(맵 이동, 장전, 아이템 사용) 취소)
                 Subject<IPlayerCancelHandler>.Publish(h => h.OnCancel());
         }
         // 입력된 액션이 사격 액션일 때
@@ -251,7 +262,7 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         {
             // 키를 눌렀을 때
             if (context.performed)
-                // 이벤트 발생
+                // 이벤트 발생(사격 모드 변경)
                 Subject<IPlayerFireModeHandler>.Publish(h => h.OnFireMode());
         }
         // 입력된 액션이 장전 액션일 때
@@ -259,21 +270,9 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         {
             // 키를 눌렀을 때
             if (context.performed)
-                // 이벤트 발생
+                // 이벤트 발생(로딩 시작)
                 Subject<IPlayerReloadHandler>.Publish(h => h.OnReload());
         }
-        // 입력된 액션이 가방 액션일 때
-        //else if (context.action == inventoryAction)
-        //{
-        //    // 키를 눌렀을 때
-        //    if (context.performed)
-        //    {
-        //        // UI 상태 이벤트 발생
-        //        EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
-        //        // 가방 이벤트 발생
-        //        EventBus<InventoryEvent>.Publish(new InventoryEvent());
-        //    }
-        //}
         // 입력된 액션이 지도 액션일 때
         //else if (context.action == mapAction)
         //{
