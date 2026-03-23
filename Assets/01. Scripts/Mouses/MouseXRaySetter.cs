@@ -57,9 +57,10 @@ public class MouseXRaySetter : MonoBehaviour
     // 머테리얼들에 페이딩 효과 적용 함수
     private void ApplyFadingMaterials()
     {
+        // 카메라의 니어 플레인 위의 현재 마우스 위치를 관통하는 보이지 않는 선 받아오기
         Ray ray = Camera.main.ScreenPointToRay(inputManager.CurMousePos);
         // 마우스 월드 좌표 주변의 페이딩이 필요한 콜라이더 받아오기
-        var hits = Physics.SphereCastAll(ray, fadingRadius, 30f, fadingLayerMask);
+        var hits = Physics.SphereCastAll(ray, fadingRadius * 50f, 30f, fadingLayerMask);
         // 화면 비율 저장
         float screenRatio = (float)Screen.width / Screen.height;
 

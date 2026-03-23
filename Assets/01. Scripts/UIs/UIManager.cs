@@ -1,123 +1,151 @@
-//using System.Collections.Generic;
-//using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine;
 
-//public class UIManager : MonoBehaviour
-//{
-//    [Header("정보")]
-//    [SerializeField] private bool isOpenUI;                 // UI 활성화 여부
+public class UIManager : MonoBehaviour, IGamePauseHandler, IPlayerDeadHandler, IBoxHandler
+{
+    [Header("정보")]
+    [SerializeField] private bool isOpenUI;                 // UI 활성화 여부
 
-//    [Header("UI")]
-//    [SerializeField] private GameOverUI gameOverUI;         // 게임 오버 UI
-//    [SerializeField] private GameObject boxUI;              // 상자 UI
-//    [SerializeField] private MapUI mapUI;                   // 맵 UI
+    [Header("UI")]
+    [SerializeField] private GameObject gamePauseUI;        // 일시정지 UI
+    [SerializeField] private GameOverUI gameOverUI;         // 게임 오버 UI
+    [SerializeField] private GameObject boxUI;              // 상자 UI
+    [SerializeField] private MapUI mapUI;                   // 맵 UI
 
-//    private Stack<GameObject> openedUIStack = new();        // 열려있는 UI 스택
+    private Stack<GameObject> openedUIStack = new();        // 열려있는 UI 스택
 
-//    private void OnEnable()
-//    {
-//        // 플레이어 죽음 이벤트 구독
-//        EventBus<DeadEvent>.OnEvent += HandlePlayerDeadUI;
-//        // 상자 이벤트 구독
-//        EventBus<BoxEvent>.OnEvent += OpenUI;
-//        // 일시정지 이벤트 구독
-//        EventBus<PauseEvent>.OnEvent += HandlePauseUIAndCloseAllUI;
-//        //EventBus<InventoryEvent>.OnEvent
-//        // 맵 이벤트 구독
-//        EventBus<MapEvent>.OnEvent += HandleMapUI;
-//    }
+    private void OnEnable()
+    {
+        // 일시정지 이벤트 구독
+        Subject<IGamePauseHandler>.Attach(this);
+        // 플레이어 죽음 이벤트 구독
+        Subject<IPlayerDeadHandler>.Attach(this);
+        // 상자 이벤트 구독
+        Subject<IBoxHandler>.Attach(this);
+        //// 맵 이벤트 구독
+        //EventBus<MapEvent>.OnEvent += HandleMapUI;
+    }
 
-//    private void OnDisable()
-//    {
-//        // 플레이어 죽음 이벤트 구독 해제
-//        EventBus<DeadEvent>.OnEvent -= HandlePlayerDeadUI;
-//        // 상자 이벤트 구독 해제
-//        EventBus<BoxEvent>.OnEvent -= OpenUI;
-//        // 일시정지 이벤트 구독 해제
-//        EventBus<PauseEvent>.OnEvent -= HandlePauseUIAndCloseAllUI;
-//        // 맵 이벤트 구독 해제
-//        EventBus<MapEvent>.OnEvent -= HandleMapUI;
-//    }
+    private void OnDisable()
+    {
+        // 일시정지 이벤트 구독 해제
+        Subject<IGamePauseHandler>.Detach(this);
+        // 플레이어 죽음 이벤트 구독 해제
+        Subject<IPlayerDeadHandler>.Detach(this);
+        // 상자 이벤트 구독 해제
+        Subject<IBoxHandler>.Detach(this);
+        //// 맵 이벤트 구독 해제
+        //EventBus<MapEvent>.OnEvent -= HandleMapUI;
+    }
 
-//    // 플레이어 죽음 UI 관리 함수
-//    private void HandlePlayerDeadUI(DeadEvent data)
-//    {
-//        // 플레이어가 죽은 거라면
-//        if (data.isPlayer)
-//        {
-//            // UI 열린 상태
-//            isOpenUI = true;
-//            // 게임 오버 UI 켜기
-//            gameOverUI.gameObject.SetActive(true);
-//        }
-//    }
+    // 일시정지 함수
+    public void OnPause()
+    {
+        // UI가 닫힌 상태라면
+        if (!isOpenUI)
+            // 일시정지 UI 활성화
+            OpenUI(UIType.Pause);
+        // UI가 열린 상태라면
+        else
+            // UI 닫기
+            CloseAllUI();
 
-//    // UI 열림 함수
-//    private void OpenUI(BoxEvent data)
-//    {
-//        Debug.Log($"{data.boxName} UI 열림");
-//        // UI 열린 상태
-//        isOpenUI = true;
-//    }
+        // UI 상태 이벤트 발생
+        Subject<IUIStateHandler>.Publish(h => h.OnUIState(isOpenUI));
+    }
 
-//    // 일시정지 UI 및 모든 UI 닫기 관리 함수
-//    private void HandlePauseUIAndCloseAllUI(PauseEvent data)
-//    {
-//        // UI가 열려있는 상태라면
-//        if (isOpenUI)
-//        {
-//            // UI 닫힌 상태
-//            isOpenUI = false;
-//            // 모든 UI 닫기
-//            CloseAllUI();
-//            // 종료
-//            return;
-//        }
+    // 플레이어 죽음 함수
+    public void OnPlayerDead(GameObject killer)
+    {
+        // 게임오버 UI 꾸미기(플레이어를 죽인 원인)
+        Debug.Log($"사망 원인 : [{killer.name}]");
+        // 게임오버 UI 활성화
+        OpenUI(UIType.GameOver);
+        // UI 상태 이벤트 발생
+        Subject<IUIStateHandler>.Publish(h => h.OnUIState(isOpenUI));
+    }
 
-//        // UI 열린 상태
-//        isOpenUI = true;
-//        // 일시 정지 UI 열기
-//        Debug.Log("일시정지 UI 열림");
-//    }
+    // 상자 함수
+    public void OnBox(List<GameObject> items)
+    {
+        // 아이템들의 수만큼
+        foreach (var item in items)
+            Debug.Log($"[Item] {item.name}");
 
-//    // 모든 UI를 닫는 함수
-//    private void CloseAllUI()
-//    {
-//        // 열려있는 UI의 개수만큼
-//        while (openedUIStack.Count > 0)
-//            // UI 비활성화
-//            openedUIStack.Pop().SetActive(false);
+        // 상자 UI 활성화
+        OpenUI(UIType.Box);
+        // UI 상태 이벤트 발생
+        Subject<IUIStateHandler>.Publish(h => h.OnUIState(isOpenUI));
+    }
 
-//        // UI 닫힌 상태
-//        isOpenUI = false;
-//    }
+    // UI 활성화 함수
+    private void OpenUI(UIType type)
+    {
+        // UI 종류에 따라서
+        switch (type)
+        {
+            // 일시정지라면
+            case UIType.Pause:
+                // UI 활성화
+                gamePauseUI.SetActive(true);
+                // 열려있는 UI 스택에 추가
+                openedUIStack.Push(gamePauseUI);
+                break;
+            // 게임 오버라면
+            case UIType.GameOver:
+                // UI 활성화
+                gameOverUI.gameObject.SetActive(true);
+                // 열려있는 UI 스택에 추가
+                openedUIStack.Push(gameOverUI.gameObject);
+                break;
+            // 상자라면
+            case UIType.Box:
+                boxUI.gameObject.SetActive(true);
+                // 열려있는 UI 스택에 추가
+                openedUIStack.Push(boxUI.gameObject);
+                break;
+        }
 
-//    // 일시정지 기능 함수
-//    public void OnPause()
-//    {
-//        // 열려있는 UI 스택에 추가
-//        //openedUIStack.Push()
-//        // 일시정지 UI 활성화
-//    }
+        // UI 열린 상태
+        isOpenUI = true;
+    }
 
-//    // 맵 UI 관리 함수
-//    private void HandleMapUI(MapEvent data)
-//    {
-//        // UI가 열려있는 상태라면
-//        if (isOpenUI)
-//        {
-//            // 모든 UI 닫기
-//            CloseAllUI();
-//            // 종료
-//            return;
-//        }
+    // 모든 UI 비활성화 함수
+    private void CloseAllUI()
+    {
+        // 열려있는 UI의 개수만큼
+        while (openedUIStack.Count > 0)
+        {
+            // 열려있는 UI 받아오기
+            var openUI = openedUIStack.Pop();
+            // UI 비활성화
+            openUI.SetActive(false);
+            Debug.Log($"{openUI.name} 닫힘");
+        }
 
-//        // UI 열린 상태
-//        isOpenUI = true;
-//        // UI 활성화 이벤트 발생
-//        EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
-//        // 맵 UI 활성화
-//        mapUI.gameObject.SetActive(true);
-//        // 열려있는 UI 스택에 추가
-//        openedUIStack.Push(mapUI.gameObject);
-//    }
-//}
+        // UI 닫힌 상태
+        isOpenUI = false;
+    }
+
+    // 맵 UI 관리 함수
+    //private void HandleMapUI(MapEvent data)
+    //{
+    //    // UI가 열려있는 상태라면
+    //    if (isOpenUI)
+    //    {
+    //        // 모든 UI 닫기
+    //        CloseAllUI();
+    //        // 종료
+    //        return;
+    //    }
+
+    //    // UI 열린 상태
+    //    isOpenUI = true;
+    //    // UI 활성화 이벤트 발생
+    //    EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
+    //    // 맵 UI 활성화
+    //    mapUI.gameObject.SetActive(true);
+    //    // 열려있는 UI 스택에 추가
+    //    openedUIStack.Push(mapUI.gameObject);
+    //}
+}

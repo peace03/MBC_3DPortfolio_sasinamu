@@ -5,8 +5,14 @@ public enum FireMode
     Auto            // 연발
 }
 
+public enum PlayerAnimState
+{
+    Idle,           // 대기
+    Walk            // 이동
+}
+
 // 애니메이션 상태
-public enum AnimState
+public enum EnemyAnimState
 {
     Idle,           // 대기
     Move,           // 이동
@@ -27,8 +33,7 @@ public enum SceneType
 // UI 종류
 public enum UIType
 {
-    None,           // 열린 UI 없음
+    Pause,          // 일시정지 UI
     GameOver,       // 게임오버 UI
-    Box,            // 상자 UI
-    Pause           // 일시정지 UI
+    Box             // 상자 UI
 }

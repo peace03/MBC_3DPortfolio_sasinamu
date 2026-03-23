@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-public class SceneRegistry
+public static class SceneRegistry
 {
-    private Dictionary<SceneType, string> sceneNames;       // 씬 이름들 딕셔너리
+    private static readonly Dictionary<SceneType, string> sceneNames;       // 씬 이름들 딕셔너리
     
     // 생성자
-    public SceneRegistry()
+    static SceneRegistry()
     {
         // 초기화
         sceneNames = new Dictionary<SceneType, string>
@@ -18,7 +18,7 @@ public class SceneRegistry
     }
 
     // 씬 이름 반환 함수
-    public bool GetSceneName(SceneType type, out string name)
+    public static bool GetSceneName(SceneType type, out string name)
     {
         // 없는 종류라면 false, null / 있다면 true, name
         return sceneNames.TryGetValue(type, out name);

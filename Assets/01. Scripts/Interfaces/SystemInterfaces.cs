@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // 상호작용이 가능한 대상 인터페이스
@@ -14,38 +15,30 @@ public interface IDamageable
     public void Damaged(float amount);
 }
 
-// 플레이어 죽음 관리 인터페이스
-public interface IPlayerDeadHandler
-{
-    public void OnPlayerDead(GameObject killer);
-}
-
 // 적 죽음 관리 인터페이스
 public interface IEnemyDeadHandler
 {
     public void OnEnemyDead(IDamageable enemy, GameObject killer);
 }
 
+// 일시정지 관리 인터페이스
+public interface IGamePauseHandler
+{
+    public void OnPause();
+}
+
 // UI 상태 관리 인터페이스
 public interface IUIStateHandler
 {
-    public void OnOpenUI(UIType type);
-    public void OnCloseUI(UIType type);
+    public void OnUIState(bool state);
 }
 
-// 상자 UI 관리 인터페이스
-public interface IBoxDataHandler
+// 상자 관리 인터페이스
+public interface IBoxHandler
 {
-    public void OnBoxOpened();
-    public void OnBoxClosed();
+    public void OnBox(List<GameObject> items);
 }
 
-// 일시정지 관리 인터페이스
-//public interface IGamePauseHandler
-//{
-//    public void OnPause();
-//}
-// 취소 관리 인터페이스
 // 가방 관리 인터페이스
 // 지도 관리 인터페이스
 // 조작설명 관리 인터페이스
