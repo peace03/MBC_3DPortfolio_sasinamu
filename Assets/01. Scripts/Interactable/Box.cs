@@ -13,5 +13,6 @@ public class Box : MonoBehaviour, IInteractable
     {
         // 상자 이벤트 발생(상자 아이템들 정보 전달)
         Subject<IBoxHandler>.Publish(h => h.OnBox(boxItems));
+        Debug.Log("상호작용");
     }
 }

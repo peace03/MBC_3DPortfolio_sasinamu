@@ -19,6 +19,7 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
 
     private CharacterController cc;                         // 캐릭터 컨트롤러
     private PlayerStat stat;                                // 플레이어 스탯
+    private PlayerAnimationChanger anim;                    // 플레이어 애니메이션
     private InputManager inputManager;                      // 입력 매니저
 
     private Vector2 curMoveInput;                           // 현재 이동 입력 값
@@ -53,19 +54,29 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
     }
 
     // 초기화 함수
-    public void Init(PlayerStat stat, InputManager manager)
+    public void Init(PlayerStat stat, PlayerAnimationChanger animation, InputManager manager)
     {
         this.stat = stat;
+        anim = animation;
         inputManager = manager;
     }
 
     // 이동 관리 함수
     private void HandleMove()
     {
-        // 현재 이동 입력 값이 없거나 구르는 중이라면
-        if (curMoveInput.magnitude <= 0 || isRolling)
+        // 구르는 중이라면
+        if (isRolling)
             // 종료
             return;
+
+        // 현재 이동 입력 값이 없다면 
+        if (curMoveInput.magnitude <= 0)
+        {
+            // 대기 모습으로 변경
+            //visual.ChangePlayerAnimation(PlayerAnimState.Idle);
+            // 종료
+            return;
+        }
 
         // 움직일 방향 저장
         Vector3 dir = CalculateMoveDirection();
@@ -81,6 +92,8 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
             // 고정적으로 눌러주기
             yVelocity = -2f;
 
+        // 걷는 모습(애니메이션)으로 변경
+        //visual.ChangePlayerAnimation(PlayerAnimState.Walk);
         // 방향에 값 반영
         dir.y = yVelocity;
         // 이동(방향 * 속도 * 시간)

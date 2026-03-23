@@ -5,8 +5,14 @@ public enum FireMode
     Auto            // 연발
 }
 
+public enum PlayerAnimState
+{
+    Idle,           // 대기
+    Walk            // 이동
+}
+
 // 애니메이션 상태
-public enum AnimState
+public enum EnemyAnimState
 {
     Idle,           // 대기
     Move,           // 이동

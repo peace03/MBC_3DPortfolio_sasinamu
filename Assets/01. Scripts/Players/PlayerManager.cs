@@ -15,6 +15,7 @@ public class PlayerManager : MonoBehaviour
     private PlayerStat stat;                                    // 스탯
     public PlayerStat Stat => stat;
 
+    private PlayerAnimationChanger anim;                        // 애니메이션
     private PlayerMove move;                                    // 이동
     private PlayerRotate rotate;                                // 회전
     private PlayerInteract interact;                            // 상호작용
@@ -30,13 +31,14 @@ public class PlayerManager : MonoBehaviour
     {
         // 플레이어 컴포넌트 받아오기
         stat = player.GetComponent<PlayerStat>();
+        anim = player.GetComponent<PlayerAnimationChanger>();
         move = player.GetComponent<PlayerMove>();
         rotate = player.GetComponent<PlayerRotate>();
         interact = player.GetComponent<PlayerInteract>();
         fire = player.GetComponent<PlayerFire>();
 
         // 컴포넌트 초기화
-        move.Init(stat, inputManager);
+        move.Init(stat, anim, inputManager);
         rotate.Init(inputManager);
         interact.Init(stat);
         fire.Init(stat, bulletFactory);

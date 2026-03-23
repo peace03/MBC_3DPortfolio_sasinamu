@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour, IGamePauseHandler, IPlayerDeadHandler, I
     [SerializeField] private bool isOpenUI;                 // UI 활성화 여부
 
     [Header("UI")]
+    [SerializeField] private GameObject gamePauseUI;        // 일시정지 UI
     [SerializeField] private GameOverUI gameOverUI;         // 게임 오버 UI
     [SerializeField] private GameObject boxUI;              // 상자 UI
     [SerializeField] private MapUI mapUI;                   // 맵 UI
@@ -60,6 +61,8 @@ public class UIManager : MonoBehaviour, IGamePauseHandler, IPlayerDeadHandler, I
         Debug.Log($"사망 원인 : [{killer.name}]");
         // 게임오버 UI 활성화
         OpenUI(UIType.GameOver);
+        // UI 상태 이벤트 발생
+        Subject<IUIStateHandler>.Publish(h => h.OnUIState(isOpenUI));
     }
 
     // 상자 함수
@@ -71,6 +74,8 @@ public class UIManager : MonoBehaviour, IGamePauseHandler, IPlayerDeadHandler, I
 
         // 상자 UI 활성화
         OpenUI(UIType.Box);
+        // UI 상태 이벤트 발생
+        Subject<IUIStateHandler>.Publish(h => h.OnUIState(isOpenUI));
     }
 
     // UI 활성화 함수
@@ -81,16 +86,23 @@ public class UIManager : MonoBehaviour, IGamePauseHandler, IPlayerDeadHandler, I
         {
             // 일시정지라면
             case UIType.Pause:
-                Debug.Log("일시정지 UI 열림");
+                // UI 활성화
+                gamePauseUI.SetActive(true);
+                // 열려있는 UI 스택에 추가
+                openedUIStack.Push(gamePauseUI);
                 break;
             // 게임 오버라면
             case UIType.GameOver:
                 // UI 활성화
                 gameOverUI.gameObject.SetActive(true);
+                // 열려있는 UI 스택에 추가
+                openedUIStack.Push(gameOverUI.gameObject);
                 break;
             // 상자라면
             case UIType.Box:
-                Debug.Log("상자 UI 열림");
+                boxUI.gameObject.SetActive(true);
+                // 열려있는 UI 스택에 추가
+                openedUIStack.Push(boxUI.gameObject);
                 break;
         }
 
