@@ -42,5 +42,8 @@ public class PlayerManager : MonoBehaviour
         rotate.Init(inputManager);
         interact.Init(stat);
         fire.Init(stat, bulletFactory);
+
+        //equip.Init(mvp);
+        //mvp.Init(equip);
     }
 }

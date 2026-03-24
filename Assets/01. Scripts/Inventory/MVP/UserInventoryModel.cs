@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class InventoryModel
+public class UserInventoryModel
 {
     private List<Item> _equipSlots; //장비 아이템 슬롯들
     private List<Item> _bagSlots; //인벤토리 내 아이템
@@ -11,7 +11,7 @@ public class InventoryModel
     private int equipCapacity = 5; //장비 아이템 최대 슬롯
     private bool fullInventory; //인벤토리가 다 찼는가?
 
-    public InventoryModel()
+    public UserInventoryModel()
     {
         //비어있는 인벤토리 생성
         _equipSlots = new List<Item>();

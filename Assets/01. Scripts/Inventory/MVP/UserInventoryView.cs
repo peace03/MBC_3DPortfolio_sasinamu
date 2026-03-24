@@ -16,7 +16,7 @@ public enum SlotSource //슬롯 출처
     Box         //상자 슬롯
 }
 
-public class InventoryView : MonoBehaviour
+public class UserInventoryView : MonoBehaviour
 {
     [Header("인벤토리")]
     [SerializeField] private List<EquipmentSlot> _equipSlots;

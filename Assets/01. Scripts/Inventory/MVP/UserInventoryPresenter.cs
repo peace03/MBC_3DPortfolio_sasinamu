@@ -3,46 +3,46 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using Unity.VisualScripting;
 
-public class InventoryPresenter
+public class UserInventoryPresenter
 {
-    private InventoryView _view;
-    private InventoryModel _model;
-    private ItemManager _manager;
+    private UserInventoryView _userInvenView;
+    private UserInventoryModel _userInvenModel;
+    private ItemManager _itemManager;
 
-    public InventoryPresenter(InventoryView view, InventoryModel model, ItemManager manager)
+    public UserInventoryPresenter(UserInventoryView view, UserInventoryModel model, ItemManager manager)
     {
-        _view = view;
-        _model = model;
-        _manager = manager;
+        _userInvenView = view;
+        _userInvenModel = model;
+        _itemManager = manager;
     }
 
     //초기화
-    public void InitializePresenter(List<ItemData> itemDatas)
+    public void InitializePresenter()
     {
-        _view.SetEvent(OnSlotDragDrop, UpdateStatPanel); //구독시키기
+        _userInvenView.SetEvent(OnSlotDragDrop, UpdateStatPanel); //구독시키기
         Test();
-        UpdateAllSlot(_model.GetAllItem());
+        UpdateAllSlot(_userInvenModel.GetAllItem());
     }
 
-    #region UI Update
+    #region User Inventory UI Update
     public void UpdateAllSlot(List<Item> items)
     {
         for (int i = 0; i < 20; i++)
         {
-            _view.UpdateBagSlot_Single(i, items[i]);
+            _userInvenView.UpdateBagSlot_Single(i, items[i]);
         }
     }
     //가방 슬롯 UI 업데이트
     public void UpdateSingleSlot_Bag(int index)
     {
-        Item item = _model.GetBagItem(index);
-        _view.UpdateBagSlot_Single(index, item);
+        Item item = _userInvenModel.GetBagItem(index);
+        _userInvenView.UpdateBagSlot_Single(index, item);
     }
     //장비 슬롯 UI 업데이트
     public void UpdateSingleSlot_Equip(int index)
     {
-        Item item = _model.GetEquipItem(index);
-        _view.UpdateEquipSlot_Single(index, item);
+        Item item = _userInvenModel.GetEquipItem(index);
+        _userInvenView.UpdateEquipSlot_Single(index, item);
     }
 
     //Slot 스왑 이벤트 발생시 스왑로직 실행
@@ -51,28 +51,28 @@ public class InventoryPresenter
         switch (swapType)
         {
             case SwapType.BagToBag:
-                if (_model.ExchangeSlot_BagToBag(fromIndex, toIndex))
+                if (_userInvenModel.ExchangeSlot_BagToBag(fromIndex, toIndex))
                 {
                     UpdateSingleSlot_Bag(fromIndex);
                     UpdateSingleSlot_Bag(toIndex);
                 }
                 break;
             case SwapType.EquipToEquip:
-                if (_model.ExchangeSlot_EquipToEquip(fromIndex, toIndex))
+                if (_userInvenModel.ExchangeSlot_EquipToEquip(fromIndex, toIndex))
                 {
                     UpdateSingleSlot_Equip(fromIndex);
                     UpdateSingleSlot_Equip(toIndex);
                 }
                 break;
             case SwapType.BagToEquip:
-                if (_model.ExchangeSlot_BagToEquip(fromIndex, toIndex))
+                if (_userInvenModel.ExchangeSlot_BagToEquip(fromIndex, toIndex))
                 {
                     UpdateSingleSlot_Bag(fromIndex);
                     UpdateSingleSlot_Equip(toIndex);
                 }
                 break;
             case SwapType.EquipToBag:
-                if (_model.ExchangeSlot_EquipToBag(fromIndex, toIndex))
+                if (_userInvenModel.ExchangeSlot_EquipToBag(fromIndex, toIndex))
                 {
                     UpdateSingleSlot_Equip(fromIndex);
                     UpdateSingleSlot_Bag(toIndex);
@@ -89,12 +89,12 @@ public class InventoryPresenter
     {
         if (slotSource == SlotSource.Bag)
         {
-            _view.SetItemStatPanel(_model.GetBagItem(index));
+            _userInvenView.SetItemStatPanel(_userInvenModel.GetBagItem(index));
             
         }
         else if (slotSource == SlotSource.Equipment)
         {
-            _view.SetItemStatPanel(_model.GetEquipItem(index));
+            _userInvenView.SetItemStatPanel(_userInvenModel.GetEquipItem(index));
         }
         else //상자에서 호출
         {
@@ -124,11 +124,9 @@ public class InventoryPresenter
     {
         //Debug.Log("P - CreateItem 호출 완료");
         //_model.CheckFullInventory();
-        Item item = _manager.CreateItemInstance(id); //인스턴스 내부에서 호출 피드백
+        Item item = _itemManager.CreateItemInstance(id); //인스턴스 내부에서 호출 피드백
         //Debug.Log($"P - 생성된 인스턴스 Type: {item.GetType()}");
         //Debug.Log($"item: {item}");
-        return _model.AddItem(item);
+        return _userInvenModel.AddItem(item);
     }
-
-    //아이템 추가 메서드 -> M에게 시키기
 }

@@ -3621,16 +3621,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   pressedRunKey: 0
   isRolling: 0
-  lastUsedStamTime: 0
   moveSpeed: 5
-  runSpeed: 7
+  runSpeedMultiplier: 0
+  runStamRate: 0
   rollTime: 0
   rollDistance: 10
-  maxStamina: 5
-  curStamina: 0
-  stamRegenStartDelay: 0
-  stamRegenRate: 0
-  runStamRate: 0
   rollStamAmount: 0
 --- !u!143 &1974293185
 CharacterController:
@@ -3685,7 +3680,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d7c198ba61b9394ca27c41b8a6f6a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFacade
-  inputManager: {fileID: 1116467618}
 --- !u!114 &1974293188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3700,11 +3694,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
   interactLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   curInteractTarget: {fileID: 0}
-  maxInteractDistance: 2
-  minInteractAngle: 180
-  maxInteractAngle: 180
 --- !u!1 &2017244285
 GameObject:
   m_ObjectHideFlags: 0
