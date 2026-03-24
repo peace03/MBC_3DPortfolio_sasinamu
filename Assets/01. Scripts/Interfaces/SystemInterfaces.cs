@@ -52,4 +52,19 @@ public interface IInventoryHandler
 }
 
 // 지도 관리 인터페이스
+public interface IMapHandler
+{
+    public void OnMap();
+}
+
 // 조작설명 관리 인터페이스
+public interface IControlManualHandler
+{
+    public void OnControlManual();
+}
+
+// 아이템 사용 관리 인터페이스
+public interface IUseItemHandler
+{
+    public void OnUseItem(GameObject item);
+}

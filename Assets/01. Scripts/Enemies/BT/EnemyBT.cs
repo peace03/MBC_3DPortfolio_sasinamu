@@ -52,7 +52,7 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
             // 공격
             new BT_Sequence(new List<BT_Node>
             {
-                // 공격 딜레이 확인
+                // 공격 지연 시간 확인
                 new BT_Action(CheckAttackDelayTime),
                 // 공격
                 new BT_Action(AttackPlayer)
@@ -170,10 +170,10 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
         return BT_NodeStatus.Running;
     }
 
-    // 공격 딜레이 시간 확인 함수
+    // 공격 지연 시간 확인 함수
     private BT_NodeStatus CheckAttackDelayTime()
     {
-        // 초기 상태가 아니고, 마지막 공격 시간에서 공격 딜레이 시간만큼 지나지 않았다면 ? 진행 중 반환 : 성공 반환
+        // 초기 상태가 아니고, 마지막 공격 시간에서 공격 지연 시간만큼 지나지 않았다면 ? 진행 중 반환 : 성공 반환
         return (lastAttackTime != 0 && Time.time - lastAttackTime <= stat.AttackDelayTime) ?
                                                     BT_NodeStatus.Running : BT_NodeStatus.Success;
     }

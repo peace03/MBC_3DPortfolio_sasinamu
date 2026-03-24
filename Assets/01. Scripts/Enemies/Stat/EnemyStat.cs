@@ -22,7 +22,7 @@ public class EnemyStat : MonoBehaviour, IDamageable
     public float MoveSpeed => moveSpeed;
 
     [Space(10)]
-    [SerializeField] private float attackDelayTime;         // 공격 딜레이 시간
+    [SerializeField] private float attackDelayTime;         // 공격 지연 시간
     public float AttackDelayTime => attackDelayTime;
 
     [SerializeField] private float hitStunTime;             // 피격 경직 시간

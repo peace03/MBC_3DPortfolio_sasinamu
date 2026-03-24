@@ -12,7 +12,7 @@ public class PlayerFire : MonoBehaviour,
 
     [Header("스탯")]
     [SerializeField] private FireMode curFireMode;          // 현재 사격 모드
-    [SerializeField] private float curFireDelayTime;        // 현재 사격 딜레이 시간
+    [SerializeField] private float curFireDelayTime;        // 현재 사격 지연 시간
     [SerializeField] private float reloadingTime;           // 사격 진행 시간
 
     private PlayerStat stat;                                // 플레이어 스탯
@@ -70,7 +70,7 @@ public class PlayerFire : MonoBehaviour,
     // 사격 관리 함수
     private void HandleFireBullet()
     {
-        // 사격이 불가능한 상태거나, 초기 상태가 아니고 마지막 사격 시간에서 딜레이 시간만큼 지나지 않았거나, 장전 중이라면
+        // 사격이 불가능한 상태거나, 초기 상태가 아니고 마지막 사격 시간에서 사격 지연 시간만큼 지나지 않았거나, 장전 중이라면
         if (!canFire || (lastFireTime != 0 && Time.time - lastFireTime < curFireDelayTime) || isReloading)
             // 종료
             return;
@@ -105,13 +105,13 @@ public class PlayerFire : MonoBehaviour,
             // 다음 사격 모드로 변경
             curFireMode++;
 
-        // 사격 딜레이 시간 갱신
+        // 사격 지연 시간 갱신
         UpdateFireDelayTimte();
         // 사격 모드 UI에 이벤트 발행하기
         Debug.Log("UI에게 사격 모드 변경 알려주기");
     }
 
-    // 사격 딜레이 시간 갱신 함수
+    // 사격 지연 시간 갱신 함수
     private void UpdateFireDelayTimte()
     {
         // 현재 사격 모드에 따라
@@ -119,12 +119,12 @@ public class PlayerFire : MonoBehaviour,
         {
             // 단발이라면
             case FireMode.Single:
-                // 단발 딜레이 시간 저장
+                // 단발 지연 시간 저장
                 curFireDelayTime = stat.SingleFireDelayTime;
                 break;
             // 연발이라면
             case FireMode.Auto:
-                // 연발 딜레이 시간 저장
+                // 연발 지연 시간 저장
                 curFireDelayTime = stat.AutoFireDelayTime;
                 break;
         }

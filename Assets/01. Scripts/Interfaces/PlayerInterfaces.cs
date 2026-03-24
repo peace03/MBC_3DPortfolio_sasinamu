@@ -1,6 +1,4 @@
 // 플레이어 달리기 관리 인터페이스
-using UnityEngine;
-
 public interface IPlayerRunHandler
 {
     public void OnRun(bool isPressed);

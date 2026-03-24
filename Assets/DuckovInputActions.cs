@@ -174,7 +174,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ShowControls"",
+                    ""name"": ""ControlManual"",
                     ""type"": ""Button"",
                     ""id"": ""1fa5afcf-ec36-4c12-99ba-53504f4d3e22"",
                     ""expectedControlType"": """",
@@ -204,7 +204,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""QuickSlot"",
                     ""type"": ""Value"",
                     ""id"": ""f599e158-9e17-42fa-8fc2-5701d8add612"",
-                    ""expectedControlType"": ""Axis"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -361,7 +361,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ShowControls"",
+                    ""action"": ""ControlManual"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -519,7 +519,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
         m_Player_Map = m_Player.FindAction("Map", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
-        m_Player_ShowControls = m_Player.FindAction("ShowControls", throwIfNotFound: true);
+        m_Player_ControlManual = m_Player.FindAction("ControlManual", throwIfNotFound: true);
         m_Player_FireMode = m_Player.FindAction("FireMode", throwIfNotFound: true);
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
         m_Player_QuickSlot = m_Player.FindAction("QuickSlot", throwIfNotFound: true);
@@ -616,7 +616,7 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Inventory;
     private readonly InputAction m_Player_Map;
     private readonly InputAction m_Player_Reload;
-    private readonly InputAction m_Player_ShowControls;
+    private readonly InputAction m_Player_ControlManual;
     private readonly InputAction m_Player_FireMode;
     private readonly InputAction m_Player_Cancel;
     private readonly InputAction m_Player_QuickSlot;
@@ -668,9 +668,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         /// <summary>
-        /// Provides access to the underlying input action "Player/ShowControls".
+        /// Provides access to the underlying input action "Player/ControlManual".
         /// </summary>
-        public InputAction @ShowControls => m_Wrapper.m_Player_ShowControls;
+        public InputAction @ControlManual => m_Wrapper.m_Player_ControlManual;
         /// <summary>
         /// Provides access to the underlying input action "Player/FireMode".
         /// </summary>
@@ -736,9 +736,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
-            @ShowControls.started += instance.OnShowControls;
-            @ShowControls.performed += instance.OnShowControls;
-            @ShowControls.canceled += instance.OnShowControls;
+            @ControlManual.started += instance.OnControlManual;
+            @ControlManual.performed += instance.OnControlManual;
+            @ControlManual.canceled += instance.OnControlManual;
             @FireMode.started += instance.OnFireMode;
             @FireMode.performed += instance.OnFireMode;
             @FireMode.canceled += instance.OnFireMode;
@@ -786,9 +786,9 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
-            @ShowControls.started -= instance.OnShowControls;
-            @ShowControls.performed -= instance.OnShowControls;
-            @ShowControls.canceled -= instance.OnShowControls;
+            @ControlManual.started -= instance.OnControlManual;
+            @ControlManual.performed -= instance.OnControlManual;
+            @ControlManual.canceled -= instance.OnControlManual;
             @FireMode.started -= instance.OnFireMode;
             @FireMode.performed -= instance.OnFireMode;
             @FireMode.canceled -= instance.OnFireMode;
@@ -998,12 +998,12 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReload(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "ShowControls" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "ControlManual" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnShowControls(InputAction.CallbackContext context);
+        void OnControlManual(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "FireMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
