@@ -13,13 +13,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private BulletFactory bulletFactory;       // 총알 공장
 
     private PlayerStat stat;                                    // 스탯
-    public PlayerStat Stat => stat;
-
     private PlayerAnimationChanger anim;                        // 애니메이션
     private PlayerMove move;                                    // 이동
     private PlayerRotate rotate;                                // 회전
     private PlayerInteract interact;                            // 상호작용
-    private PlayerFire fire;                                    // 발사
+    private PlayerFire fire;                                    // 사격
 
     private void Awake()
     {
@@ -27,6 +25,7 @@ public class PlayerManager : MonoBehaviour
         InitPlayer();
     }
 
+    // 플레이어 초기화 함수
     private void InitPlayer()
     {
         // 플레이어 컴포넌트 받아오기

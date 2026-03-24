@@ -6,7 +6,7 @@ public class SceneChanger : MonoBehaviour, IInteractable, IPlayerCancelHandler
 {
     [Header("정보")]
     [SerializeField] private float startChangeTime;     // 전환 시작 시간
-    [SerializeField] private float changeDelayTime;     // 전환 딜레이 시간
+    [SerializeField] private float changeDelayTime;     // 전환 지연 시간
     [SerializeField] private SceneType nextScene;       // 다음 씬
 
     private Coroutine sceneChangeCoroutine;             // 씬 전환 코루틴
@@ -40,7 +40,7 @@ public class SceneChanger : MonoBehaviour, IInteractable, IPlayerCancelHandler
     // 씬 전환 코루틴 함수
     private IEnumerator SceneChangeCoroutine()
     {
-        // 전환 시작 시간에서 전환 딜레이 시간만큼 지날 때까지
+        // 전환 시작 시간에서 전환 지연 시간만큼 지날 때까지
         while (Time.time - startChangeTime < changeDelayTime)
         {
             Debug.Log($"진행 시간 : {(Time.time - startChangeTime):F1}초");

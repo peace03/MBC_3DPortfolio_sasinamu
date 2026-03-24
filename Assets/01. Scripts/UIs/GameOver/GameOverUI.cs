@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
+    [Header("정보")]
+    [SerializeField] private SceneType bunkerScene;     // 벙커 씬
+
     [Header("버튼")]
     [SerializeField] private Button continueButton;     // 계속하기 버튼
 
@@ -18,11 +21,12 @@ public class GameOverUI : MonoBehaviour
     // 게임 계속하기 함수
     private void ContinueGame()
     {
-        // 게임 오버 UI 닫기
-        gameObject.SetActive(false);
-        // UI가 닫힌 상태임
-        Subject<IUIStateHandler>.Publish(h => h.OnUIState(false));
-        // 벙커 씬으로 이동
-        SceneManager.LoadScene("BunkerScene");
+        // 등록부에 다음 씬 이름이 등록되어 있다면
+        if (SceneRegistry.GetSceneName(bunkerScene, out string sceneName))
+            // 벙커 씬 전환
+            SceneManager.LoadScene(sceneName);
+        // 등록부에 다음 씬 이름이 등록되어 있지 않다면
+        else
+            Debug.LogError($"[Error] {bunkerScene}이 Scene Registry에 등록되지 않음");
     }
 }

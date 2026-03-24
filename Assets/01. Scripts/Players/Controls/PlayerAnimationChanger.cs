@@ -17,6 +17,7 @@ public class PlayerAnimationChanger : MonoBehaviour
         InitAnimationHashDictionary();
     }
 
+    // 플레이어 애니메이션 해시 값 초기화 함수
     private void InitAnimationHashDictionary()
     {
         // 대기
@@ -25,14 +26,20 @@ public class PlayerAnimationChanger : MonoBehaviour
         animHashDictionary.Add(PlayerAnimState.Walk, Animator.StringToHash("Walk"));
     }
 
+    // 플레이어 애니메이션 변경 함수
     public void ChangePlayerAnimation(PlayerAnimState state)
     {
+        // 현재 애니메이션과 같다면
         if (curAnimState == state)
+            // 종료
             return;
 
+        // 애니메이션 해시 값이 있다면
         if (animHashDictionary.TryGetValue(state, out var newAnim))
         {
+            // 애니메이션 변경
             anim.SetTrigger(newAnim);
+            // 현재 애니메이션 상태 바꾸기
             curAnimState = state;
         }
     }

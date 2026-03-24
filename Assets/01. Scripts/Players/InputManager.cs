@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour, IUIStateHandler
     private InputAction reloadAction;               // 장전 액션(R)
     private InputAction inventoryAction;            // 가방 액션(Tab)
     private InputAction mapAction;                  // 지도 액션(M)
-    private InputAction showControlsAction;         // 조작 설명 액션(O)
+    private InputAction controlManualsAction;       // 조작 설명 액션(O)
     private InputAction quickSlotAction;            // 퀵슬롯 액션(1 ~ 8)
     #endregion
 
@@ -100,20 +100,20 @@ public class InputManager : MonoBehaviour, IUIStateHandler
     private void InitAllActions()
     {
         // 초기화
-        moveAction = inputActions.Player.Move;                      // 이동
-        runAction = inputActions.Player.Run;                        // 달리기
-        rollAction = inputActions.Player.Roll;                      // 구르기
-        interactAction = inputActions.Player.Interact;              // 상호작용
-        pauseAction = inputActions.Player.Pause;                    // 일시정지
-        cancelAction = inputActions.Player.Cancel;                  // 취소     
-        fireAction = inputActions.Player.Fire;                      // 사격
-        fireModeAction = inputActions.Player.FireMode;              // 사격 모드 변경
-        reloadAction = inputActions.Player.Reload;                  // 장전
-        inventoryAction = inputActions.Player.Inventory;            // 가방
-        mapAction = inputActions.Player.Map;                        // 지도
-        showControlsAction = inputActions.Player.ShowControls;      // 조작 설명
-        quickSlotAction = inputActions.Player.QuickSlot;            // 퀵슬롯
-        mousePosAction = inputActions.Mouse.Position;               // 마우스 위치
+        moveAction = inputActions.Player.Move;                          // 이동
+        runAction = inputActions.Player.Run;                            // 달리기
+        rollAction = inputActions.Player.Roll;                          // 구르기
+        interactAction = inputActions.Player.Interact;                  // 상호작용
+        pauseAction = inputActions.Player.Pause;                        // 일시정지
+        cancelAction = inputActions.Player.Cancel;                      // 취소     
+        fireAction = inputActions.Player.Fire;                          // 사격
+        fireModeAction = inputActions.Player.FireMode;                  // 사격 모드 변경
+        reloadAction = inputActions.Player.Reload;                      // 장전
+        inventoryAction = inputActions.Player.Inventory;                // 가방
+        mapAction = inputActions.Player.Map;                            // 지도
+        controlManualsAction = inputActions.Player.ControlManual;       // 조작 설명
+        quickSlotAction = inputActions.Player.QuickSlot;                // 퀵슬롯
+        mousePosAction = inputActions.Mouse.Position;                   // 마우스 위치
 
         // 입력 종류가 필요한 액션들은 액션 리스트에 추가
         allActionsList.Add(moveAction);
@@ -127,7 +127,7 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         allActionsList.Add(reloadAction);
         allActionsList.Add(inventoryAction);
         allActionsList.Add(mapAction);
-        allActionsList.Add(showControlsAction);
+        allActionsList.Add(controlManualsAction);
         allActionsList.Add(quickSlotAction);
     }
 
@@ -181,8 +181,19 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         {
             // 키를 눌렀을 때
             if (context.performed)
-                // 이벤트 발생
-                Subject<IGamePauseHandler>.Publish(h => h.OnPause());
+                // 이벤트 발생(UI 활성화(UI 모두 닫기), UI 비활성화(일시정지 UI 열기))
+                Subject<IGamePauseHandler>.Publish(h => h.OnGamePause());
+
+            // 종료
+            return;
+        }
+        // 입력된 액션이 가방 액션일 때
+        else if (context.action == inventoryAction)
+        {
+            // 키를 눌렀을 때
+            if (context.performed)
+                // 이벤트 발생(UI 활성화(UI 모두(일시정지 제외) 닫기), UI 비활성화(가방 UI 열기))
+                Subject<IInventoryHandler>.Publish(h => h.OnInventory());
 
             // 종료
             return;
@@ -239,7 +250,7 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         {
             // 키를 눌렀을 때
             if (context.performed)
-                // 이벤트 발생
+                // 이벤트 발생(로딩(맵 이동, 장전, 아이템 사용) 취소)
                 Subject<IPlayerCancelHandler>.Publish(h => h.OnCancel());
         }
         // 입력된 액션이 사격 액션일 때
@@ -251,7 +262,7 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         {
             // 키를 눌렀을 때
             if (context.performed)
-                // 이벤트 발생
+                // 이벤트 발생(사격 모드 변경)
                 Subject<IPlayerFireModeHandler>.Publish(h => h.OnFireMode());
         }
         // 입력된 액션이 장전 액션일 때
@@ -259,48 +270,35 @@ public class InputManager : MonoBehaviour, IUIStateHandler
         {
             // 키를 눌렀을 때
             if (context.performed)
-                // 이벤트 발생
+                // 이벤트 발생(로딩 시작)
                 Subject<IPlayerReloadHandler>.Publish(h => h.OnReload());
         }
-        // 입력된 액션이 가방 액션일 때
-        //else if (context.action == inventoryAction)
-        //{
-        //    // 키를 눌렀을 때
-        //    if (context.performed)
-        //    {
-        //        // UI 상태 이벤트 발생
-        //        EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
-        //        // 가방 이벤트 발생
-        //        EventBus<InventoryEvent>.Publish(new InventoryEvent());
-        //    }
-        //}
-        // 입력된 액션이 지도 액션일 때
-        //else if (context.action == mapAction)
-        //{
-        //    // 키를 눌렀을 때
-        //    if (context.performed)
-        //    {
-        //        // UI 상태 이벤트 발생
-        //        EventBus<UIStateEvent>.Publish(new UIStateEvent(true));
-        //        // 맵 이벤트 발생
-        //        EventBus<MapEvent>.Publish(new MapEvent());
-        //    }
-        //}
         // 입력된 액션이 조작 설명 액션일 때
-        //else if (context.action == showControlsAction)
-        //{
-        //    // 키를 눌렀을 때
-        //    if (context.performed)
-        //        // 이벤트 발생
-        //        EventBus<ShowControlsEvent>.Publish(new ShowControlsEvent());
-        //}
+        else if (context.action == controlManualsAction)
+        {
+            // 키를 눌렀을 때
+            if (context.performed)
+                // 이벤트 발생(UI 활성화(조작 설명 UI 닫기), UI 비활성화(조작 설명 UI 열기)
+                Subject<IControlManualHandler>.Publish(h => h.OnControlManual());
+        }
+        // 입력된 액션이 지도 액션일 때
+        else if (context.action == mapAction)
+        {
+            // 키를 눌렀을 때
+            if (context.performed)
+                // 이벤트 발생(UI 활성화(맵 UI 닫기), UI 비활성화(맵 UI 열기))
+                Subject<IMapHandler>.Publish(h => h.OnMap());
+        }
         // 입력된 액션이 퀵슬롯 액션일 때
-        //else if (context.action == quickSlotAction)
-        //{
-        //    // 키를 눌렀을 때
-        //    if (context.performed)
-        //        // 이벤트 발생
-        //        EventBus<QuickSlotEvent>.Publish(new QuickSlotEvent(context.ReadValue<int>()));
-        //}
+        else if (context.action == quickSlotAction)
+        {
+            // 키를 눌렀을 때
+            if (context.performed)
+            {
+                Debug.Log($"[{context.control.name}]번 퀵슬롯 누름");
+                // 이벤트 발생(무기 교체 혹은 퀵슬롯에 있는 아이템 사용)
+                Subject<IPlayerQuickSlotHandler>.Publish(h => h.OnQuickSlot(int.Parse(context.control.name) - 1));
+            }
+        }
     }
 }

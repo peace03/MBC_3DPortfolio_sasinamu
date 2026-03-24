@@ -47,7 +47,7 @@ public class PlayerStat : MonoBehaviour, IDamageable
     [SerializeField] private float maxThirst;                           // 최대 갈증
     public float thirstRatio => curThirst / maxThirst;                  // 갈증 비율
 
-    [SerializeField] private float hungerAndThirstDereaseDelayTime;     // 허기, 갈증 감소 딜레이 시간
+    [SerializeField] private float hungerAndThirstDereaseDelayTime;     // 허기, 갈증 감소 지연 시간
     [SerializeField] private float hungerAndThirstDecreaseAmount;       // 허기, 갈증 감소량
 
     [Header("스탯 제한 관련")]
@@ -61,13 +61,11 @@ public class PlayerStat : MonoBehaviour, IDamageable
     public float MaxInteractAngle => maxInteractAngle;
 
     [Space(10)]
-    [SerializeField] private float singleFireDelayTime;                 // 단발 발사 딜레이 시간
+    [SerializeField] private float singleFireDelayTime;                 // 단발 사격 지연 시간
     public float SingleFireDelayTime => singleFireDelayTime;
 
-    [SerializeField] private float autoFireDelayTime;                   // 연발 발사 딜레이 시간
+    [SerializeField] private float autoFireDelayTime;                   // 연발 사격 지연 시간
     public float AutoFireDelayTime => autoFireDelayTime;
-
-    public int LayerNumber => gameObject.layer;                         // 레이어 번호
     #endregion
 
     private void Awake()
@@ -108,17 +106,15 @@ public class PlayerStat : MonoBehaviour, IDamageable
     }
 
     // 피격 함수
-    public void Damaged(float amount)
+    public void Damaged(string name, float amount)
     {
         // 데미지 입음
         curHp -= amount;
 
         // 죽었다면
         if (curHp <= 0)
-        {
             // 플레이어 죽음 이벤트 발행
-            Debug.Log("플레이어 죽음");
-        }
+            Subject<IPlayerDeadHandler>.Publish(h => h.OnPlayerDead(name));
     }
 
     // 스테미나 회복 함수
@@ -156,7 +152,7 @@ public class PlayerStat : MonoBehaviour, IDamageable
     // 허기, 갈증 감소 함수
     private void DecreaseHungerAndThirst()
     {
-        // 마지막 허기, 갈증 소모 시간에서 허기, 갈증 소모 딜레이 시간만큼 지나지 않았다면
+        // 마지막 허기, 갈증 소모 시간에서 허기, 갈증 소모 지연 시간만큼 지나지 않았다면
         if (Time.time - lastDecreaseHungerAndThirstTime <= hungerAndThirstDereaseDelayTime)
             // 종료
             return;
