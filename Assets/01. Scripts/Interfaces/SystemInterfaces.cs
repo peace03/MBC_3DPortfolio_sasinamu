@@ -21,6 +21,12 @@ public interface IEnemyDeadHandler
     public void OnEnemyDead(Vector3 position);
 }
 
+// UI 상태 관리 인터페이스
+public interface IUIStateHandler
+{
+    public void OnUIState(bool state);
+}
+
 // 적 일시정지 관리 인터페이스
 public interface IEnemyPauseHandler
 {
@@ -33,10 +39,10 @@ public interface IGamePauseHandler
     public void OnGamePause();
 }
 
-// UI 상태 관리 인터페이스
-public interface IUIStateHandler
+// 조작설명 관리 인터페이스
+public interface IControlManualHandler
 {
-    public void OnUIState(bool state);
+    public void OnControlManual();
 }
 
 // 상자 관리 인터페이스
@@ -57,11 +63,12 @@ public interface IMapHandler
     public void OnMap();
 }
 
-// 조작설명 관리 인터페이스
-public interface IControlManualHandler
+// 버튼으로 열리는 UI 관리 인터페이스
+public interface IOpenUIByButtonHandler
 {
-    public void OnControlManual();
+    public void OnOpenUIByButton(UIType type);
 }
+
 
 // 아이템 사용 관리 인터페이스
 public interface IUseItemHandler

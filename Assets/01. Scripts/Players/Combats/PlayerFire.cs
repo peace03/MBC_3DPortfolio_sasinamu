@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerFire : MonoBehaviour,
@@ -13,10 +14,11 @@ public class PlayerFire : MonoBehaviour,
     [Header("스탯")]
     [SerializeField] private FireMode curFireMode;          // 현재 사격 모드
     [SerializeField] private float curFireDelayTime;        // 현재 사격 지연 시간
-    [SerializeField] private float reloadingTime;           // 사격 진행 시간
+    [SerializeField] private float reloadingDelayTime;      // 장전 지연 시간
 
     private PlayerStat stat;                                // 플레이어 스탯
     private BulletFactory bulletFactory;                    // 총알 공장
+    private Coroutine reloadingCoroutine;                   // 장전 코루틴
 
     private void Awake()
     {
@@ -39,8 +41,6 @@ public class PlayerFire : MonoBehaviour,
 
     private void Update()
     {
-        // 장전
-        HandleReloading();
         // 사격
         HandleFireBullet();
     }
@@ -142,35 +142,51 @@ public class PlayerFire : MonoBehaviour,
         isReloading = true;
         // 장전 시작 시간 저장
         startReloadingTime = Time.time;
+        // 장전 코루틴 시작
+        reloadingCoroutine = StartCoroutine(ReloadingCoroutine());
     }
 
-    // 장전 관리 함수
-    private void HandleReloading()
+    // 장전 코루틴 함수
+    private IEnumerator ReloadingCoroutine()
     {
-        // 장전 중이 아니라면
-        if (!isReloading)
-            // 종료
-            return;
-
-        // 여기서 UI로 값 보내주면 될듯?
-        Debug.Log("장전 중...");
-
-        // 장전 시작 시간에서 장전 시간만큼 지났다면
-        if (Time.time - startReloadingTime >= reloadingTime)
+        // 장전 시작 시간에서 장전 지연 시간만큼 지날 때까지
+        while (Time.time - startReloadingTime < reloadingDelayTime)
         {
-            Debug.Log("장전 끝!");
-            // 정전 종료
-            isReloading = false;
-            // 종료
-            return;
+            // 게임 시간이 멈춰있다면
+            if (Time.timeScale == 0)
+            {
+                // 프레임 단위로 기다리기
+                yield return null;
+                // 건너뛰기
+                continue;
+            }
+
+            Debug.Log($"장전 진행 시간 : {(Time.time - startReloadingTime):F1}초");
+            // 여기서 UI 슬라이더 값 전달하기
+
+            // 프레임 단위로 기다리기
+            yield return null;
         }
+
+        Debug.Log("장전 끝!");
+        // 정전 종료
+        isReloading = false;
     }
 
     // 장전 취소 함수
     public void OnCancel()
     {
+        // 장전 코루틴이 비어있다면
+        if (reloadingCoroutine == null)
+            // 종료
+            return;
+
         // 장전 취소
         isReloading = false;
+        // 장전 코루틴 정지
+        StopCoroutine(reloadingCoroutine);
+        // 장전 코루틴 초기화
+        reloadingCoroutine = null;
         // 나중에 UI로 값 보내주기
         Debug.Log("장전 취소");
     }

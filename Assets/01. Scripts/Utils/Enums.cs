@@ -37,9 +37,9 @@ public enum UIType
     None,           // 없음
     GamePause,      // 일시정지 UI
     GameOver,       // 게임오버 UI
-    Box,            // 상자 UI
     Inventory,      // 가방 UI
     Stat,           // 스탯 UI
     Map,            // 맵 UI
-    Settings        // 세팅 UI
+    Settings,       // 세팅 UI
+    Box             // 상자 UI
 }
