@@ -2,83 +2,84 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class UserInventoryModel
+public class InventoryModel
 {
-    private List<Item> _equipSlots; //장비 아이템 슬롯들
-    private List<Item> _bagSlots; //인벤토리 내 아이템
+    private List<Item> _Slots; //인벤토리 내 아이템
 
-    [SerializeField] private int capacity = 20; //인벤토리 최대 슬롯
+    private int _capacity = 20; //인벤토리 최대 슬롯
     private int equipCapacity = 5; //장비 아이템 최대 슬롯
     private bool fullInventory; //인벤토리가 다 찼는가?
 
-    public UserInventoryModel()
+    public InventoryModel()
     {
         //비어있는 인벤토리 생성
-        _equipSlots = new List<Item>();
-        _bagSlots = new List<Item>();
+        _Slots = new List<Item>();
         fullInventory = false;
-        for (int i = 0; i < equipCapacity; i++) _equipSlots.Add(null);
-        for (int i = 0; i < capacity; i++) _bagSlots.Add(null);
+    }
+
+    public void Init()
+    {
+        for (int i = 0; i < _capacity; i++) _Slots.Add(null);
     }
 
     #region ExchangeSlot
-    public bool ExchangeSlot_BagToBag(int fromIndex, int toIndex)
+    public bool ExchangeSlot_Self(int fromIndex, int toIndex)
     {
-        Item temp = _bagSlots[fromIndex];
-        _bagSlots[fromIndex] = _bagSlots[toIndex];
-        _bagSlots[toIndex] = temp;
+        Item temp = _Slots[fromIndex];
+        _Slots[fromIndex] = _Slots[toIndex];
+        _Slots[toIndex] = temp;
         return true;
     }
-    public bool ExchangeSlot_EquipToEquip(int fromIndex, int toIndex)
-    {
-        //무기만 swap가능
-        if (fromIndex > 1 || toIndex > 1) return false;
-        else
-        {
-            // Debug.Log("EquipToEquip 실행");
-            Item temp = _equipSlots[fromIndex];
-            _equipSlots[fromIndex] = _equipSlots[toIndex];
-            _equipSlots[toIndex] = temp;
-        }
-        return true;
-    }
-    public bool ExchangeSlot_BagToEquip(int fromIndex, int toIndex)
-    {
-        if (toIndex <= 1 && _bagSlots[fromIndex] is GunItem) //무기 슬롯으로 옮길 때
-        {
-            SwapBag_Equip(fromIndex, toIndex);
-            return true;
-        }
-        else if (toIndex == 2 && _bagSlots[fromIndex] is BagItem) //가방 슬롯으로 옮길 때
-        {
-            SwapBag_Equip(fromIndex, toIndex);
-            return true;
-        }
-        else if (toIndex == 3 && _bagSlots[fromIndex] is ConsumableItem consumableItem && consumableItem.Type == ConsumableType.Helmat) //방탄모 슬롯으로 옮길 때
-        {
-            SwapBag_Equip(fromIndex, toIndex);
-            return true;
-        }
-        else if (toIndex == 4 && _bagSlots[fromIndex] is ConsumableItem consumableItem2 && consumableItem2.Type == ConsumableType.Vest) //방탄복 슬롯으로 옮길 때
-        {
-            SwapBag_Equip(fromIndex, toIndex);
-            return true;
-        }
-        return false;
-    }
-    public bool ExchangeSlot_EquipToBag(int fromIndex, int toIndex)
-    {
-        if (_bagSlots[toIndex] == null) { SwapBag_Equip(toIndex, fromIndex); return true; }
-        return false;
-    }
-    //Equip -> bag Swap
-    //반대방향으로 하려면 인덱스만 바꾸어서 넣어주면 됨
-    private void SwapBag_Equip(int firstIndex, int SecondIndex)
-    {
-        Item temp = _equipSlots[SecondIndex];
-        _equipSlots[SecondIndex] = _bagSlots[firstIndex];
-        _bagSlots[firstIndex] = temp;
-    }
+    //public bool ExchangeSlot_EquipToEquip(int fromIndex, int toIndex)
+    //{
+    //    //무기만 swap가능
+    //    if (fromIndex > 1 || toIndex > 1) return false;
+    //    else
+    //    {
+    //        // Debug.Log("EquipToEquip 실행");
+    //        Item temp = _equipSlots[fromIndex];
+    //        _equipSlots[fromIndex] = _equipSlots[toIndex];
+    //        _equipSlots[toIndex] = temp;
+    //    }
+    //    return true;
+    //}
+    //public bool ExchangeSlot_BagToEquip(int fromIndex, int toIndex)
+    //{
+    //    if (toIndex <= 1 && _Slots[fromIndex] is GunItem) //무기 슬롯으로 옮길 때
+    //    {
+    //        SwapBag_Equip(fromIndex, toIndex);
+    //        return true;
+    //    }
+    //    else if (toIndex == 2 && _Slots[fromIndex] is BagItem) //가방 슬롯으로 옮길 때
+    //    {
+    //        SwapBag_Equip(fromIndex, toIndex);
+    //        return true;
+    //    }
+    //    else if (toIndex == 3 && _Slots[fromIndex] is ConsumableItem consumableItem && consumableItem.Type == ConsumableType.Helmat) //방탄모 슬롯으로 옮길 때
+    //    {
+    //        SwapBag_Equip(fromIndex, toIndex);
+    //        return true;
+    //    }
+    //    else if (toIndex == 4 && _Slots[fromIndex] is ConsumableItem consumableItem2 && consumableItem2.Type == ConsumableType.Vest) //방탄복 슬롯으로 옮길 때
+    //    {
+    //        SwapBag_Equip(fromIndex, toIndex);
+    //        return true;
+    //    }
+    //    return false;
+    //}
+    //public bool ExchangeSlot_EquipToBag(int fromIndex, int toIndex)
+    //{
+    //    if (_Slots[toIndex] == null) { SwapBag_Equip(toIndex, fromIndex); return true; }
+    //    return false;
+    //}
+    ////Equip -> bag Swap
+    ////반대방향으로 하려면 인덱스만 바꾸어서 넣어주면 됨
+    //private void SwapBag_Equip(int firstIndex, int SecondIndex)
+    //{
+    //    Item temp = _equipSlots[SecondIndex];
+    //    _equipSlots[SecondIndex] = _Slots[firstIndex];
+    //    _Slots[firstIndex] = temp;
+    //}
     #endregion
 
     #region AddItem
@@ -107,7 +108,7 @@ public class UserInventoryModel
     {
         int totalCount = 0;
         //Debug.Log("인벤토리 아이템 탐색");
-        foreach(var item in _bagSlots) //linq 사용 피드백
+        foreach(var item in _Slots) //linq 사용 피드백
         {
             //동일 아이템이 있다면
             if (item is CountableItem Citem && Citem._data.ID == newCountableItem._data.ID)
@@ -144,11 +145,11 @@ public class UserInventoryModel
         }
         else //비어있을 때
         {
-            for (int i = 0; i < capacity; i++)
+            for (int i = 0; i < _capacity; i++)
             {
-                if (_bagSlots[i] == null)
+                if (_Slots[i] == null)
                 {
-                    _bagSlots[i] = newItem;
+                    _Slots[i] = newItem;
                     //Debug.Log("새로 생성 성공");
                     return true;
                 }
@@ -160,17 +161,25 @@ public class UserInventoryModel
     }
     #endregion
 
-    public Item GetEquipItem(int index)
+    //아이템 넣어주기
+    public void PutItem(int index, Item item)
     {
-        return _equipSlots[index];
+        _Slots[index] = item;
     }
-    public Item GetBagItem(int index)
+    //아이템 보내주기
+    public Item GetItem(int index)
     {
-        return _bagSlots[index];
+        return _Slots[index];
     }
+    //모든 아이템 보내주기
     public List<Item> GetAllItem()
     {
-        return _bagSlots;
+        return _Slots;
+    }
+    //슬롯 용량 설정
+    public void SetCapacity(int capacity)
+    {
+        _capacity = capacity;
     }
 
     //인벤토리 다 찼는지 확인
@@ -178,7 +187,7 @@ public class UserInventoryModel
     public void CheckFullInventory()
     {
         fullInventory = true;
-        foreach(var item in _bagSlots)
+        foreach(var item in _Slots)
         {
             if (item == null) fullInventory = false;
         }

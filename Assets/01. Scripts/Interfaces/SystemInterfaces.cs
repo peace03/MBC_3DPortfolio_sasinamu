@@ -68,3 +68,10 @@ public interface IUseItemHandler
 {
     public void OnUseItem(GameObject item);
 }
+
+//아이템 교환 인터페이스
+public interface ISlotExchangeHandler
+{
+    public void onExchangeSlot(SlotType fromSlotType, int fromIndex,
+        SlotType toSlotType, int toIndex);
+}

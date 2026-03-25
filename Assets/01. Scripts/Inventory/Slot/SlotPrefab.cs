@@ -6,6 +6,8 @@ using System;
 
 public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    private SlotType _slotType = SlotType.Bag;
+    private EquipType _equipType = EquipType.None;
     private Image _image;
     private TextMeshProUGUI _itemName;
     private TextMeshProUGUI _itemNum;
@@ -16,9 +18,9 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     private VirtualSlot _virtualSlot;       //아이템 드래그 표시 슬롯
 
-    private Action<SwapType, int, int> onDropSlot;   //시작 인덱스, 종료 인덱스
-    private Action<SlotSource, int> onCusorEnter;    //커서가 슬롯 들어갈 때 호출
-    private Action onCusorExit;                      //커서가 슬롯 벗어날 때 호출
+    //private Action<SwapType, int, int> onDropSlot;   //시작 인덱스, 종료 인덱스
+    //private Action<SlotSource, int> onCusorEnter;    //커서가 슬롯 들어갈 때 호출
+    //private Action onCusorExit;                      //커서가 슬롯 벗어날 때 호출
 
     private void Awake()
     {
@@ -28,16 +30,10 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         defaultImage = _image.sprite;
     }
 
-    public void Initialize(int index, VirtualSlot virtualSlot,
-        Action<SwapType, int, int> callback1,
-        Action<SlotSource, int> callback2,
-        Action callback3)
+    public void Initialize(int index, VirtualSlot virtualSlot)
     {
         _index = index;
         _virtualSlot = virtualSlot;
-        onDropSlot = callback1;
-        onCusorEnter = callback2;
-        onCusorExit = callback3;
     }
 
     #region SetSlot
@@ -72,8 +68,8 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     {
         //아이템이 없으면 종료
         if (!_itemName.gameObject.activeSelf) return;
-        _virtualSlot.SetVirtualSlot(false, _image.sprite, _index);
-        _virtualSlot.ToggleActive(true);
+        _virtualSlot.SetVirtualSlot(_slotType, _equipType, _image.sprite, _index);
+        _virtualSlot.SetActive(true);
         _virtualSlot.gameObject.GetComponent<Image>().raycastTarget = false;
 
         //Debug.Log($"선택된 슬롯 인덱스: {_Index}");
@@ -91,12 +87,14 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     {
         //가상슬롯 비활성화면 종료
         if (!_virtualSlot.gameObject.activeSelf) return;
-        //드래그 시작과 종료 인벤토리 방향 타입
-        SwapType swapType;
-        if (_virtualSlot.IsFromEquipment) swapType = SwapType.EquipToBag;
-        else swapType = SwapType.BagToBag;
+        //장비 슬롯 아이템일 경우 비어있는 칸 아니면 슬롯 교환 안함
+        if (_virtualSlot.SlotType == SlotType.Equip && _itemName.gameObject.activeSelf == true) return;
+
+        //슬롯 교환 이벤트 발생
+        Subject<ISlotExchangeHandler>.Publish(h => 
+        h.onExchangeSlot(_virtualSlot.SlotType, _virtualSlot.Index, _slotType, _index));
         //Debug.Log($"SwapType: {swapType}");
-        onDropSlot?.Invoke(swapType, _virtualSlot.Index, _index);
+        //onDropSlot?.Invoke(swapType, _virtualSlot.Index, _index);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -104,7 +102,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         //가상슬롯 비활성화면 종료
         if (!_virtualSlot.gameObject.activeSelf) return;
         _virtualSlot.gameObject.GetComponent<Image>().raycastTarget = true;
-        _virtualSlot.ToggleActive(false);
+        _virtualSlot.SetActive(false);
         //Debug.Log($"보내준 슬롯 인덱스: {_Index}");
     }
     #endregion
@@ -114,13 +112,13 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     {
         //이벤트 발생
         //Debug.Log($"현재 마우스 커서\n이름: {_itemName.text}\t개수: {_itemNum.text}");
-        onCusorEnter?.Invoke(SlotSource.Bag, _index);
+        //onCusorEnter?.Invoke(SlotSource.Bag, _index);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         //Debug.Log("마우스 커서 이탈!!!!");
-        onCusorExit?.Invoke();
+        //onCusorExit?.Invoke();
     }
     #endregion
 }

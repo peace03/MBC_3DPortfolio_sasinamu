@@ -6,27 +6,42 @@ public class BootStrapper : MonoBehaviour
     [SerializeField] private ItemManager _itemManager;
 
     [Header("User 인벤토리 의존성 주입")] //BootStrapper 역할: P에 MV 연결해줌
-    public UserInventoryView _userInvenView; //인스펙터에서 연결
-    private UserInventoryModel _userInvenModel;
-    private UserInventoryPresenter _userInvenPresent;
+    public FacadeView _facadeView; //인스펙터에서 연결
+    private InventoryModel _userInvenModel;
+    private InventoryModel _equipInvenModel;
+    private InventoryPresenter _InvenPresent;
 
-    //[Header("Box 인벤토리 의존성 주입")]
-    //public BoxInventoryView _boxInvenView; //인스펙터에서 연결
-    //private BoxInventoryModel _boxInvenModel;
-    //private BoxInventoryPresenter _boxInvenPresent;
+    [Header("인벤토리 용량")]
+    [SerializeField] private int _equipCapacity = 5;    //장비
+    [SerializeField] private int _bagCapacity = 20;     //가방
+    [SerializeField] private int _quickCapacity = 6;    //퀵슬롯
+    [SerializeField] private int _storageCapacity = 60; //창고
+    [SerializeField] private int _boxCapacity = 10;     //상자
 
     private void Awake()
     {
         //User Presenter에 M, V 연결
-        _userInvenModel = new UserInventoryModel();
-        _userInvenPresent = new UserInventoryPresenter(_userInvenView, _userInvenModel, _itemManager);
+        _equipInvenModel = new InventoryModel();
+        _userInvenModel = new InventoryModel();
+        _InvenPresent = new InventoryPresenter(_facadeView, _userInvenModel, _equipInvenModel, _itemManager);
 
-        ////Box Presenter에 M, V 연결
-        //_boxInvenModel = new BoxInventoryModel();
-        //_boxInvenPresent = new BoxInventoryPresenter(_boxInvenView, _boxInvenModel, _itemManager);
+        //모델별 슬롯 용량 초기화
+        _equipInvenModel.SetCapacity(_equipCapacity);
+        _userInvenModel.SetCapacity(_bagCapacity);
     }
     private void Start()
     {
-        _userInvenPresent.InitializePresenter();
+        _equipInvenModel.Init();
+        _userInvenModel.Init();
+        _InvenPresent.InitializePresenter();
+    }
+
+    private void OnEnable()
+    {
+        Subject<ISlotExchangeHandler>.Attach(_InvenPresent);
+    }
+    private void OnDisable()
+    {
+        Subject<ISlotExchangeHandler>.Detach(_InvenPresent);
     }
 }
