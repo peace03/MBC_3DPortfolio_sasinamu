@@ -150,19 +150,24 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
         // 진행률
         float progress = 0f;
 
-        while (true)
+        // 구르기 시간이 지날 때까지
+        while (progress < rollTime)
         {
+            // 게임 시간이 멈춰있다면
+            if (Time.timeScale == 0)
+            {
+                // 프레임 단위로 기다리기
+                yield return null;
+                // 건너뛰기
+                continue;
+            }
+
             // 이동
             cc.Move(dir * speed * Time.deltaTime);
             // 진행률 증가
             progress += Time.deltaTime;
-            // 프레임 기다리기
+            // 프레임 단위로 기다리기
             yield return null;
-
-            // 진행률이 차면
-            if (progress >= rollTime)
-                // 종료
-                break;
         }
 
         // 구르기 종료

@@ -28,11 +28,12 @@ public class BootStrapper : MonoBehaviour
         //모델별 슬롯 용량 초기화
         _equipInvenModel.SetCapacity(_equipCapacity);
         _userInvenModel.SetCapacity(_bagCapacity);
+        _equipInvenModel.Init();
+        _userInvenModel.Init();
     }
     private void Start()
     {
-        _equipInvenModel.Init();
-        _userInvenModel.Init();
+        
         _InvenPresent.InitializePresenter();
     }
 

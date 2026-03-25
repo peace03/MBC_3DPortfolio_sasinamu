@@ -11,6 +11,7 @@ public static class SceneRegistry
         sceneNames = new Dictionary<SceneType, string>
         {
             { SceneType.Start, "StartScene" },
+            { SceneType.Custom, "PlayerCustomScene" },
             { SceneType.Bunker, "BunkerScene" },
             { SceneType.Game, "GameScene" },
             { SceneType.End, "EndScene" }
