@@ -1,10 +1,14 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
 public class FoodItem : Item
 {
     public FoodItem(FoodData data) : base(data) { }
+
+    public float Thirst => _data.GetComponent<FoodData>().WaterRestoreAmount;
+    public float Energy => _data.GetComponent<FoodData>().EnergyRestoreAmount;
 
     public override List<(string statName, string statValue)> GetItemStats()
     {

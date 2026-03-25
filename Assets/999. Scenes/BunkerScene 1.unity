@@ -729,6 +729,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BootStrapper
   _itemManager: {fileID: 1156805808}
   _facadeView: {fileID: 2064414017}
+  _equipCapacity: 5
+  _bagCapacity: 20
+  _quickCapacity: 6
+  _storageCapacity: 60
+  _boxCapacity: 10
 --- !u!1 &225402214
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,6 +816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090924c4461c9df4da1de2bf3572c9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
+  _equipType: 1
   defaultTextName: "\uAC00\uBC29"
 --- !u!1 &265832300
 GameObject:
@@ -1869,6 +1875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090924c4461c9df4da1de2bf3572c9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
+  _equipType: 0
   defaultTextName: "\uBB34\uAE301"
 --- !u!1 &687760978
 GameObject:
@@ -3662,6 +3669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090924c4461c9df4da1de2bf3572c9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
+  _equipType: 0
   defaultTextName: "\uBB34\uAE302"
 --- !u!1 &1116467616
 GameObject:
@@ -3954,6 +3962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090924c4461c9df4da1de2bf3572c9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
+  _equipType: 2
   defaultTextName: "\uBC29\uD0C4\uBAA8"
 --- !u!1 &1203285352
 GameObject:
@@ -5400,6 +5409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090924c4461c9df4da1de2bf3572c9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
+  _equipType: 3
   defaultTextName: "\uBC29\uD0C4\uBCF5"
 --- !u!1 &1711890057
 GameObject:
@@ -6867,7 +6877,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FacadeView
   _equipView: {fileID: 1711890059}
-  _bagInventoryView: {fileID: 2043934734}
+  _bagView: {fileID: 2043934734}
+  _virtualSlot: {fileID: 1203285354}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

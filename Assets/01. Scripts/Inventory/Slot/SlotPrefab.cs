@@ -92,7 +92,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
         //슬롯 교환 이벤트 발생
         Subject<ISlotExchangeHandler>.Publish(h => 
-        h.onExchangeSlot(_virtualSlot.SlotType, _virtualSlot.Index, _slotType, _index));
+        h.OnExchangeSlot(_virtualSlot.SlotType, _virtualSlot.Index, _slotType, _index));
         //Debug.Log($"SwapType: {swapType}");
         //onDropSlot?.Invoke(swapType, _virtualSlot.Index, _index);
     }
@@ -110,15 +110,14 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     #region 마우스 커서
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //이벤트 발생
-        //Debug.Log($"현재 마우스 커서\n이름: {_itemName.text}\t개수: {_itemNum.text}");
-        //onCusorEnter?.Invoke(SlotSource.Bag, _index);
+        //마우스 올린 상태에서 E키 누르면 아이템 사용 이벤트 발행
+        // 마우스가 몇번째 슬롯에 있는지 이벤트 발행
+        Subject<ISlotPointerHandler>.Publish(h => h.OnSlotPointer(_slotType, _index));
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //Debug.Log("마우스 커서 이탈!!!!");
-        //onCusorExit?.Invoke();
+        Subject<ISlotPointerHandler>.Publish(h => h.OnSlotPointer(SlotType.None, _index));
     }
     #endregion
 }

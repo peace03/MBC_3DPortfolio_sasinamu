@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -10,8 +11,15 @@ public class ConsumableItem : Item
         _curDurability = curDurability;
     }
 
-    public ConsumableType Type => (_data as ConsumableData).consumableType;
+    public virtual float Use()
+    {
+        _curDurability -= _data.GetComponent<CureKitData>().DurabilityConsumetion;
+        return _curDurability;
+    }
 
+    public ConsumableType Type => (_data as ConsumableData).ConsumableType;
+
+    //아이템 스탯창 표시용
     public override List<(string statName, string statValue)> GetItemStats()
     {
         var list = base.GetItemStats();
@@ -21,4 +29,6 @@ public class ConsumableItem : Item
 
         return list;
     }
+
+    
 }

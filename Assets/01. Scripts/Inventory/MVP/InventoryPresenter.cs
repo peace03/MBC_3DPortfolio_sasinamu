@@ -1,7 +1,8 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum SlotType
 {
@@ -9,15 +10,20 @@ public enum SlotType
     Bag,        //가방
     Box,        //상자
     Storage,    //창고
-    Quick       //퀵슬롯
+    Quick,       //퀵슬롯
+    None
 }
 
-public class InventoryPresenter : ISlotExchangeHandler
+public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, ISlotPointerHandler, IPlayerInteractHandler
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
     private InventoryModel _equipModel;
     private ItemManager _itemManager;
+
+    //슬롯위에 커서 있을 때 저장
+    private int _slotPointerIndex;
+    private SlotType _slotPointerType = SlotType.None;
 
     public InventoryPresenter(FacadeView view,
         InventoryModel bagModel, InventoryModel equipModel,
@@ -88,8 +94,9 @@ public class InventoryPresenter : ISlotExchangeHandler
         return _bagModel.AddItem(item);
     }
 
+    #region 아이템 교체
     //아이템 교체
-    public void onExchangeSlot(SlotType fromSlotType, int fromIndex, SlotType toSlotType, int toIndex)
+    public void OnExchangeSlot(SlotType fromSlotType, int fromIndex, SlotType toSlotType, int toIndex)
     {
         Item fromItem;
         Item toItem;
@@ -97,23 +104,29 @@ public class InventoryPresenter : ISlotExchangeHandler
         fromItem = GetModelItem(fromSlotType, fromIndex);
         toItem = GetModelItem(toSlotType, toIndex);
         if (fromSlotType == SlotType.Equip || toSlotType == SlotType.Equip)
-            if (!CanExchange(fromItem, toItem)) return; //교환 가능한지 검사
+            if (!CanExchange(fromSlotType, fromIndex, fromItem, toSlotType, toIndex, toItem)) return; //교환 불가능하면 종료
         Debug.Log("슬롯 교환 호출!!");
         PutModelItem(fromSlotType, fromIndex, toItem);
         PutModelItem(toSlotType, toIndex, fromItem);
         //UI 업데이트
-        UpdateSingleSlot(fromSlotType, fromIndex);
-        UpdateSingleSlot(toSlotType, toIndex);
+        OnUpdateSingleSlot(fromSlotType, fromIndex);
+        OnUpdateSingleSlot(toSlotType, toIndex);
     }
     //모델의 해당 인덱스 아이템 가져오기
     public Item GetModelItem(SlotType slotType, int index)
     {
+        InventoryModel model = GetModel(slotType);
+        return model.GetItem(index);
+    }
+    //슬롯 타입에 맞는 모델 얻기
+    public InventoryModel GetModel(SlotType slotType)
+    {
         switch (slotType)
         {
             case SlotType.Equip:
-                return _equipModel.GetItem(index);
+                return _equipModel;
             case SlotType.Bag:
-                return _bagModel.GetItem(index);
+                return _bagModel;
             case SlotType.Box:
                 break;
             case SlotType.Storage:
@@ -126,46 +139,64 @@ public class InventoryPresenter : ISlotExchangeHandler
         return null;
     }
     //교환 가능한지 검사
-    public bool CanExchange(Item fromItem, Item toItem)
+    public bool CanExchange(SlotType fromSlotType, int fromIndex, Item fromItem,
+        SlotType toSlotType, int toIndex, Item toItem) //보완해야함
     {
-        if (fromItem is GunItem && toItem is GunItem) return true;
-        if (fromItem is BagItem && toItem is BagItem) return true;
-        if (fromItem is ConsumableItem from && toItem is ConsumableItem to
-            && from._data.GetComponent<ConsumableData>().consumableType == to._data.GetComponent<ConsumableData>().consumableType) return true;
+        if (fromSlotType == SlotType.Equip && toSlotType == SlotType.Equip)
+        {//장비 -> 장비
+            //무기끼리만 교환 가능
+            if (fromIndex < 2 && toIndex < 2) return true;
+        }
+        else if (fromSlotType == SlotType.Equip)
+        {//장비 -> 가방
+            if (toItem == null) return true;
+            else return EqualEquipType(fromIndex, fromItem, toItem);
+        }
+        else //toSlotType == SlotType.Equip
+        {//가방 -> 장비
+            return EqualEquipType(toIndex, toItem, fromItem);
+        }
         return false;
     }
-    //모델의 해당 인덱스 아이템 넣어주기
-    public void PutModelItem(SlotType slotType, int index, Item item)
+    public bool EqualEquipType(int equipIndex, Item equipItem, Item other)
     {
-        switch (slotType)
+        switch (equipIndex)
         {
-            case SlotType.Equip:
-                _equipModel.PutItem(index, item);
+            case 0:
+            case 1:
+                if (other is GunItem) return true;
                 break;
-            case SlotType.Bag:
-                _bagModel.PutItem(index, item);
+            case 2:
+                if (other is BagItem) return true;
                 break;
-            case SlotType.Box:
+            case 3:
+                if (other is ConsumableItem consume1 && consume1.Type == ConsumableType.Helmat) return true;
                 break;
-            case SlotType.Storage:
-                break;
-            case SlotType.Quick:
+            case 4:
+                if (other is ConsumableItem consume2 && consume2.Type == ConsumableType.Vest) return true;
                 break;
             default:
                 break;
         }
+        return false;
     }
-    public void UpdateSingleSlot(SlotType slotType, int index)
+
+    //모델의 해당 인덱스 아이템 넣어주기
+    public void PutModelItem(SlotType slotType, int index, Item item)
     {
-        Item item;
+        InventoryModel model = GetModel(slotType);
+        model.PutItem(index, item);
+    }
+    public void OnUpdateSingleSlot(SlotType slotType, int index)
+    {
+        InventoryModel model = GetModel(slotType);
+        Item item = model.GetItem(index);
         switch (slotType)
         {
             case SlotType.Equip:
-                item = _equipModel.GetItem(index);
                 _view.UpdateSingleSlot_Equip(index, item);
                 break;
             case SlotType.Bag:
-                item = _bagModel.GetItem(index);
                 _view.UpdateSingleSlot_Bag(index, item);
                 break;
             case SlotType.Box:
@@ -178,11 +209,28 @@ public class InventoryPresenter : ISlotExchangeHandler
                 break;
         }
     }
+
+
+    #endregion
+
+    public void OnSlotPointer(SlotType slotType, int index)
+    {
+        _slotPointerType = slotType;
+        _slotPointerIndex = index;
+    }
+    
+    public void OnInteract()
+    {
+        if (_slotPointerType == SlotType.None) return;
+        //아이템 사용
+        InventoryModel model = GetModel(_slotPointerType);
+        model.UseItem(_slotPointerType, _slotPointerIndex);
+    }
 }
 
-//인벤토리 push
-//아이템 사용 - 아이템 E키 누르면 데이터 반환
+//아이템 사용 - 아이템 인터페이스 발행 메서드 2개 누르면 데이터 반환 O
 //아이템 버리기
 //상자 창고
 //장비 착용했을 때 총 오브젝트 반환
-//장비
+
+//초기화 생명주기 순서다시보기

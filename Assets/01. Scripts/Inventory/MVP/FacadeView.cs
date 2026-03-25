@@ -19,6 +19,8 @@ public class FacadeView : MonoBehaviour
     [Header("Etc")]
     [SerializeField] private VirtualSlot _virtualSlot;                  //가상 슬롯
 
+    private int slotPointerIndex;
+
     private void Awake()
     {
         InitViews();

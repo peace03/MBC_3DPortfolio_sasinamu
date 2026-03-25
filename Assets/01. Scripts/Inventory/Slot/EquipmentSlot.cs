@@ -23,9 +23,6 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IDr
     [SerializeField] private string defaultTextName;    //장비 슬롯 기본 이름
 
     private VirtualSlot _virtualSlot;                   //가상 슬롯
-    //private Action<SwapType, int, int> onDropSlot;  //아이템 드롭되면 교체 이벤트 발생
-    //private Action<SlotSource, int> onCusorEnter;   //커서가 슬롯 들어갈 때 호출
-    //private Action onCusorExit;                     //커서가 슬롯 벗어날 때 호출
 
     private int _index; //슬롯 인덱스
     public int Index => _index;
@@ -78,7 +75,7 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IDr
         Debug.Log("아이템 드롭!!");
 
         //슬롯 교환 이벤트 발생
-        Subject<ISlotExchangeHandler>.Publish(h =>h.onExchangeSlot
+        Subject<ISlotExchangeHandler>.Publish(h =>h.OnExchangeSlot
         (_virtualSlot.SlotType, _virtualSlot.Index, _slotType, _index));
 
         //Debug.Log($"SwapType: {swapType}");
@@ -97,9 +94,7 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IDr
     #region 마우스 커서
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //이벤트 발생
-        //Debug.Log($"현재 마우스 커서\n이름: {_itemName.text}");
-        //onCusorEnter?.Invoke(SlotSource.Equipment, _index);
+        
     }
 
     public void OnPointerExit(PointerEventData eventData)

@@ -207,6 +207,10 @@ public class InputManager : MonoBehaviour, IUIStateHandler
                 // 초기화
                 lastMoveInput = Vector2.zero;
 
+            if (context.action == interactAction)
+                if (context.performed)
+                    Subject<IPlayerInteractHandler>.Publish(h => h.OnInteract());
+
             // 종료
             return;
         }

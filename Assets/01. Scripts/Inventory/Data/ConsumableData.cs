@@ -15,5 +15,5 @@ public class ConsumableData : ItemData
     [SerializeField] private float maxDurability; //내구도
 
     public float MaxDurability => maxDurability;
-    public ConsumableType consumableType => _consumableType;
+    public ConsumableType ConsumableType => _consumableType;
 }

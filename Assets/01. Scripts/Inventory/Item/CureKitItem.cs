@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -7,6 +8,14 @@ public class CureKitItem : ConsumableItem
     public CureKitItem(CureKitData data, float curDurability)
         : base(data, curDurability) { }
 
+    public float CureAmount => _data.GetComponent<CureKitData>().CureAmount;
+
+    public override float Use()
+    {
+        return base.Use();
+    }
+
+    //아이템 스탯창에 표시용
     public override List<(string statName, string statValue)> GetItemStats()
     {
         var list = base.GetItemStats();
@@ -16,4 +25,8 @@ public class CureKitItem : ConsumableItem
 
         return list;
     }
+
+
 }
+
+// 부모의 가상함수 실행되고 자식의 함수 실행되도록하는 방법

@@ -14,6 +14,10 @@ public interface IDamageable
     // 데미지 반영 함수
     public void Damaged(string name, float amount);
 }
+public interface ISlotPointerHandler
+{
+    public void OnSlotPointer(SlotType slotType, int index);
+}
 
 // 적 죽음 관리 인터페이스
 public interface IEnemyDeadHandler
@@ -61,17 +65,4 @@ public interface IMapHandler
 public interface IControlManualHandler
 {
     public void OnControlManual();
-}
-
-// 아이템 사용 관리 인터페이스
-public interface IUseItemHandler
-{
-    public void OnUseItem(GameObject item);
-}
-
-//아이템 교환 인터페이스
-public interface ISlotExchangeHandler
-{
-    public void onExchangeSlot(SlotType fromSlotType, int fromIndex,
-        SlotType toSlotType, int toIndex);
 }

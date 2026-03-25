@@ -36,12 +36,19 @@ public class BootStrapper : MonoBehaviour
         _InvenPresent.InitializePresenter();
     }
 
+    //구독, 해제
     private void OnEnable()
     {
         Subject<ISlotExchangeHandler>.Attach(_InvenPresent);
+        Subject<ISlotChanged>.Attach(_InvenPresent);
+        Subject<ISlotPointerHandler>.Attach(_InvenPresent);
+        Subject<IPlayerInteractHandler>.Attach(_InvenPresent);
     }
     private void OnDisable()
     {
         Subject<ISlotExchangeHandler>.Detach(_InvenPresent);
+        Subject<ISlotChanged>.Detach(_InvenPresent);
+        Subject<ISlotPointerHandler>.Detach(_InvenPresent);
+        Subject<IPlayerInteractHandler>.Detach(_InvenPresent);
     }
 }

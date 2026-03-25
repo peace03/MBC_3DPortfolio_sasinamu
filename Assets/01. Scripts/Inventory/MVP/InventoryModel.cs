@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 
 public class InventoryModel
 {
     private List<Item> _Slots; //인벤토리 내 아이템
 
-    private int _capacity = 20; //인벤토리 최대 슬롯
-    private int equipCapacity = 5; //장비 아이템 최대 슬롯
+    private int _capacity; //인벤토리 최대 슬롯
     private bool fullInventory; //인벤토리가 다 찼는가?
 
     public InventoryModel()
@@ -21,66 +21,6 @@ public class InventoryModel
     {
         for (int i = 0; i < _capacity; i++) _Slots.Add(null);
     }
-
-    #region ExchangeSlot
-    public bool ExchangeSlot_Self(int fromIndex, int toIndex)
-    {
-        Item temp = _Slots[fromIndex];
-        _Slots[fromIndex] = _Slots[toIndex];
-        _Slots[toIndex] = temp;
-        return true;
-    }
-    //public bool ExchangeSlot_EquipToEquip(int fromIndex, int toIndex)
-    //{
-    //    //무기만 swap가능
-    //    if (fromIndex > 1 || toIndex > 1) return false;
-    //    else
-    //    {
-    //        // Debug.Log("EquipToEquip 실행");
-    //        Item temp = _equipSlots[fromIndex];
-    //        _equipSlots[fromIndex] = _equipSlots[toIndex];
-    //        _equipSlots[toIndex] = temp;
-    //    }
-    //    return true;
-    //}
-    //public bool ExchangeSlot_BagToEquip(int fromIndex, int toIndex)
-    //{
-    //    if (toIndex <= 1 && _Slots[fromIndex] is GunItem) //무기 슬롯으로 옮길 때
-    //    {
-    //        SwapBag_Equip(fromIndex, toIndex);
-    //        return true;
-    //    }
-    //    else if (toIndex == 2 && _Slots[fromIndex] is BagItem) //가방 슬롯으로 옮길 때
-    //    {
-    //        SwapBag_Equip(fromIndex, toIndex);
-    //        return true;
-    //    }
-    //    else if (toIndex == 3 && _Slots[fromIndex] is ConsumableItem consumableItem && consumableItem.Type == ConsumableType.Helmat) //방탄모 슬롯으로 옮길 때
-    //    {
-    //        SwapBag_Equip(fromIndex, toIndex);
-    //        return true;
-    //    }
-    //    else if (toIndex == 4 && _Slots[fromIndex] is ConsumableItem consumableItem2 && consumableItem2.Type == ConsumableType.Vest) //방탄복 슬롯으로 옮길 때
-    //    {
-    //        SwapBag_Equip(fromIndex, toIndex);
-    //        return true;
-    //    }
-    //    return false;
-    //}
-    //public bool ExchangeSlot_EquipToBag(int fromIndex, int toIndex)
-    //{
-    //    if (_Slots[toIndex] == null) { SwapBag_Equip(toIndex, fromIndex); return true; }
-    //    return false;
-    //}
-    ////Equip -> bag Swap
-    ////반대방향으로 하려면 인덱스만 바꾸어서 넣어주면 됨
-    //private void SwapBag_Equip(int firstIndex, int SecondIndex)
-    //{
-    //    Item temp = _equipSlots[SecondIndex];
-    //    _equipSlots[SecondIndex] = _Slots[firstIndex];
-    //    _Slots[firstIndex] = temp;
-    //}
-    #endregion
 
     #region AddItem
     //아이템 추가 메서드
@@ -160,6 +100,29 @@ public class InventoryModel
         return false;
     }
     #endregion
+
+    //아이템 사용 - 아이템 소멸되면 true 반환
+    public void UseItem(SlotType slotType, int index)
+    {
+        Item item = _Slots[index];
+        if (item is CureKitItem cureItem)
+        {
+            Subject<IUseItemHandler>.Publish(h => h.OnUseCureItem(cureItem.CureAmount));
+            //내구도 0이하면 아이템 없애기
+            if (cureItem.Use() <= 0f) 
+            {
+                _Slots[index] = null;
+                Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+            }
+        }
+        else if (item is FoodItem foodItem)
+        {
+            Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
+            _Slots[index] = null;
+            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+            
+        }
+    }
 
     //아이템 넣어주기
     public void PutItem(int index, Item item)
