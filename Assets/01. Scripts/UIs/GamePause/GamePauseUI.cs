@@ -44,7 +44,7 @@ public class GamePauseUI : MonoBehaviour
         Subject<IGamePauseHandler>.Publish(h => h.OnGamePause());
     }
 
-    // 설정 함수
+    // 게임 설정 함수
     private void SettingsGame()
     {
         Debug.Log("설정");

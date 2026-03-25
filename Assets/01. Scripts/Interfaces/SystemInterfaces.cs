@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 게임 종료 취소 관리 인터페이스
+public interface IGameQuitCancelHandler
+{
+    public void OnGameQuitCancel();
+}
+
 // 상호작용이 가능한 대상 인터페이스
 public interface IInteractable
 {
