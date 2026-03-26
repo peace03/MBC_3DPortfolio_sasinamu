@@ -1,6 +1,7 @@
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
 
-public class PlayerStat : MonoBehaviour, IDamageable
+public class PlayerStat : MonoBehaviour, IDamageable, T_IUseItemHandler
 {
     #region Player Info
     [Header("정보")]
@@ -77,12 +78,24 @@ public class PlayerStat : MonoBehaviour, IDamageable
         curThirst = maxThirst;
     }
 
+    private void OnEnable()
+    {
+        // 테스트 아이템 사용 이벤트 구독
+        Subject<T_IUseItemHandler>.Attach(this);
+    }
+
     private void Update()
     {
         // 스테미나 회복
         RegenStamina();
         // 허기, 갈증 감소
         DecreaseHungerAndThirst();
+    }
+
+    private void OnDisable()
+    {
+        // 테스트 아이템 사용 이벤트 구독 해제
+        Subject<T_IUseItemHandler>.Detach(this);
     }
 
     // 공격력, 방어력 갱신 함수
@@ -165,13 +178,24 @@ public class PlayerStat : MonoBehaviour, IDamageable
         lastDecreaseHungerAndThirstTime = Time.time;
     }
 
-    // 아이템 효과 적용 함수
-    public void ApplyItemEffect(float hungerChange, float thirstChange)
+    // 회복 아이템 사용 함수
+    public void OnUseCureItem(float cureAmount)
     {
-        // 허기
-        curHunger = Mathf.Clamp(curHunger + hungerChange, 0, maxHunger);
-        // 갈증
-        curThirst = Mathf.Clamp(curThirst + thirstChange, 0, maxThirst);
+        Debug.Log($"[변경 전] 현재 HP : {curHp}");
+        // HP 회복
+        curHp = Mathf.Clamp(curHp + cureAmount, 0, maxHp);
+        Debug.Log($"[변경 후] 현재 HP : {curHp}");
+    }
+
+    // 음식 아이템 사용 함수
+    public void OnUseFoodItem(float hunger, float thirst)
+    {
+        Debug.Log($"[변경 전] 현재 허기 : {curHunger} / 현재 갈증 : {curThirst}");
+        // 허기 회복
+        curHunger = Mathf.Clamp(curHunger + hunger, 0, maxHunger);
+        // 갈증 회복
+        curThirst = Mathf.Clamp(curThirst + thirst, 0, maxThirst);
+        Debug.Log($"[변경 후] 현재 허기 : {curHunger} / 현재 갈증 : {curThirst}");
     }
 
     private void OnDrawGizmos()

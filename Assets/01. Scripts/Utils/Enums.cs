@@ -26,7 +26,6 @@ public enum EnemyAnimState
 public enum SceneType
 {
     Start,          // 시작
-    Custom,         // 꾸미기
     Bunker,         // 벙커
     Game,           // 게임
     End             // 끝

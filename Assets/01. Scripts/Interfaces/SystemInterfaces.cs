@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 게임 종료 취소 관리 인터페이스
-public interface IGameQuitCancelHandler
+// 팝업 UI 닫기 관리 인터페이스
+public interface IPopupUIClosedHandler
 {
-    public void OnGameQuitCancel();
+    public void OnClosedPopupUI();
 }
 
 // 상호작용이 가능한 대상 인터페이스
@@ -77,7 +77,7 @@ public interface IOpenUIByButtonHandler
 
 
 // 아이템 사용 관리 인터페이스
-public interface IUseItemHandler
+public interface T_IUseItemHandler
 {
     public void OnUseCureItem(float cureAmount);
     public void OnUseFoodItem(float hunger, float thirst);
