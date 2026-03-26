@@ -40,16 +40,20 @@ public class BootStrapper : MonoBehaviour
     //구독, 해제
     private void OnEnable()
     {
-        Subject<ISlotExchangeHandler>.Attach(_InvenPresent);
-        Subject<ISlotChanged>.Attach(_InvenPresent);
-        Subject<ISlotPointerHandler>.Attach(_InvenPresent);
-        Subject<IPlayerInteractHandler>.Attach(_InvenPresent);
+        Subject<ISlotExchangeHandler>.Attach(_InvenPresent);    //View에서 교환     발생
+        Subject<ISlotChanged>.Attach(_InvenPresent);            //Model에서 교환    발생
+        Subject<ISlotClickHandler>.Attach(_InvenPresent);       //슬롯 클릭         발생
+        Subject<IPlayerInteractHandler>.Attach(_InvenPresent);  //플레이어 상호작용  발생
+        Subject<ISlotClickRightHandler>.Attach(_facadeView);    //슬롯 우클릭       발생
+        Subject<IDropButtonHandler>.Attach(_InvenPresent);      //버리기 누름       발생
     }
     private void OnDisable()
     {
         Subject<ISlotExchangeHandler>.Detach(_InvenPresent);
         Subject<ISlotChanged>.Detach(_InvenPresent);
-        Subject<ISlotPointerHandler>.Detach(_InvenPresent);
+        Subject<ISlotClickHandler>.Detach(_InvenPresent);
         Subject<IPlayerInteractHandler>.Detach(_InvenPresent);
+        Subject<ISlotClickRightHandler>.Detach(_facadeView);
+        Subject<IDropButtonHandler>.Detach(_InvenPresent);
     }
 }

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using System;
 
-public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     private SlotType _slotType = SlotType.Bag;
     private EquipType _equipType = EquipType.None;
@@ -32,6 +32,11 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         _index = index;
         _virtualSlot = virtualSlot;
     }
+
+    //public void OnButton()
+    //{
+    //    Debug.Log("버튼 클릭됨!");
+    //}
 
     #region SetSlot
     //Countable일 때
@@ -107,14 +112,28 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     #region 마우스 커서
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //마우스 올린 상태에서 E키 누르면 아이템 사용 이벤트 발행
-        // 마우스가 몇번째 슬롯에 있는지 이벤트 발행
-        Subject<ISlotPointerHandler>.Publish(h => h.OnSlotPointer(_slotType, _index));
+        //아이템 상태창 구현하기
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Subject<ISlotPointerHandler>.Publish(h => h.OnSlotPointer(SlotType.None, _index));
+        //Subject<ISlotPointerHandler>.Publish(h => h.OnSlotPointer(SlotType.None, _index));
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        //좌 우클릭 둘다
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            //클릭한 슬롯의 정보 P에 저장
+            Subject<ISlotClickHandler>.Publish(h => h.OnSlotLeftClick(_slotType, _index));
+            //우클릭이면 버튼 띄워주기
+        }
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            Subject<ISlotClickHandler>.Publish(h => h.OnSlotRightClick(_slotType, _index));
+            Subject<ISlotClickRightHandler>.Publish(h => h.OnSlotClickRight(gameObject.transform));
+        }
     }
     #endregion
 }

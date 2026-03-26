@@ -6,6 +6,9 @@ public class ItemManager : MonoBehaviour
     [Header("전체 아이템 데이터(Scriptable Object)")]
     [SerializeField] private List<ItemData> _itemDatas;
 
+    [Header("플레이어 위치")]
+    [SerializeField] private Transform _player;
+
     private void Awake()
     {
         _itemDatas = new List<ItemData>(Resources.LoadAll<ItemData>("ItemDatas"));
@@ -49,6 +52,13 @@ public class ItemManager : MonoBehaviour
         return null;
 
         //return _itemD.ContainsKey(id) ? _itemD[id] : null; 
+    }
+
+    //아이템 월드에 생성
+    public void CreateItemObjInWorld(GameObject gameObject)
+    {
+        Transform transform = Instantiate(gameObject).GetComponent<Transform>();
+        transform.position = _player.position;
     }
 
 }

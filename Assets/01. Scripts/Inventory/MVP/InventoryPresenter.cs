@@ -14,16 +14,21 @@ public enum SlotType
     None
 }
 
-public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, ISlotPointerHandler, IPlayerInteractHandler
+public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
+    ISlotClickHandler, IPlayerInteractHandler, IDropButtonHandler
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
     private InventoryModel _equipModel;
     private ItemManager _itemManager;
 
-    //슬롯위에 커서 있을 때 저장
-    private int _slotPointerIndex;
-    private SlotType _slotPointerType = SlotType.None;
+    //슬롯 좌클릭시 저장
+    private SlotType _slotTypeLeft = SlotType.None;
+    private int _slotIndexLeft;
+    //슬롯 우클릭시 저장
+    private SlotType _slotTypeRight = SlotType.None;
+    private int _slotIndexRight;
+    
 
     public InventoryPresenter(FacadeView view,
         InventoryModel bagModel, InventoryModel equipModel,
@@ -108,9 +113,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, ISlotPoint
         Debug.Log("슬롯 교환 호출!!");
         PutModelItem(fromSlotType, fromIndex, toItem);
         PutModelItem(toSlotType, toIndex, fromItem);
-        //UI 업데이트
-        OnUpdateSingleSlot(fromSlotType, fromIndex);
-        OnUpdateSingleSlot(toSlotType, toIndex);
+        //UI 업데이트는 자동으로 됨
     }
     //모델의 해당 인덱스 아이템 가져오기
     public Item GetModelItem(SlotType slotType, int index)
@@ -185,7 +188,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, ISlotPoint
     public void PutModelItem(SlotType slotType, int index, Item item)
     {
         InventoryModel model = GetModel(slotType);
-        model.PutItem(index, item);
+        model.PutItem(slotType, index, item);
     }
     public void OnUpdateSingleSlot(SlotType slotType, int index)
     {
@@ -213,24 +216,44 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, ISlotPoint
 
     #endregion
 
-    public void OnSlotPointer(SlotType slotType, int index)
+    //슬롯 클릭되었을 때 실행
+    public void OnSlotLeftClick(SlotType slotType, int index)
     {
-        _slotPointerType = slotType;
-        _slotPointerIndex = index;
+        _slotTypeLeft = slotType;
+        _slotIndexLeft = index;
     }
-    
+    public void OnSlotRightClick(SlotType slotType, int index)
+    {
+        _slotTypeRight = slotType;
+        _slotIndexRight = index;
+    }
+
+    //상호작용 시 아이템 사용
     public void OnInteract()
     {
-        if (_slotPointerType == SlotType.None) return;
+        if (_slotTypeLeft == SlotType.None) return;
         //아이템 사용
-        InventoryModel model = GetModel(_slotPointerType);
-        model.UseItem(_slotPointerType, _slotPointerIndex);
+        InventoryModel model = GetModel(_slotTypeLeft);
+        model.UseItem(_slotTypeLeft, _slotIndexLeft);
+    }
+
+    //아이템 버리기 버튼 눌렀을 때 실행
+    public void OnDropButtenDown()
+    {
+        if (_slotTypeRight == SlotType.None) return;
+        InventoryModel model = GetModel(_slotTypeRight);
+        //오브젝트 생성
+        _itemManager.CreateItemObjInWorld(model.GetItemObject(_slotIndexRight));
+        //Model에서 삭제
+        model.PutItem(_slotTypeRight, _slotIndexRight, null);
     }
 }
 
-//아이템 사용 - 아이템 인터페이스 발행 메서드 2개 누르면 데이터 반환 O
-//아이템 버리기
+
+
+
 //상자 창고
 //장비 착용했을 때 총 오브젝트 반환
+//내구도 변화 UI 만들기
 
 //초기화 생명주기 순서다시보기

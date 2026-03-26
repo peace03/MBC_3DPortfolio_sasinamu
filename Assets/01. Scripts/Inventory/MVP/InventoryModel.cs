@@ -1,7 +1,8 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
+using UnityEngine;
 
 public class InventoryModel
 {
@@ -111,28 +112,32 @@ public class InventoryModel
             //내구도 0이하면 아이템 없애기
             if (cureItem.Use() <= 0f) 
             {
-                _Slots[index] = null;
-                Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+                PutItem(slotType, index, null);
             }
         }
         else if (item is FoodItem foodItem)
         {
             Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
-            _Slots[index] = null;
-            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+            PutItem(slotType, index, null);
             
         }
     }
 
     //아이템 넣어주기
-    public void PutItem(int index, Item item)
+    public void PutItem(SlotType slotType, int index, Item item)
     {
         _Slots[index] = item;
+        Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
     }
     //아이템 보내주기
     public Item GetItem(int index)
     {
         return _Slots[index];
+    }
+    public GameObject GetItemObject (int index)
+    {
+        GameObject gameObject = _Slots[index]._data.ObjectPrefab;
+        return gameObject;
     }
     //모든 아이템 보내주기
     public List<Item> GetAllItem()

@@ -14,10 +14,6 @@ public interface IDamageable
     // 데미지 반영 함수
     public void Damaged(string name, float amount);
 }
-public interface ISlotPointerHandler
-{
-    public void OnSlotPointer(SlotType slotType, int index);
-}
 
 // 적 죽음 관리 인터페이스
 public interface IEnemyDeadHandler
