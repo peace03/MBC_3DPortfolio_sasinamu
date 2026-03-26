@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 게임 종료 취소 관리 인터페이스
+public interface IGameQuitCancelHandler
+{
+    public void OnGameQuitCancel();
+}
+
 // 상호작용이 가능한 대상 인터페이스
 public interface IInteractable
 {
@@ -35,6 +41,12 @@ public interface IEnemyPauseHandler
 public interface IGamePauseHandler
 {
     public void OnGamePause();
+}
+
+// 버튼으로 열리는 UI 관리 인터페이스
+public interface IOpenUIByButtonHandler
+{
+    public void OnOpenUIByButton(UIType type);
 }
 
 // UI 상태 관리 인터페이스
