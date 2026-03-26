@@ -59,6 +59,9 @@ public class SceneChanger : MonoBehaviour, IInteractable, IPlayerCancelHandler
             yield return null;
         }
 
+        // 씬 전환 코루틴 초기화
+        sceneChangeCoroutine = null;
+
         // 등록부에 다음 씬 이름이 등록되어 있다면
         if (SceneRegistry.GetSceneName(nextScene, out string sceneName))
             // 다음 씬 전환

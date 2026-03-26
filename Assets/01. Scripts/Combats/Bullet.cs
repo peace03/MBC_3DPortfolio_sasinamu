@@ -107,5 +107,7 @@ public class Bullet : MonoBehaviour
         yield return new WaitForSeconds(returnTime);
         // 총알 반납
         poolRef.Release(this);
+        // 총알 반납 코루틴 초기화
+        returnToPoolCoroutine = null;
     }
 }

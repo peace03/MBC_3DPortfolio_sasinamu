@@ -209,6 +209,14 @@ public class InputManager : MonoBehaviour, IUIStateHandler
             // 종료
             return;
         }
+        // 입력된 액션이 상호작용 액션일 때
+        else if (context.action == interactAction)
+        {
+            // 키를 눌렀을 때
+            if (context.performed)
+                // 이벤트 발생(상호작용 함수 실행)
+                Subject<IPlayerInteractHandler>.Publish(h => h.OnInteract());
+        }
 
         // 조작이 불가능한 상태라면
         if (!canInput)
@@ -247,14 +255,6 @@ public class InputManager : MonoBehaviour, IUIStateHandler
             if (context.performed)
                 // 이벤트 발생(구르기 함수 실행)
                 Subject<IPlayerRollHandler>.Publish(h => h.OnRoll());
-        }
-        // 입력된 액션이 상호작용 액션일 때
-        else if (context.action == interactAction)
-        {
-            // 키를 눌렀을 때
-            if (context.performed)
-                // 이벤트 발생(상호작용 함수 실행)
-                Subject<IPlayerInteractHandler>.Publish(h => h.OnInteract());
         }
         // 입력된 액션이 취소 액션일 때
         else if (context.action == cancelAction)

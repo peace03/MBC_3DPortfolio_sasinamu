@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class PlayerInteract : MonoBehaviour, IPlayerInteractHandler
+public class PlayerInteract : MonoBehaviour, IPlayerInteractHandler, IUIStateHandler
 {
     [Header("정보")]
+    [SerializeField] private bool interactable = true;          // 상호작용 가능 여부
     [SerializeField] private LayerMask interactLayer;           // 상호작용 레이어
     [SerializeField] private Collider curInteractTarget;        // 현재 상호작용 타겟
 
@@ -12,6 +13,8 @@ public class PlayerInteract : MonoBehaviour, IPlayerInteractHandler
     {
         // 상호작용 이벤트 구독
         Subject<IPlayerInteractHandler>.Attach(this);
+        // UI 상태 이벤트 구독
+        Subject<IUIStateHandler>.Attach(this);
     }
 
     private void Update()
@@ -24,6 +27,8 @@ public class PlayerInteract : MonoBehaviour, IPlayerInteractHandler
     {
         // 상호작용 이벤트 구독 해제
         Subject<IPlayerInteractHandler>.Detach(this);
+        // UI 상태 이벤트 구독 해제
+        Subject<IUIStateHandler>.Detach(this);
     }
 
     // 초기화 함수
@@ -109,9 +114,12 @@ public class PlayerInteract : MonoBehaviour, IPlayerInteractHandler
     // 상호작용 함수
     public void OnInteract()
     {
-        // 현재 상호작용 타겟이 비어있지 않고, 상호작용 인터페이스를 가지고 있다면
-        if (curInteractTarget != null && curInteractTarget.TryGetComponent(out IInteractable interactable))
+        // 상호작용이 가능한 상태이고 현재 상호작용 타겟이 비어있지 않고 상호작용 인터페이스를 가지고 있다면
+        if (interactable && curInteractTarget != null && curInteractTarget.TryGetComponent(out IInteractable target))
             // 상호작용 실행(상자 : UI 활성화, 맵 이동 : 씬 전환)
-            interactable.Interact();
+            target.Interact();
     }
+
+    // UI 상태 함수(UI가 열리면 상호작용 불가, 닫히면 상호작용 가능)
+    public void OnUIState(bool state) => interactable = !state;
 }
