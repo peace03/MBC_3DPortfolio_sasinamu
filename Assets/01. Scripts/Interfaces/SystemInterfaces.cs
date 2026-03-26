@@ -69,13 +69,6 @@ public interface IMapHandler
     public void OnMap();
 }
 
-// 버튼으로 열리는 UI 관리 인터페이스
-public interface IOpenUIByButtonHandler
-{
-    public void OnOpenUIByButton(UIType type);
-}
-
-
 // 아이템 사용 관리 인터페이스
 public interface T_IUseItemHandler
 {

@@ -37,6 +37,14 @@ public class GameLevelUI : MonoBehaviour
         StartGame();
     }
 
+    // 어려움 난이도 선택 함수
+    private void SelectHardLevel()
+    {
+        Debug.Log("어려움 난이도 시작");
+        // 게임 시작
+        StartGame();
+    }
+
     // 게임 시작 함수
     private void StartGame()
     {
@@ -51,14 +59,6 @@ public class GameLevelUI : MonoBehaviour
         // 등록부에 다음 씬 이름이 등록되어 있지 않다면
         else
             Debug.LogError($"[Error] {bunkerScene}이 Scene Registry에 등록되지 않음");
-    }
-
-    // 어려움 난이도 선택 함수
-    private void SelectHardLevel()
-    {
-        Debug.Log("어려움 난이도 시작");
-        // 게임 시작
-        StartGame();
     }
 
     // 게임 난이도 UI 버튼 초기화 함수
