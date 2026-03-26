@@ -8,11 +8,11 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 {
     private SlotType _slotType = SlotType.Bag;
     private EquipType _equipType = EquipType.None;
-    private Image _image;
-    private TextMeshProUGUI _itemName;
-    private TextMeshProUGUI _itemNum;
+    [SerializeField] private Image _image;
+    [SerializeField] private TextMeshProUGUI _itemName;
+    [SerializeField] private TextMeshProUGUI _itemNum;
 
-    private Sprite defaultImage;    //아이템이 사라지면 넣을 기본이미지
+    [SerializeField] private Sprite defaultImage;    //아이템이 사라지면 넣을 기본이미지
     private int _index;             //해당 슬롯의 인덱스
     public int Index => _index;
 
@@ -24,10 +24,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     private void Awake()
     {
-        _image = transform.GetChild(0).GetComponent<Image>();
-        _itemName = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-        _itemNum = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
-        defaultImage = _image.sprite;
+        //defaultImage = _image.sprite;
     }
 
     public void Initialize(int index, VirtualSlot virtualSlot)

@@ -43,7 +43,16 @@ public class SceneChanger : MonoBehaviour, IInteractable, IPlayerCancelHandler
         // 전환 시작 시간에서 전환 지연 시간만큼 지날 때까지
         while (Time.time - startChangeTime < changeDelayTime)
         {
-            Debug.Log($"진행 시간 : {(Time.time - startChangeTime):F1}초");
+            // 게임 시간이 멈춰있다면
+            if (Time.timeScale == 0)
+            {
+                // 프레임 단위로 기다리기
+                yield return null;
+                // 건너뛰기
+                continue;
+            }
+
+            Debug.Log($"씬 전환 진행 시간 : {(Time.time - startChangeTime):F1}초");
             // 여기서 UI의 슬라이더 값 전달하기
 
             // 프레임 단위로 기다리기

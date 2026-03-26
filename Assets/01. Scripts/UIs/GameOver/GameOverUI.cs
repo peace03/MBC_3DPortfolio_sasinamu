@@ -23,8 +23,12 @@ public class GameOverUI : MonoBehaviour
     {
         // 등록부에 다음 씬 이름이 등록되어 있다면
         if (SceneRegistry.GetSceneName(bunkerScene, out string sceneName))
+        {
+            // 게임 시간 시작
+            Time.timeScale = 1f;
             // 벙커 씬 전환
             SceneManager.LoadScene(sceneName);
+        }
         // 등록부에 다음 씬 이름이 등록되어 있지 않다면
         else
             Debug.LogError($"[Error] {bunkerScene}이 Scene Registry에 등록되지 않음");
