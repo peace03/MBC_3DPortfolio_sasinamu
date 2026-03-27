@@ -6,7 +6,7 @@ using System;
 
 public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private SlotType _slotType = SlotType.Bag;
+    private SlotType _slotType;
     private EquipType _equipType = EquipType.None;
     [SerializeField] private Image _image;
     [SerializeField] private TextMeshProUGUI _itemName;
@@ -27,10 +27,12 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         //defaultImage = _image.sprite;
     }
 
-    public void Initialize(int index, VirtualSlot virtualSlot)
+    public void Initialize(int index, SlotType slotType, VirtualSlot virtualSlot)
     {
         _index = index;
+        _slotType = slotType;
         _virtualSlot = virtualSlot;
+        SetSlot();
     }
 
     //public void OnButton()
@@ -101,6 +103,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        Subject<ISlotClickRightHandler>.Publish(h => h.OnDropBtnSetActive(false));
         //가상슬롯 비활성화면 종료
         if (!_virtualSlot.gameObject.activeSelf) return;
         _virtualSlot.gameObject.GetComponent<Image>().raycastTarget = true;
@@ -122,13 +125,14 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (_image.sprite == defaultImage) return;
         //좌 우클릭 둘다
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             //클릭한 슬롯의 정보 P에 저장
             Subject<ISlotClickHandler>.Publish(h => h.OnSlotLeftClick(_slotType, _index));
-            //우클릭이면 버튼 띄워주기
         }
+        //우클릭이면 버튼 띄워주기
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             Subject<ISlotClickHandler>.Publish(h => h.OnSlotRightClick(_slotType, _index));

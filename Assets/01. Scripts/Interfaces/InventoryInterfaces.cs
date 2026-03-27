@@ -10,7 +10,8 @@ public interface ISlotClickHandler
 //슬록 우클릭 인터페이스
 public interface ISlotClickRightHandler
 {
-    public void OnSlotClickRight(Transform transform);
+    public void OnSlotClickRight(Transform transform); //우클릭시 발행
+    public void OnDropBtnSetActive(bool setActive); //버튼 (비)활성
 }
 //Drop 버튼 누름 인터페이스
 public interface IDropButtonHandler

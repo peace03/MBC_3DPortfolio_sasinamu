@@ -7,29 +7,40 @@ public class BootStrapper : MonoBehaviour
 
     [Header("User 인벤토리 의존성 주입")] //BootStrapper 역할: P에 MV 연결해줌
     public FacadeView _facadeView; //인스펙터에서 연결
-    private InventoryModel _userInvenModel;
-    private InventoryModel _equipInvenModel;
+    private InventoryModel _equipInvenModel;    //장비    Model
+    private InventoryModel _bagInvenModel;      //가방    Model
+    private InventoryModel _storageInvenModel;  //창고    Model
+    private InventoryModel _quickInvenModel;    //퀵슬롯  Model
     private InventoryPresenter _InvenPresent;
 
     [Header("인벤토리 용량")]
-    [SerializeField] private int _equipCapacity = 5;    //장비
+                     private int _equipCapacity = 5;    //장비
     [SerializeField] private int _bagCapacity = 20;     //가방
     [SerializeField] private int _quickCapacity = 6;    //퀵슬롯
     [SerializeField] private int _storageCapacity = 60; //창고
-    [SerializeField] private int _boxCapacity = 10;     //상자
+    [SerializeField] private int _boxCapacity = 5;     //상자
 
     private void Awake()
     {
-        //User Presenter에 M, V 연결
+        //View별 용량 초기화
+        _facadeView.InitViews(_bagCapacity, _quickCapacity, _storageCapacity, _boxCapacity);
+
+        //모델 생성
         _equipInvenModel = new InventoryModel();
-        _userInvenModel = new InventoryModel();
-        _InvenPresent = new InventoryPresenter(_facadeView, _userInvenModel, _equipInvenModel, _itemManager);
+        _bagInvenModel = new InventoryModel();
+        _storageInvenModel = new InventoryModel();
+        _quickInvenModel = new InventoryModel();
+
+        //User Presenter에 M, V 연결
+        _InvenPresent = new InventoryPresenter(_facadeView, 
+            _equipInvenModel, _bagInvenModel, _storageInvenModel, _quickInvenModel,
+            _itemManager);
 
         //모델별 슬롯 용량 초기화
-        _equipInvenModel.SetCapacity(_equipCapacity);
-        _userInvenModel.SetCapacity(_bagCapacity);
-        _equipInvenModel.Init();
-        _userInvenModel.Init();
+        _equipInvenModel.Init(_equipCapacity);
+        _bagInvenModel.Init(_bagCapacity);
+        _storageInvenModel.Init(_storageCapacity);
+        _quickInvenModel.Init(_quickCapacity);
     }
     private void Start()
     {
@@ -37,7 +48,7 @@ public class BootStrapper : MonoBehaviour
         _InvenPresent.InitializePresenter();
     }
 
-    //구독, 해제
+    //이벤트 구독, 해제
     private void OnEnable()
     {
         Subject<ISlotExchangeHandler>.Attach(_InvenPresent);    //View에서 교환     발생
@@ -56,4 +67,14 @@ public class BootStrapper : MonoBehaviour
         Subject<ISlotClickRightHandler>.Detach(_facadeView);
         Subject<IDropButtonHandler>.Detach(_InvenPresent);
     }
+
+    //상자 상호작용시 Model 초기화 해주는 메서드
+    //이벤트 구독으로 실행
+    public void OnInteractBox(InventoryModel boxModel)
+    {
+        _InvenPresent.SetBoxModel(boxModel);
+    }
 }
+
+
+//

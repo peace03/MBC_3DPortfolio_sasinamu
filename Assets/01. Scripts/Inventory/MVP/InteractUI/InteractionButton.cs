@@ -7,13 +7,14 @@ public class InteractionButton : MonoBehaviour
     public void Init()
     {
         _dropButton = gameObject.transform.GetChild(0);
+        //_dropButton.gameObject.SetActive(false);
     }
 
     //슬롯에서 마우스 우클릭 했을 때
     public void SlotClickRight(Transform transform)
     {
-        _dropButton.gameObject.SetActive(true);
         MovePosition(transform);
+        
     }
 
     public void MovePosition(Transform transform)
@@ -27,5 +28,6 @@ public class InteractionButton : MonoBehaviour
     public void DropButtonDown()
     {
         Subject<IDropButtonHandler>.Publish(h => h.OnDropButtenDown());
+        gameObject.SetActive(false);
     }
 }

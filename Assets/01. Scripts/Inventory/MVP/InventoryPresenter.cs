@@ -20,6 +20,9 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     private FacadeView _view;
     private InventoryModel _bagModel;
     private InventoryModel _equipModel;
+    private InventoryModel _storageModel;
+    private InventoryModel _quickModel;
+    private InventoryModel _boxModel;
     private ItemManager _itemManager;
 
     //슬롯 좌클릭시 저장
@@ -31,12 +34,14 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     
 
     public InventoryPresenter(FacadeView view,
-        InventoryModel bagModel, InventoryModel equipModel,
+        InventoryModel equipModel, InventoryModel bagModel, InventoryModel storageModel, InventoryModel quickModel,
         ItemManager manager)
     {
         _view = view;
-        _bagModel = bagModel;
         _equipModel = equipModel;
+        _bagModel = bagModel;
+        _storageModel = storageModel;
+        _quickModel = quickModel;
         _itemManager = manager;
     }
 
@@ -49,6 +54,12 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         //Debug.Log("실행2");
         UpdateAllSlot(_bagModel.GetAllItem());
         //Debug.Log("실행3");
+    }
+
+    //상자 상호작용시 상자모델 교체
+    public void SetBoxModel(InventoryModel boxModel)
+    {
+        _boxModel = boxModel;
     }
 
     public void UpdateAllSlot(List<Item> items)
@@ -133,9 +144,9 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
             case SlotType.Box:
                 break;
             case SlotType.Storage:
-                break;
+                return _storageModel;
             case SlotType.Quick:
-                break;
+                return _quickModel;
             default:
                 break;
         }
@@ -205,8 +216,10 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
             case SlotType.Box:
                 break;
             case SlotType.Storage:
+                _view.UpdateSingleSlot_Storage(index, item);
                 break;
             case SlotType.Quick:
+                _view.UpdateSingleSlot_Quick(index, item);
                 break;
             default:
                 break;
@@ -252,7 +265,8 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
 
 
-//상자 창고
+//상자 최소:1 최대: 3 (슬롯 5개)
+//창고O 퀵슬롯O
 //장비 착용했을 때 총 오브젝트 반환
 //내구도 변화 UI 만들기
 

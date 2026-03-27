@@ -18,8 +18,9 @@ public class InventoryModel
         fullInventory = false;
     }
 
-    public void Init()
+    public void Init(int capacity)
     {
+        _capacity = capacity;
         for (int i = 0; i < _capacity; i++) _Slots.Add(null);
     }
 
@@ -145,10 +146,6 @@ public class InventoryModel
         return _Slots;
     }
     //슬롯 용량 설정
-    public void SetCapacity(int capacity)
-    {
-        _capacity = capacity;
-    }
 
     //인벤토리 다 찼는지 확인
     //? countable이 다 안찼을 땐 어캄?
