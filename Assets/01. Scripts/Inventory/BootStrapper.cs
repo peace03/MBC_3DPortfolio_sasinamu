@@ -12,16 +12,21 @@ public class BootStrapper : MonoBehaviour
     private InventoryModel _storageInvenModel;  //창고    Model
     private InventoryModel _quickInvenModel;    //퀵슬롯  Model
     private InventoryPresenter _InvenPresent;
+    [SerializeField] Transform boxesObj;       //박스 오브젝트가 들어잇는 빈 오브젝트
+    [SerializeField] int boxNum;                //박스 개수
 
     [Header("인벤토리 용량")]
-                     private int _equipCapacity = 5;    //장비
     [SerializeField] private int _bagCapacity = 20;     //가방
     [SerializeField] private int _quickCapacity = 6;    //퀵슬롯
     [SerializeField] private int _storageCapacity = 60; //창고
     [SerializeField] private int _boxCapacity = 5;     //상자
+                     private int _equipCapacity = 5;    //장비
 
     private void Awake()
     {
+        //ItemManager 초기화
+        _itemManager.Init();
+
         //View별 용량 초기화
         _facadeView.InitViews(_bagCapacity, _quickCapacity, _storageCapacity, _boxCapacity);
 
@@ -41,6 +46,10 @@ public class BootStrapper : MonoBehaviour
         _bagInvenModel.Init(_bagCapacity);
         _storageInvenModel.Init(_storageCapacity);
         _quickInvenModel.Init(_quickCapacity);
+        InitBoxes();
+
+        //Test
+
     }
     private void Start()
     {
@@ -68,13 +77,16 @@ public class BootStrapper : MonoBehaviour
         Subject<IDropButtonHandler>.Detach(_InvenPresent);
     }
 
-    //상자 상호작용시 Model 초기화 해주는 메서드
-    //이벤트 구독으로 실행
-    public void OnInteractBox(InventoryModel boxModel)
+    public void InitBoxes()
     {
-        _InvenPresent.SetBoxModel(boxModel);
+        for (int i = 0; i < boxNum; i++)
+        {
+            //모델 생성
+            InventoryModel boxmodel = new InventoryModel();
+            boxesObj.GetChild(i).GetComponent<Box2>().SetModel(boxmodel);
+            Debug.Log($"박스 모델{boxmodel} 생성");
+            //모델 초기화(아이템 랜덤생성)
+            _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
+        }
     }
 }
-
-
-//

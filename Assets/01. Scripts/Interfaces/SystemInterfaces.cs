@@ -42,7 +42,7 @@ public interface IUIStateHandler
 // 상자 관리 인터페이스
 public interface IBoxHandler
 {
-    public void OnBox(List<GameObject> items);
+    public void OnBox(InventoryModel boxModel);
 }
 
 // 가방 관리 인터페이스

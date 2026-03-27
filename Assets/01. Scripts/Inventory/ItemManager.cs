@@ -9,7 +9,7 @@ public class ItemManager : MonoBehaviour
     [Header("플레이어 위치")]
     [SerializeField] private Transform _player;
 
-    private void Awake()
+    public void Init()
     {
         _itemDatas = new List<ItemData>(Resources.LoadAll<ItemData>("ItemDatas"));
     }

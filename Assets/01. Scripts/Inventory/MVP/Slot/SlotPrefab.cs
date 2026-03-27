@@ -24,7 +24,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     private void Awake()
     {
-        //defaultImage = _image.sprite;
+        defaultImage = _image.sprite;
     }
 
     public void Initialize(int index, SlotType slotType, VirtualSlot virtualSlot)

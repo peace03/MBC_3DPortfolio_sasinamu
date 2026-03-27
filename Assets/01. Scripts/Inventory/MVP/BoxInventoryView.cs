@@ -24,7 +24,7 @@ public class BoxInventoryView : MonoBehaviour
         }
     }
 
-    public void UpdateQuickSlot_Single(int index, Item item)
+    public void UpdateBoxSlot_Single(int index, Item item)
     {
         if (item is CountableItem countableItem)
         {

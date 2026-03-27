@@ -4,9 +4,12 @@ using UnityEngine;
 public class InteractionButton : MonoBehaviour
 {
     private Transform _dropButton;
+    private Transform _useButton;
+    public Transform UseButton => _useButton;
     public void Init()
     {
-        _dropButton = gameObject.transform.GetChild(0);
+        _useButton = gameObject.transform.GetChild(0);
+        _dropButton = gameObject.transform.GetChild(1);
         //_dropButton.gameObject.SetActive(false);
     }
 

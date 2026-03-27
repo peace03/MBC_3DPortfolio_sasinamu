@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public enum SlotType
 {
@@ -34,7 +31,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     
 
     public InventoryPresenter(FacadeView view,
-        InventoryModel equipModel, InventoryModel bagModel, InventoryModel storageModel, InventoryModel quickModel,
+        InventoryModel equipModel, InventoryModel bagModel, InventoryModel storageModel,InventoryModel quickModel,
         ItemManager manager)
     {
         _view = view;
@@ -52,7 +49,8 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         //Debug.Log("실행1");
         Test();
         //Debug.Log("실행2");
-        UpdateAllSlot(_bagModel.GetAllItem());
+        UpdateAllSlot(SlotType.Bag);
+        UpdateAllSlot(SlotType.Box);
         //Debug.Log("실행3");
     }
 
@@ -62,11 +60,12 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         _boxModel = boxModel;
     }
 
-    public void UpdateAllSlot(List<Item> items)
+    public void UpdateAllSlot(SlotType slotType)
     {
-        for (int i = 0; i < 20; i++)
+        InventoryModel model = GetModel(slotType);
+        for (int i = 0; i < model.Capacity; i++)
         {
-            _view.UpdateSingleSlot_Bag(i, items[i]);
+            OnUpdateSingleSlot(slotType, i);
         }
     }
 
@@ -142,7 +141,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
             case SlotType.Bag:
                 return _bagModel;
             case SlotType.Box:
-                break;
+                return _boxModel;
             case SlotType.Storage:
                 return _storageModel;
             case SlotType.Quick:
@@ -152,23 +151,35 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         }
         return null;
     }
-    //교환 가능한지 검사
+    //교환 가능한지 검사 및 교체될 아이템 이벤트로 반환
     public bool CanExchange(SlotType fromSlotType, int fromIndex, Item fromItem,
         SlotType toSlotType, int toIndex, Item toItem) //보완해야함
     {
+        bool equal;
         if (fromSlotType == SlotType.Equip && toSlotType == SlotType.Equip)
         {//장비 -> 장비
             //무기끼리만 교환 가능
-            if (fromIndex < 2 && toIndex < 2) return true;
+            if (fromIndex < 2 && toIndex < 2)
+            {
+                //장비 교체 알림
+                Subject<IEquipWear>.Publish(h => h.OnGunSwap(fromIndex, fromItem, toIndex, toItem));
+                return true;
+            }
         }
         else if (fromSlotType == SlotType.Equip)
         {//장비 -> 가방
-            if (toItem == null) return true;
-            else return EqualEquipType(fromIndex, fromItem, toItem);
+            if (toItem == null) equal = true;
+            else equal = EqualEquipType(fromIndex, fromItem, toItem);
+            //장비 교체 알림
+            if (equal == true) Subject<IEquipWear>.Publish(h => h.OnEquipWear(toIndex, toItem));
+            return equal;
         }
         else //toSlotType == SlotType.Equip
         {//가방 -> 장비
-            return EqualEquipType(toIndex, toItem, fromItem);
+            equal = EqualEquipType(toIndex, toItem, fromItem);
+            //장비 교체 알림
+            if (equal == true) Subject<IEquipWear>.Publish(h => h.OnEquipWear(fromIndex, fromItem));
+            return equal;
         }
         return false;
     }
@@ -214,6 +225,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
                 _view.UpdateSingleSlot_Bag(index, item);
                 break;
             case SlotType.Box:
+                _view.UpdateSingleSlot_Box(index, item);
                 break;
             case SlotType.Storage:
                 _view.UpdateSingleSlot_Storage(index, item);
@@ -239,6 +251,12 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     {
         _slotTypeRight = slotType;
         _slotIndexRight = index;
+
+        //Use 버튼 표시 가능 판단
+        Item item = GetModel(slotType).GetItem(index);
+        if (item is CureKitItem && item is FoodItem)
+            Subject<ISlotClickRightHandler>.Publish(h => h.OnUseBtnSetActive(true));
+        else Subject<ISlotClickRightHandler>.Publish(h => h.OnUseBtnSetActive(false));
     }
 
     //상호작용 시 아이템 사용
@@ -260,14 +278,23 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         //Model에서 삭제
         model.PutItem(_slotTypeRight, _slotIndexRight, null);
     }
+    public void InitBoxModel(InventoryModel boxModel, int boxCapacity)
+    {
+        //박스 모델 초기화
+        boxModel.Init(boxCapacity);
+        //모델에 아이템 랜덤 생성
+        int[] IDs = new int[] { 1,8,9,13,16,18,20 };
+        for (int i = 0; i < Random.Range(1, boxCapacity); i++)
+        {
+            Item item = _itemManager.CreateItemInstance(IDs[Random.Range(0, IDs.Length)]);
+            Debug.Log($"생성된 아이템:{item._data.Name}");
+            boxModel.AddItem(item);
+        }
+        _boxModel = boxModel;
+    }
 }
 
 
 
 
-//상자 최소:1 최대: 3 (슬롯 5개)
-//창고O 퀵슬롯O
-//장비 착용했을 때 총 오브젝트 반환
-//내구도 변화 UI 만들기
 
-//초기화 생명주기 순서다시보기

@@ -11,6 +11,8 @@ public class InventoryModel
     private int _capacity; //인벤토리 최대 슬롯
     private bool fullInventory; //인벤토리가 다 찼는가?
 
+    public int Capacity => _capacity;
+
     public InventoryModel()
     {
         //비어있는 인벤토리 생성

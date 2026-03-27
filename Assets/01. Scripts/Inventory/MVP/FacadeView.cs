@@ -48,6 +48,8 @@ public class FacadeView : MonoBehaviour, ISlotClickRightHandler
         _storageView.UpdateStorageSlot_Single(index, item);
     public void UpdateSingleSlot_Quick(int index, Item item) =>
         _quickView.UpdateQuickSlot_Single(index, item);
+    public void UpdateSingleSlot_Box(int index, Item item) =>
+        _boxView.UpdateBoxSlot_Single(index, item);
 
     //슬롯에서 마우스 우클릭 했을 때
     public void OnSlotClickRight(Transform transform)
@@ -71,5 +73,10 @@ public class FacadeView : MonoBehaviour, ISlotClickRightHandler
     public void OnDropBtnSetActive(bool setActive)
     {
         _interactButton.gameObject.SetActive(setActive);
+    }
+
+    public void OnUseBtnSetActive(bool setActive)
+    {
+        _interactButton.UseButton.gameObject.SetActive(setActive);
     }
 }
