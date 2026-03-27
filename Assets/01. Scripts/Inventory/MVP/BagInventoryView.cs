@@ -9,7 +9,6 @@ public class BagInventoryView : MonoBehaviour
     [Header("가방")]
     [SerializeField] private GameObject slotPrefab;         //가방 인벤토리에 배치될 슬롯
     [SerializeField] private VirtualSlot virtualSlot;       //가상 슬롯(드래그앤드롭에 사용)
-    [SerializeField] private ItemStatPanel itemStatPanel;   //아이템 스탯 패널
     private int capacity;
 
     private List<SlotPrefab> _bagSlots;    //가방 프리펩 슬롯 리스트
@@ -55,13 +54,5 @@ public class BagInventoryView : MonoBehaviour
         }
     }
 
-    public void SetItemStatPanel(Item item)
-    {
-        if (item == null) itemStatPanel.InActiveToggle();
-        else
-        {
-            itemStatPanel.ActiveToggle();
-            itemStatPanel.SetStatPanel(item);
-        }
-    }
+    
 }

@@ -11,15 +11,21 @@ public interface ISlotClickHandler
 public interface ISlotClickRightHandler
 {
     public void OnSlotClickRight(Transform transform); //우클릭시 발행
-    public void OnDropBtnSetActive(bool setActive); //드랍 버튼 (비)활성
+    public void OnAllBtnSetActive(bool setActive); //드랍 버튼 (비)활성
     public void OnUseBtnSetActive(bool setActive);  //사용 버튼 (비)활성
 }
-//Drop 버튼 누름 인터페이스
-public interface IDropButtonHandler
+//사용하기, 버리기 버튼 누름 인터페이스
+public interface IButtonHandler
 {
+    public void OnUseButtonDown();
     public void OnDropButtenDown();
 }
 
+public interface ICusorPointerHandler
+{
+    public void OnCusorSlotIn(SlotType slotType, int index);
+    public void OnCusorSlotExit();
+}
 
 // 아이템 사용 인터페이스
 public interface IUseItemHandler

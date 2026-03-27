@@ -103,7 +103,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Subject<ISlotClickRightHandler>.Publish(h => h.OnDropBtnSetActive(false));
+        Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
         //가상슬롯 비활성화면 종료
         if (!_virtualSlot.gameObject.activeSelf) return;
         _virtualSlot.gameObject.GetComponent<Image>().raycastTarget = true;
@@ -115,12 +115,16 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     #region 마우스 커서
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //아이템 상태창 구현하기
+        //아이템 상태창 세팅
+        Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotIn(_slotType, _index));
+        Debug.Log("상태창 활성화");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //Subject<ISlotPointerHandler>.Publish(h => h.OnSlotPointer(SlotType.None, _index));
+        //아이템 상태창 비활성화
+        Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotExit());
+        Debug.Log("상태창 비활성화");
     }
 
     public void OnPointerClick(PointerEventData eventData)

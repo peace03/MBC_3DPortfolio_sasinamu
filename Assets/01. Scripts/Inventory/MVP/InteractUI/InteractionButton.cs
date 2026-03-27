@@ -28,9 +28,16 @@ public class InteractionButton : MonoBehaviour
             new Vector2(rect2.position.x + 50, rect2.position.y);
     }
 
+    //사용하기 버튼 눌렀을 때
+    public void UseButtonDown()
+    {
+        Subject<IButtonHandler>.Publish(h => h.OnUseButtonDown());
+        //Debug.Log("사용 버튼 눌림");
+    }
+    //버리기 버튼 눌렀을 때
     public void DropButtonDown()
     {
-        Subject<IDropButtonHandler>.Publish(h => h.OnDropButtenDown());
+        Subject<IButtonHandler>.Publish(h => h.OnDropButtenDown());
         gameObject.SetActive(false);
     }
 }

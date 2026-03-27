@@ -113,13 +113,16 @@ public class InventoryModel
         {
             Subject<IUseItemHandler>.Publish(h => h.OnUseCureItem(cureItem.CureAmount));
             //내구도 0이하면 아이템 없애기
-            if (cureItem.Use() <= 0f) 
+            if (cureItem.DecreaseDurability() <= 0f) 
             {
                 PutItem(slotType, index, null);
+                Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             }
+            Debug.Log(cureItem.CurDurability);
         }
         else if (item is FoodItem foodItem)
         {
+            Debug.Log(foodItem.Energy + " " + foodItem.Thirst);
             Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
             PutItem(slotType, index, null);
             

@@ -12,7 +12,7 @@ public enum SlotType
 }
 
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
-    ISlotClickHandler, IPlayerInteractHandler, IDropButtonHandler
+    ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
@@ -69,23 +69,6 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         }
     }
 
-    //public void UpdateStatPanel(SlotSource slotSource, int index)
-    //{
-    //    if (slotSource == SlotSource.Bag)
-    //    {
-    //        _bagInvenView.SetItemStatPanel(_userInvenModel.GetBagItem(index));
-            
-    //    }
-    //    else if (slotSource == SlotSource.Equipment)
-    //    {
-    //        _bagInvenView.SetItemStatPanel(_userInvenModel.GetEquipItem(index));
-    //    }
-    //    else //상자에서 호출
-    //    {
-
-    //    }
-    //}
-
     void Test()
     {
         CreateItem(1);
@@ -108,6 +91,19 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         //Debug.Log($"item: {item}");
         return _bagModel.AddItem(item);
     }
+
+    //아이템 스탯창 업데이트
+    public void OnCusorSlotIn(SlotType slotType, int index)
+    {
+        InventoryModel model = GetModel(slotType);
+        _view.SetItemStatPanel(model.GetItem(index));
+    }
+    //아이템 스탯창 비활성화
+    public void OnCusorSlotExit()
+    {
+        _view.StatPanelInActive();
+    }
+
 
     #region 아이템 교체
     //아이템 교체
@@ -251,23 +247,35 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     {
         _slotTypeRight = slotType;
         _slotIndexRight = index;
+        Debug.Log($"{_slotTypeRight}, {_slotIndexRight}");
 
         //Use 버튼 표시 가능 판단
         Item item = GetModel(slotType).GetItem(index);
-        if (item is CureKitItem && item is FoodItem)
+        if (item is CureKitItem || item is FoodItem)
             Subject<ISlotClickRightHandler>.Publish(h => h.OnUseBtnSetActive(true));
         else Subject<ISlotClickRightHandler>.Publish(h => h.OnUseBtnSetActive(false));
+        //Debug.Log("우클릭");
     }
 
-    //상호작용 시 아이템 사용
+    //좌클릭 후 E키로 상호작용 시 아이템 사용
     public void OnInteract()
     {
+        //Debug.Log("사용 버튼 눌림");
         if (_slotTypeLeft == SlotType.None) return;
         //아이템 사용
         InventoryModel model = GetModel(_slotTypeLeft);
         model.UseItem(_slotTypeLeft, _slotIndexLeft);
+        //Debug.Log("사용 버튼 눌림");
     }
 
+    //아이템 사용하기 버튼 눌렀을 때 실행
+    public void OnUseButtonDown()
+    {
+        if (_slotTypeRight == SlotType.None) return;
+        //아이템 사용
+        InventoryModel model = GetModel(_slotTypeRight);
+        model.UseItem(_slotTypeRight, _slotIndexRight);
+    }
     //아이템 버리기 버튼 눌렀을 때 실행
     public void OnDropButtenDown()
     {
@@ -287,11 +295,12 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         for (int i = 0; i < Random.Range(1, boxCapacity); i++)
         {
             Item item = _itemManager.CreateItemInstance(IDs[Random.Range(0, IDs.Length)]);
-            Debug.Log($"생성된 아이템:{item._data.Name}");
+            //Debug.Log($"생성된 아이템:{item._data.Name}");
             boxModel.AddItem(item);
         }
         _boxModel = boxModel;
     }
+
 }
 
 

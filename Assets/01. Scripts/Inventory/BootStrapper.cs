@@ -65,7 +65,8 @@ public class BootStrapper : MonoBehaviour
         Subject<ISlotClickHandler>.Attach(_InvenPresent);       //슬롯 클릭         발생
         Subject<IPlayerInteractHandler>.Attach(_InvenPresent);  //플레이어 상호작용  발생
         Subject<ISlotClickRightHandler>.Attach(_facadeView);    //슬롯 우클릭       발생
-        Subject<IDropButtonHandler>.Attach(_InvenPresent);      //버리기 누름       발생
+        Subject<IButtonHandler>.Attach(_InvenPresent);          //버리기 누름       발생
+        Subject<ICusorPointerHandler>.Attach(_InvenPresent);    //커서 인아웃       발생
     }
     private void OnDisable()
     {
@@ -74,7 +75,8 @@ public class BootStrapper : MonoBehaviour
         Subject<ISlotClickHandler>.Detach(_InvenPresent);
         Subject<IPlayerInteractHandler>.Detach(_InvenPresent);
         Subject<ISlotClickRightHandler>.Detach(_facadeView);
-        Subject<IDropButtonHandler>.Detach(_InvenPresent);
+        Subject<IButtonHandler>.Detach(_InvenPresent);
+        Subject<ICusorPointerHandler>.Detach(_InvenPresent);
     }
 
     public void InitBoxes()
@@ -84,7 +86,7 @@ public class BootStrapper : MonoBehaviour
             //모델 생성
             InventoryModel boxmodel = new InventoryModel();
             boxesObj.GetChild(i).GetComponent<Box2>().SetModel(boxmodel);
-            Debug.Log($"박스 모델{boxmodel} 생성");
+            //Debug.Log($"박스 모델{boxmodel} 생성");
             //모델 초기화(아이템 랜덤생성)
             _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
         }
