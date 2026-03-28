@@ -1,7 +1,8 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
+using UnityEngine;
 
 public class InventoryModel
 {
@@ -10,6 +11,8 @@ public class InventoryModel
     private int _capacity; //인벤토리 최대 슬롯
     private bool fullInventory; //인벤토리가 다 찼는가?
 
+    public int Capacity => _capacity;
+
     public InventoryModel()
     {
         //비어있는 인벤토리 생성
@@ -17,8 +20,9 @@ public class InventoryModel
         fullInventory = false;
     }
 
-    public void Init()
+    public void Init(int capacity)
     {
+        _capacity = capacity;
         for (int i = 0; i < _capacity; i++) _Slots.Add(null);
     }
 
@@ -109,30 +113,38 @@ public class InventoryModel
         {
             Subject<IUseItemHandler>.Publish(h => h.OnUseCureItem(cureItem.CureAmount));
             //내구도 0이하면 아이템 없애기
-            if (cureItem.Use() <= 0f) 
+            if (cureItem.DecreaseDurability() <= 0f) 
             {
-                _Slots[index] = null;
-                Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+                PutItem(slotType, index, null);
+                Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             }
+            Debug.Log(cureItem.CurDurability);
         }
         else if (item is FoodItem foodItem)
         {
+            Debug.Log(foodItem.Energy + " " + foodItem.Thirst);
             Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
-            _Slots[index] = null;
-            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+            Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
+            PutItem(slotType, index, null);
             
         }
     }
 
     //아이템 넣어주기
-    public void PutItem(int index, Item item)
+    public void PutItem(SlotType slotType, int index, Item item)
     {
         _Slots[index] = item;
+        Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
     }
     //아이템 보내주기
     public Item GetItem(int index)
     {
         return _Slots[index];
+    }
+    public GameObject GetItemObject (int index)
+    {
+        GameObject gameObject = _Slots[index]._data.ObjectPrefab;
+        return gameObject;
     }
     //모든 아이템 보내주기
     public List<Item> GetAllItem()
@@ -140,10 +152,6 @@ public class InventoryModel
         return _Slots;
     }
     //슬롯 용량 설정
-    public void SetCapacity(int capacity)
-    {
-        _capacity = capacity;
-    }
 
     //인벤토리 다 찼는지 확인
     //? countable이 다 안찼을 땐 어캄?

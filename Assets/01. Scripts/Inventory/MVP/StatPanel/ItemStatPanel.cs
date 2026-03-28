@@ -66,18 +66,18 @@ public class ItemStatPanel : MonoBehaviour
         {
             if (i >= _statTexts.Count) //아이템 스탯 개수가 리스트 크기 초과했다면 - 생성
             {
-                Debug.Log("1");
+                //Debug.Log("1");
                 GameObject go = Instantiate(_statText, transform);
                 StatTextLine stl = go.GetComponent<StatTextLine>();
                 _statTexts.Add(stl);
-                Debug.Log("2");
+                //Debug.Log("2");
             }
             if (i < stats.Count) //인덱스가 아이템 스탯 개수보다 적으면 초기화
             {
-                Debug.Log("3");
+                //Debug.Log("3");
                 _statTexts[i].SetStatText(stats[i].statName, stats[i].statValue);
                 _statTexts[i].gameObject.SetActive(true);
-                Debug.Log("4");
+                //Debug.Log("4");
             }
             else //인덱스가 아이템 스탯 개수보다 많으면 비활성화
             {

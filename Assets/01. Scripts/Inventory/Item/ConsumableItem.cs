@@ -5,15 +5,15 @@ using UnityEngine;
 [System.Serializable]
 public class ConsumableItem : Item
 {
-    private float _curDurability; //현재 내구도
+    protected float _curDurability; //현재 내구도
     public ConsumableItem(ConsumableData data, float curDurability) : base(data)
     {
         _curDurability = curDurability;
     }
 
-    public virtual float Use()
+    //내구도 감소
+    public virtual float DecreaseDurability()
     {
-        _curDurability -= _data.GetComponent<CureKitData>().DurabilityConsumetion;
         return _curDurability;
     }
 

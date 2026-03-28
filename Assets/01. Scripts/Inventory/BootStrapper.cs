@@ -7,29 +7,49 @@ public class BootStrapper : MonoBehaviour
 
     [Header("User 인벤토리 의존성 주입")] //BootStrapper 역할: P에 MV 연결해줌
     public FacadeView _facadeView; //인스펙터에서 연결
-    private InventoryModel _userInvenModel;
-    private InventoryModel _equipInvenModel;
+    private InventoryModel _equipInvenModel;    //장비    Model
+    private InventoryModel _bagInvenModel;      //가방    Model
+    private InventoryModel _storageInvenModel;  //창고    Model
+    private InventoryModel _quickInvenModel;    //퀵슬롯  Model
     private InventoryPresenter _InvenPresent;
+    [SerializeField] Transform boxesObj;       //박스 오브젝트가 들어잇는 빈 오브젝트
+    [SerializeField] int boxNum;                //박스 개수
 
     [Header("인벤토리 용량")]
-    [SerializeField] private int _equipCapacity = 5;    //장비
     [SerializeField] private int _bagCapacity = 20;     //가방
     [SerializeField] private int _quickCapacity = 6;    //퀵슬롯
     [SerializeField] private int _storageCapacity = 60; //창고
-    [SerializeField] private int _boxCapacity = 10;     //상자
+    [SerializeField] private int _boxCapacity = 5;     //상자
+                     private int _equipCapacity = 5;    //장비
 
     private void Awake()
     {
-        //User Presenter에 M, V 연결
+        //ItemManager 초기화
+        _itemManager.Init();
+
+        //View별 용량 초기화
+        _facadeView.InitViews(_bagCapacity, _quickCapacity, _storageCapacity, _boxCapacity);
+
+        //모델 생성
         _equipInvenModel = new InventoryModel();
-        _userInvenModel = new InventoryModel();
-        _InvenPresent = new InventoryPresenter(_facadeView, _userInvenModel, _equipInvenModel, _itemManager);
+        _bagInvenModel = new InventoryModel();
+        _storageInvenModel = new InventoryModel();
+        _quickInvenModel = new InventoryModel();
+
+        //User Presenter에 M, V 연결
+        _InvenPresent = new InventoryPresenter(_facadeView, 
+            _equipInvenModel, _bagInvenModel, _storageInvenModel, _quickInvenModel,
+            _itemManager);
 
         //모델별 슬롯 용량 초기화
-        _equipInvenModel.SetCapacity(_equipCapacity);
-        _userInvenModel.SetCapacity(_bagCapacity);
-        _equipInvenModel.Init();
-        _userInvenModel.Init();
+        _equipInvenModel.Init(_equipCapacity);
+        _bagInvenModel.Init(_bagCapacity);
+        _storageInvenModel.Init(_storageCapacity);
+        _quickInvenModel.Init(_quickCapacity);
+        InitBoxes();
+
+        //Test
+
     }
     private void Start()
     {
@@ -37,19 +57,38 @@ public class BootStrapper : MonoBehaviour
         _InvenPresent.InitializePresenter();
     }
 
-    //구독, 해제
+    //이벤트 구독, 해제
     private void OnEnable()
     {
-        Subject<ISlotExchangeHandler>.Attach(_InvenPresent);
-        Subject<ISlotChanged>.Attach(_InvenPresent);
-        Subject<ISlotPointerHandler>.Attach(_InvenPresent);
-        Subject<IPlayerInteractHandler>.Attach(_InvenPresent);
+        Subject<ISlotExchangeHandler>.Attach(_InvenPresent);    //View에서 교환     발생
+        Subject<ISlotChanged>.Attach(_InvenPresent);            //Model에서 교환    발생
+        Subject<ISlotClickHandler>.Attach(_InvenPresent);       //슬롯 클릭         발생
+        Subject<IPlayerInteractHandler>.Attach(_InvenPresent);  //플레이어 상호작용  발생
+        Subject<ISlotClickRightHandler>.Attach(_facadeView);    //슬롯 우클릭       발생
+        Subject<IButtonHandler>.Attach(_InvenPresent);          //버리기 누름       발생
+        Subject<ICusorPointerHandler>.Attach(_InvenPresent);    //커서 인아웃       발생
     }
     private void OnDisable()
     {
         Subject<ISlotExchangeHandler>.Detach(_InvenPresent);
         Subject<ISlotChanged>.Detach(_InvenPresent);
-        Subject<ISlotPointerHandler>.Detach(_InvenPresent);
+        Subject<ISlotClickHandler>.Detach(_InvenPresent);
         Subject<IPlayerInteractHandler>.Detach(_InvenPresent);
+        Subject<ISlotClickRightHandler>.Detach(_facadeView);
+        Subject<IButtonHandler>.Detach(_InvenPresent);
+        Subject<ICusorPointerHandler>.Detach(_InvenPresent);
+    }
+
+    public void InitBoxes()
+    {
+        for (int i = 0; i < boxNum; i++)
+        {
+            //모델 생성
+            InventoryModel boxmodel = new InventoryModel();
+            boxesObj.GetChild(i).GetComponent<Box2>().SetModel(boxmodel);
+            //Debug.Log($"박스 모델{boxmodel} 생성");
+            //모델 초기화(아이템 랜덤생성)
+            _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
+        }
     }
 }

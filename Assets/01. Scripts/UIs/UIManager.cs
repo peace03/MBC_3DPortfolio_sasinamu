@@ -159,11 +159,11 @@ public class UIManager : MonoBehaviour,
     }
 
     // 상자 함수
-    public void OnBox(List<GameObject> items)
+    public void OnBox(InventoryModel model)
     {
         // 아이템들의 수만큼
-        foreach (var item in items)
-            Debug.Log($"[Item] {item.name}");
+        //foreach (var item in items)
+        //    Debug.Log($"[Item] {item.name}");
 
         // 상자 UI 열기
         OpenUI(UIType.Box);

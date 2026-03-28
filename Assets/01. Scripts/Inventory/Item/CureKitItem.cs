@@ -8,11 +8,15 @@ public class CureKitItem : ConsumableItem
     public CureKitItem(CureKitData data, float curDurability)
         : base(data, curDurability) { }
 
-    public float CureAmount => _data.GetComponent<CureKitData>().CureAmount;
+    //체력 회복량
+    public float CureAmount => (_data as CureKitData).CureAmount;
+    //현재 내구도
+    public float CurDurability => _curDurability;
 
-    public override float Use()
+    public override float DecreaseDurability()
     {
-        return base.Use();
+        _curDurability += (_data as CureKitData).DurabilityConsumetion;
+        return _curDurability;
     }
 
     //아이템 스탯창에 표시용

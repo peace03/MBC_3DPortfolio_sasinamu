@@ -12,6 +12,7 @@ public class ItemData : ScriptableObject
     [SerializeField] private string _explain;
 
     public Sprite Sprite => sprite;
+    public GameObject ObjectPrefab => objectPrefab;
     public int ID => _id;
     public string Name => _name;
     public float Weight => _weight;

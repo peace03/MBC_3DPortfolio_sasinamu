@@ -10,6 +10,8 @@ public class Item
         _data = data;
     }
 
+    public GameObject Object => _data.ObjectPrefab;
+
     public virtual List<(string statName, string statValue)> GetItemStats()
     {
         return new List<(string, string)>();

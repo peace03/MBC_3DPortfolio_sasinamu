@@ -4,9 +4,9 @@ using TMPro;
 using UnityEngine.EventSystems;
 using System;
 
-public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private SlotType _slotType = SlotType.Bag;
+    private SlotType _slotType;
     private EquipType _equipType = EquipType.None;
     [SerializeField] private Image _image;
     [SerializeField] private TextMeshProUGUI _itemName;
@@ -24,14 +24,21 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     private void Awake()
     {
-        //defaultImage = _image.sprite;
+        defaultImage = _image.sprite;
     }
 
-    public void Initialize(int index, VirtualSlot virtualSlot)
+    public void Initialize(int index, SlotType slotType, VirtualSlot virtualSlot)
     {
         _index = index;
+        _slotType = slotType;
         _virtualSlot = virtualSlot;
+        SetSlot();
     }
+
+    //public void OnButton()
+    //{
+    //    Debug.Log("버튼 클릭됨!");
+    //}
 
     #region SetSlot
     //Countable일 때
@@ -96,6 +103,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
         //가상슬롯 비활성화면 종료
         if (!_virtualSlot.gameObject.activeSelf) return;
         _virtualSlot.gameObject.GetComponent<Image>().raycastTarget = true;
@@ -107,14 +115,33 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     #region 마우스 커서
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //마우스 올린 상태에서 E키 누르면 아이템 사용 이벤트 발행
-        // 마우스가 몇번째 슬롯에 있는지 이벤트 발행
-        Subject<ISlotPointerHandler>.Publish(h => h.OnSlotPointer(_slotType, _index));
+        //아이템 상태창 세팅
+        Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotIn(_slotType, _index));
+        Debug.Log("상태창 활성화");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Subject<ISlotPointerHandler>.Publish(h => h.OnSlotPointer(SlotType.None, _index));
+        //아이템 상태창 비활성화
+        Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotExit());
+        Debug.Log("상태창 비활성화");
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (_image.sprite == defaultImage) return;
+        //좌 우클릭 둘다
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            //클릭한 슬롯의 정보 P에 저장
+            Subject<ISlotClickHandler>.Publish(h => h.OnSlotLeftClick(_slotType, _index));
+        }
+        //우클릭이면 버튼 띄워주기
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            Subject<ISlotClickHandler>.Publish(h => h.OnSlotRightClick(_slotType, _index));
+            Subject<ISlotClickRightHandler>.Publish(h => h.OnSlotClickRight(gameObject.transform));
+        }
     }
     #endregion
 }

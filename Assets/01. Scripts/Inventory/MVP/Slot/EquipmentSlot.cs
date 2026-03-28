@@ -13,7 +13,9 @@ public enum EquipType //장비의 타입과 슬롯의 타입
     None
 }
 
-public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, 
+    IDropHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, 
+    IPointerClickHandler
 {
     private SlotType _slotType = SlotType.Equip;
     [SerializeField] private EquipType _equipType;
@@ -70,6 +72,7 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IDr
     }
     public void OnDrop(PointerEventData eventData)
     {
+        Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
         //가상 슬롯 비활성화 상태면 종료
         if (!_virtualSlot.gameObject.activeSelf) return;
         Debug.Log("아이템 드롭!!");
@@ -94,13 +97,33 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IDr
     #region 마우스 커서
     public void OnPointerEnter(PointerEventData eventData)
     {
-        
+        //아이템 상태창 세팅
+        Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotIn(_slotType, _index));
+        Debug.Log("상태창 활성화");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //Debug.Log("마우스 커서 이탈!!!!");
-        //onCusorExit?.Invoke();
+        //아이템 상태창 비활성화
+        Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotExit());
+        Debug.Log("상태창 비활성화");
     }
     #endregion
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (_image.sprite == defaultImage) return;
+        //좌 우클릭 둘다
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            //클릭한 슬롯의 정보 P에 저장
+            Subject<ISlotClickHandler>.Publish(h => h.OnSlotLeftClick(_slotType, _index));
+        }
+        //우클릭이면 버튼 띄워주기
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            Subject<ISlotClickHandler>.Publish(h => h.OnSlotRightClick(_slotType, _index));
+            Subject<ISlotClickRightHandler>.Publish(h => h.OnSlotClickRight(gameObject.transform.GetChild(0).transform));
+        }
+    }
 }
