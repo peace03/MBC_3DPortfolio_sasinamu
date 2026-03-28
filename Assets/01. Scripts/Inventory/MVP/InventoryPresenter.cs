@@ -12,7 +12,7 @@ public enum SlotType
 }
 
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
-    ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler
+    ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler, IBoxHandler
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
@@ -52,12 +52,6 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         UpdateAllSlot(SlotType.Bag);
         UpdateAllSlot(SlotType.Box);
         //Debug.Log("실행3");
-    }
-
-    //상자 상호작용시 상자모델 교체
-    public void SetBoxModel(InventoryModel boxModel)
-    {
-        _boxModel = boxModel;
     }
 
     public void UpdateAllSlot(SlotType slotType)
@@ -117,6 +111,15 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         if (fromSlotType == SlotType.Equip || toSlotType == SlotType.Equip)
             if (!CanExchange(fromSlotType, fromIndex, fromItem, toSlotType, toIndex, toItem)) return; //교환 불가능하면 종료
         Debug.Log("슬롯 교환 호출!!");
+        //아이템 적재
+        if (fromItem is CountableItem fcount && toItem is CountableItem tcount)
+            if (fcount._data.ID == tcount._data.ID)
+                if (tcount.CurAmount <= tcount.MaxAmount)
+                {
+                    int rest = GetModel(toSlotType).PutCountToItem(toSlotType, toIndex, fcount.CurAmount);
+                    GetModel(fromSlotType).PutCountFromItem(fromSlotType, fromIndex, rest);
+                    return;
+                }
         PutModelItem(fromSlotType, fromIndex, toItem);
         PutModelItem(toSlotType, toIndex, fromItem);
         //UI 업데이트는 자동으로 됨
@@ -286,6 +289,8 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         //Model에서 삭제
         model.PutItem(_slotTypeRight, _slotIndexRight, null);
     }
+
+    //월드 생성될 때 박스 아이템들 초기화
     public void InitBoxModel(InventoryModel boxModel, int boxCapacity)
     {
         //박스 모델 초기화
@@ -301,6 +306,13 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         _boxModel = boxModel;
     }
 
+    //상자 상호작용 시 호출
+    public void OnBox(InventoryModel boxModel)
+    {
+        Debug.Log("호출");
+        _boxModel = boxModel;
+        UpdateAllSlot(SlotType.Box);
+    }
 }
 
 

@@ -28,7 +28,7 @@ public class QuickInventoryView : MonoBehaviour
         if (item is CountableItem countableItem)
         {
             _quickSlots[index].SetSlot(countableItem._data.Sprite, countableItem._data.Name,
-                countableItem._curAmount.ToString());
+                countableItem.CurAmount.ToString());
             //Debug.Log("카운터블 뷰 업뎃");
         }
         else if (item == null)

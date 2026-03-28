@@ -58,18 +58,18 @@ public class InventoryModel
             if (item is CountableItem Citem && Citem._data.ID == newCountableItem._data.ID)
             {
                 //Debug.Log("동일 아이템 발견");
-                totalCount = Citem._curAmount + newCountableItem._curAmount;
+                totalCount = Citem.CurAmount + newCountableItem.CurAmount;
                 //최대 적재량보다 작으면
                 if (totalCount <= Citem.MaxAmount)
                 {
-                    Citem._curAmount = totalCount;
+                    Citem.SetCurAmount(totalCount);
                     //Debug.Log("적재 성공");
                     return true;
                 }
                 else
                 {
-                    Citem._curAmount = Citem.MaxAmount;
-                    newCountableItem._curAmount = totalCount - Citem._curAmount;
+                    Citem.SetCurAmount(Citem.MaxAmount);
+                    newCountableItem.SetCurAmount(totalCount - Citem.CurAmount);
                 }
             }
         }
@@ -130,6 +130,25 @@ public class InventoryModel
         }
     }
 
+    //적재 아이템 넣어주기
+    public int PutCountToItem(SlotType slotType, int index, int fromItemCount)
+    {
+        CountableItem item = _Slots[index] as CountableItem;
+        int totalCount = item.CurAmount + fromItemCount;
+        if (totalCount <= item.MaxAmount) item.SetCurAmount(totalCount);
+        else item.SetCurAmount(item.MaxAmount);
+
+        Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+        return totalCount - item.MaxAmount;
+    }
+    public void PutCountFromItem(SlotType slotType, int index, int itemCount)
+    {
+        CountableItem item = _Slots[index] as CountableItem;
+        if (itemCount <= 0) _Slots[index] = null;
+        else item.SetCurAmount(itemCount);
+
+        Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+    }
     //아이템 넣어주기
     public void PutItem(SlotType slotType, int index, Item item)
     {
