@@ -11,6 +11,12 @@ public class GunItem : ConsumableItem
         _curAmmo = curAmmo;
     }
 
+    public override float DecreaseDurability()
+    {
+        _curDurability += -1;
+        return _curDurability;
+    }
+
     public override List<(string statName, string statValue)> GetItemStats()
     {
         var list = base.GetItemStats();

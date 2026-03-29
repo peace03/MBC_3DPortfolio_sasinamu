@@ -17,6 +17,8 @@ public class ConsumableItem : Item
         return _curDurability;
     }
 
+    public float MaxDruability => (_data as ConsumableData).MaxDurability;
+    public virtual float CurDurability => _curDurability;
     public ConsumableType Type => (_data as ConsumableData).ConsumableType;
 
     //아이템 스탯창 표시용

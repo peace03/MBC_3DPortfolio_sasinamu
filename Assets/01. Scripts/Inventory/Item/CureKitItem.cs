@@ -11,7 +11,7 @@ public class CureKitItem : ConsumableItem
     //체력 회복량
     public float CureAmount => (_data as CureKitData).CureAmount;
     //현재 내구도
-    public float CurDurability => _curDurability;
+    public override float CurDurability => _curDurability;
 
     public override float DecreaseDurability()
     {

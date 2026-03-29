@@ -23,7 +23,9 @@ public class EquipInventoryView : MonoBehaviour
     //장비 인벤토리 슬롯 한개만 업데이트
     public void UpdateEquipSlot_Single(int index, Item item)
     {
-        if (item == null) _equipSlots[index].SetSlot();
-        else _equipSlots[index].SetSlot(item._data.Sprite, item._data.Name);
+        if (item == null) _equipSlots[index].SetSlot(); //빈 슬롯
+        else if (item is ConsumableItem consumable) //consumable 아이템
+            _equipSlots[index].SetSlot(consumable._data.Sprite, consumable._data.Name, consumable.CurDurability, consumable.MaxDruability);
+        else _equipSlots[index].SetSlot(item._data.Sprite, item._data.Name); //가방
     }
 }

@@ -27,18 +27,23 @@ public class StorageView : MonoBehaviour
 
     public void UpdateStorageSlot_Single(int index, Item item)
     {
-        if (item is CountableItem countableItem)
+        if (item is CountableItem countableItem) //적재가능 아이템
         {
             _storageSlots[index].SetSlot(countableItem._data.Sprite, countableItem._data.Name,
                 countableItem.CurAmount.ToString());
             //Debug.Log("카운터블 뷰 업뎃");
         }
-        else if (item == null)
+        else if (item == null) //비어있는 슬롯
         {
             _storageSlots[index].SetSlot();
             //Debug.Log("비어있는 뷰 업뎃");
         }
-        else
+        else if (item is ConsumableItem consumableItem) //consumable 아이템
+        {
+            _storageSlots[index].SetSlot(consumableItem._data.Sprite, consumableItem._data.Name,
+                consumableItem.CurDurability, consumableItem.MaxDruability);
+        }
+        else //unCountable 아이템
         {
             //Debug.Log("넌카운터블 뷰 업뎃");
             _storageSlots[index].SetSlot(item._data.Sprite, item._data.Name);

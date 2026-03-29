@@ -19,21 +19,27 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler,
 {
     private SlotType _slotType = SlotType.Equip;
     [SerializeField] private EquipType _equipType;
+    private Image _backImage;                           //배경 이미지
     private Image _image;                               //장비 슬롯 이미지
     private Sprite defaultImage;                        //아이템이 사라지면 넣을 기본이미지
     private TextMeshProUGUI _itemName;                  //장비 슬롯 이름
+    private Slider _slider;
+    [SerializeField] private Sprite clickImage;         //클릭시 넣을 이미지
+    [SerializeField] private Sprite unClickImage;       //한번 더 클릭시 기본이미지
     [SerializeField] private string defaultTextName;    //장비 슬롯 기본 이름
 
     private VirtualSlot _virtualSlot;                   //가상 슬롯
-
+    private bool isClicked = false;                             //클릭 되었는지?
     private int _index; //슬롯 인덱스
     public int Index => _index;
 
     private void Awake()
     {
         //코드로 이미지, 네임 로드
-        _image = transform.GetChild(0).GetComponent<Image>();
-        _itemName = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        _backImage = transform.GetChild(0).GetComponent<Image>();
+        _image = transform.GetChild(1).GetComponent<Image>();
+        _itemName = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+        _slider = transform.GetChild(3).GetComponent<Slider>();
         defaultImage = _image.sprite;
         SetSlot();
     }
@@ -48,11 +54,21 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         _image.sprite = sprite;
         _itemName.text = name;
+        _slider.gameObject.SetActive(false);
+    }
+    public void SetSlot(Sprite sprite, string name, float durabilityValue, float maxDurability)
+    {
+        _image.sprite = sprite;
+        _itemName.text = name;
+        _slider.maxValue = maxDurability;
+        _slider.value = durabilityValue;
+        _slider.gameObject.SetActive(true);
     }
     public void SetSlot()
     {
         _image.sprite = defaultImage;
         _itemName.text = defaultTextName;
+        _slider.gameObject.SetActive(false);
     }
 
     #region MouseDrag
@@ -91,6 +107,10 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (!_virtualSlot.gameObject.activeSelf) return;
         _virtualSlot.gameObject.GetComponent<Image>().raycastTarget = true;
         _virtualSlot.SetActive(false);
+
+        //슬롯 배경이미지 변경
+        _backImage.sprite = unClickImage;
+        isClicked = !isClicked;
     }
     #endregion
 
@@ -116,6 +136,9 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler,
         //좌 우클릭 둘다
         if (eventData.button == PointerEventData.InputButton.Left)
         {
+            if (isClicked) _backImage.sprite = unClickImage;
+            else _backImage.sprite = clickImage;
+            isClicked = !isClicked;
             //클릭한 슬롯의 정보 P에 저장
             Subject<ISlotClickHandler>.Publish(h => h.OnSlotLeftClick(_slotType, _index));
         }

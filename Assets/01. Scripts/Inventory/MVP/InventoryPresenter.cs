@@ -12,7 +12,7 @@ public enum SlotType
 }
 
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
-    ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler, IBoxHandler
+    ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler, IBoxHandler, IFireBullet
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
@@ -279,6 +279,12 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         InventoryModel model = GetModel(_slotTypeRight);
         model.UseItem(_slotTypeRight, _slotIndexRight);
     }
+    //총 발사시 호출
+    public void OnUseGunItem(SlotType slotType, int index)
+    {
+        InventoryModel model = GetModel(slotType);
+        model.UseItem(slotType, index);
+    }
     //아이템 버리기 버튼 눌렀을 때 실행
     public void OnDropButtenDown()
     {
@@ -313,6 +319,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         _boxModel = boxModel;
         UpdateAllSlot(SlotType.Box);
     }
+
 }
 
 

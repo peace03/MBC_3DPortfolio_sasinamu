@@ -37,6 +37,11 @@ public class BoxInventoryView : MonoBehaviour
             _boxSlots[index].SetSlot();
             //Debug.Log("비어있는 뷰 업뎃");
         }
+        else if (item is ConsumableItem consumableItem) //consumable 아이템
+        {
+            _boxSlots[index].SetSlot(consumableItem._data.Sprite, consumableItem._data.Name,
+                consumableItem.CurDurability, consumableItem.MaxDruability);
+        }
         else
         {
             //Debug.Log("넌카운터블 뷰 업뎃");

@@ -27,12 +27,18 @@ public interface ICusorPointerHandler
     public void OnCusorSlotExit();
 }
 
-// 아이템 사용 인터페이스
+// 아이템 사용 인터페이스 (플레이어에게 전달)
 public interface IUseItemHandler
 {
     public void OnUseCureItem(float cureAmount);
     public void OnUseFoodItem(float energe, float thirst);
 }
+//총 발사 시 내구도 감도 (플레이어 -> 인벤토리)
+public interface IFireBullet
+{
+    public void OnUseGunItem(SlotType slotType, int index); //내구도 감소량
+}
+
 
 //아이템 교환 인터페이스
 public interface ISlotExchangeHandler
@@ -44,6 +50,7 @@ public interface ISlotExchangeHandler
 //아이템 착용 인터페이스
 public interface IEquipWear
 {
+    public void OnGunDestroy(int index, Item item);
     public void OnGunSwap(int index1, Item item1, int index2, Item item2); //무기끼리 교환할 때
     public void OnEquipWear(int index, Item item); //장비 한개 장착될 때
 }

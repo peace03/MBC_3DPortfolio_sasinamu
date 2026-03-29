@@ -12,7 +12,7 @@ public class ConsumableData : ItemData
 {
     [Header("내구도 정보")]
     [SerializeField] private ConsumableType _consumableType; //소모성 아이템의 종류
-    [SerializeField] private float maxDurability; //내구도
+    [SerializeField] private float maxDurability; //최대 내구도
 
     public float MaxDurability => maxDurability;
     public ConsumableType ConsumableType => _consumableType;

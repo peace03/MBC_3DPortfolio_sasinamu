@@ -8,12 +8,18 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 {
     private SlotType _slotType;
     private EquipType _equipType = EquipType.None;
+    [SerializeField] private Image _backImage;      //배경 이미지
     [SerializeField] private Image _image;
     [SerializeField] private TextMeshProUGUI _itemName;
     [SerializeField] private TextMeshProUGUI _itemNum;
+    [SerializeField] private Slider _slider;
 
     [SerializeField] private Sprite defaultImage;    //아이템이 사라지면 넣을 기본이미지
+    [SerializeField] private Sprite clickImage;     //슬롯 클릭 이미지
+
     private int _index;             //해당 슬롯의 인덱스
+    private bool isClicked = false;         //선택되었는지?
+
     public int Index => _index;
 
     private VirtualSlot _virtualSlot;       //아이템 드래그 표시 슬롯
@@ -49,6 +55,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         _itemName.gameObject.SetActive(true);
         _itemNum.text = itemNum;
         _itemNum.gameObject.SetActive(true);
+        _slider.gameObject.SetActive(false);
     }
     //UnCountable일 때
     public void SetSlot(Sprite image, string itemName)
@@ -57,6 +64,19 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         _itemName.text = itemName;
         _itemName.gameObject.SetActive(true);
         _itemNum.gameObject.SetActive(false);
+        _slider.gameObject.SetActive(false);
+    }
+    //Consumable일 때 (치료, 총 템밖에 없음)
+    public void SetSlot(Sprite image, string itemName, float durabilityValue, float maxDurability)
+    {
+        _image.sprite = image;
+        _itemName.text = itemName;
+        _slider.maxValue = maxDurability;
+        _slider.value = durabilityValue;
+        _itemName.gameObject.SetActive(true);
+        _itemNum.gameObject.SetActive(false);
+        _slider.gameObject.SetActive(true);
+        Debug.Log("호출");
     }
     //비어있는 슬롯일 때
     public void SetSlot()
@@ -64,6 +84,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         _image.sprite = defaultImage;
         _itemName.gameObject.SetActive(false);
         _itemNum.gameObject.SetActive(false);
+        _slider.gameObject.SetActive(false);
     }
     #endregion
 
@@ -108,7 +129,10 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         if (!_virtualSlot.gameObject.activeSelf) return;
         _virtualSlot.gameObject.GetComponent<Image>().raycastTarget = true;
         _virtualSlot.SetActive(false);
-        //Debug.Log($"보내준 슬롯 인덱스: {_Index}");
+
+        //슬롯 배경이미지 변경
+        _backImage.sprite = defaultImage;
+        isClicked = !isClicked;
     }
     #endregion
 
@@ -117,14 +141,14 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     {
         //아이템 상태창 세팅
         Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotIn(_slotType, _index));
-        Debug.Log("상태창 활성화");
+        //Debug.Log("상태창 활성화");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         //아이템 상태창 비활성화
         Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotExit());
-        Debug.Log("상태창 비활성화");
+        //Debug.Log("상태창 비활성화");
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -133,6 +157,9 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         //좌 우클릭 둘다
         if (eventData.button == PointerEventData.InputButton.Left)
         {
+            if (isClicked) _backImage.sprite = defaultImage;
+            else _backImage.sprite = clickImage;
+            isClicked = !isClicked;
             //클릭한 슬롯의 정보 P에 저장
             Subject<ISlotClickHandler>.Publish(h => h.OnSlotLeftClick(_slotType, _index));
         }

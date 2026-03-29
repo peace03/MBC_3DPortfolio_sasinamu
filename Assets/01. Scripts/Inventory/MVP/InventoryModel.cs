@@ -118,7 +118,17 @@ public class InventoryModel
                 PutItem(slotType, index, null);
                 Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             }
+            else Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
             Debug.Log(cureItem.CurDurability);
+        }
+        else if (item is GunItem gunItem)
+        {
+            if (gunItem.DecreaseDurability() <= 0f)
+            {
+                PutGunItem(index, null);
+                Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
+            }
+            else Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
         }
         else if (item is FoodItem foodItem)
         {
@@ -130,6 +140,15 @@ public class InventoryModel
         }
     }
 
+    //총 아이템 파괴
+    public void PutGunItem(int index, Item item)
+    {
+        _Slots[index] = item;
+        if (item == null)
+        {
+            Subject<IEquipWear>.Publish(h => h.OnGunDestroy(index, item));
+        }
+    }
     //적재 아이템 넣어주기
     public int PutCountToItem(SlotType slotType, int index, int fromItemCount)
     {
