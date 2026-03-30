@@ -1,4 +1,7 @@
 ﻿<Solution>
+  <Project Path="Unity.RenderPipelines.Universal.Runtime.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="sc.stylizedwater2.runtime.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="sc.stylizedwater2.editor.csproj" />
 </Solution>
