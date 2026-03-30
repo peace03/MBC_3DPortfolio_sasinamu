@@ -1381,6 +1381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 139805043}
+  - component: {fileID: 139805044}
   m_Layer: 5
   m_Name: WorkStation UI
   m_TagString: Untagged
@@ -1409,6 +1410,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &139805044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139805042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5b1d3e771360e48bdb9bab5880129d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorkStationView
+  btnCount: 4
 --- !u!1 &144547936
 GameObject:
   m_ObjectHideFlags: 0
@@ -16017,6 +16031,7 @@ MonoBehaviour:
   _storageView: {fileID: 1399158009}
   _quickView: {fileID: 845584606}
   _boxView: {fileID: 1796334075}
+  _workStaionView: {fileID: 139805044}
   _virtualSlot: {fileID: 1203285354}
   _itemStatPanel: {fileID: 322478573}
   _interactButton: {fileID: 1486307254}
