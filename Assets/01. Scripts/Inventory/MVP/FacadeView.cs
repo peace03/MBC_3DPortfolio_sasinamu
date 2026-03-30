@@ -19,7 +19,7 @@ public class FacadeView : MonoBehaviour, ISlotClickRightHandler
     [SerializeField] private StorageView        _storageView;   //창고    View
     [SerializeField] private QuickInventoryView _quickView;     //퀵슬롯  View
     [SerializeField] private BoxInventoryView   _boxView;       //상자    View
-    //창고 View
+    [SerializeField] private WorkStationView    _workStaionView;//작업대  View
 
     [Header("Etc")]
     [SerializeField] private VirtualSlot _virtualSlot;          //가상 슬롯
@@ -37,6 +37,7 @@ public class FacadeView : MonoBehaviour, ISlotClickRightHandler
         _quickView.Init(_virtualSlot, quickCapacity);
         _storageView.Init(_virtualSlot, storageCapacity);
         _boxView.Init(_virtualSlot, boxCapacity);
+        _workStaionView.Init();
 
         _interactButton.Init();
     }

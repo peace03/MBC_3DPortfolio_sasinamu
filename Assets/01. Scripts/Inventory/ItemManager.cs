@@ -61,4 +61,10 @@ public class ItemManager : MonoBehaviour
         transform.position = _player.position;
     }
 
+    public string GetItemNameByID(int id)
+    {
+        ItemData data = ReturnItemData_One(id);
+        // 데이터가 존재하면 이름을, 아니면 예외 텍스트를 반환합니다.
+        return data != null ? data.Name : "Unknown Item";
+    }
 }

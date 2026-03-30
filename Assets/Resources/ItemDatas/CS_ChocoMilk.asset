@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 844c10e751a1bc4419c2daa87a0cc5f6, type: 3}
-  m_Name: ChocoMilk
+  m_Name: CS_ChocoMilk
   m_EditorClassIdentifier: Assembly-CSharp::FoodData
   sprite: {fileID: 21300000, guid: 03c30194652459640916a74fd7c780df, type: 3}
   objectPrefab: {fileID: 114933692098145703, guid: 29978f2751fc8b842aea99c83d2e9647, type: 3}

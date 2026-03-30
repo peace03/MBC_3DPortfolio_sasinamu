@@ -60,3 +60,14 @@ public interface ISlotChanged
 {
     public void OnUpdateSingleSlot(SlotType slotType, int index);
 }
+
+//제작대 UI 인터페이스
+public interface IWorkStation
+{
+    public void OnActiveWorkSationUI(List<WorkStationBtn> btns);   //UI 활성화 되면 호출
+}
+public interface ICraftItemHandler
+{
+    // 어떤 버튼이 눌렸는지 페이로드(Payload)로 함께 넘겨줍니다.
+    public void OnCraftButtonClicked(WorkStationBtn btn);
+}

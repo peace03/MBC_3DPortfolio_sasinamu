@@ -12,7 +12,8 @@ public enum SlotType
 }
 
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
-    ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler, IBoxHandler, IFireBullet
+    ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler,
+    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
@@ -28,7 +29,9 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     //슬롯 우클릭시 저장
     private SlotType _slotTypeRight = SlotType.None;
     private int _slotIndexRight;
-    
+    //현재 활성화된 제작대의 버튼 리스트를 기억해둘 캐싱 변수
+    private List<WorkStationBtn> _currentWorkStationBtns;
+
 
     public InventoryPresenter(FacadeView view,
         InventoryModel equipModel, InventoryModel bagModel, InventoryModel storageModel,InventoryModel quickModel,
@@ -320,6 +323,82 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         UpdateAllSlot(SlotType.Box);
     }
 
+    // [UI 열림 이벤트 구독 응답] - BootStrapper에서 Attach 해주어야 함!
+    public void OnActiveWorkSationUI(List<WorkStationBtn> btns)
+    {
+        // 1. 넘어온 버튼 리스트를 메모리에 캐싱합니다.
+        _currentWorkStationBtns = btns;
+
+        // 2. UI를 최초로 그려줍니다.
+        RefreshWorkStationUI(_currentWorkStationBtns);
+    }
+
+    // 1. 제작대 UI가 열리거나 아이템이 갱신될 때 버튼 상태를 검증하는 로직
+    public void RefreshWorkStationUI(List<WorkStationBtn> btns)
+    {
+        foreach (var btn in btns)
+        {
+            bool canCraft = true;
+            string reqTextStr = "";
+
+            foreach (var needItem in btn.NeedItemList)
+            {
+                // 3개의 모델을 순회하며 총합 계산 (Aggregation)
+                int totalOwned = _bagModel.GetTotalItemCount(needItem.id)
+                               + _storageModel.GetTotalItemCount(needItem.id)
+                               + _quickModel.GetTotalItemCount(needItem.id);
+
+                if (totalOwned < needItem.count) canCraft = false;
+
+                // 텍스트 포맷팅 생성 예시: "나무(2/5)\n철광석(10/2)"
+                string itemName = _itemManager.GetItemNameByID(needItem.id); // ItemManager에 이름 가져오는 기능이 필요함
+                reqTextStr += $"{itemName} ({totalOwned}/{needItem.count})\n";
+            }
+
+            // View에게 계산된 결과 전달
+            btn.UpdateUI(canCraft, reqTextStr);
+        }
+    }
+
+    // 2. 제작 버튼 클릭 시 실행될 핵심 트랜잭션
+    public void OnCraftButtonClicked(WorkStationBtn btn)
+    {
+        // [Phase 1: 재료 차감 (Sequential Consumption)]
+        foreach (var needItem in btn.NeedItemList)
+        {
+            int remaining = needItem.count;
+
+            // 폭포수(Waterfall) 방식으로 남은 요구량을 다음 모델로 넘기며 차감
+            remaining = _bagModel.ConsumeItem(SlotType.Bag, needItem.id, remaining);
+            if (remaining > 0) remaining = _storageModel.ConsumeItem(SlotType.Storage, needItem.id, remaining);
+            if (remaining > 0) remaining = _quickModel.ConsumeItem(SlotType.Quick, needItem.id, remaining);
+        }
+
+        // [Phase 2: 결과물 생성 및 적재 (Priority Insertion)]
+        Item craftedItem = _itemManager.CreateItemInstance(btn.ResultItemID);
+
+        // 우선순위 1: 가방
+        if (!_bagModel.AddItem(craftedItem))
+        {
+            // 우선순위 2: 창고
+            if (!_storageModel.AddItem(craftedItem))
+            {
+                // 예외 처리: 모두 꽉 찼다면 월드에 드랍 (데이터 증발 방지)
+                _itemManager.CreateItemObjInWorld(craftedItem._data.ObjectPrefab);
+                Debug.LogWarning("가방과 창고가 모두 가득 차서 아이템이 바닥에 떨어졌습니다.");
+            }
+            else UpdateAllSlot(SlotType.Storage); // 창고 뷰 갱신
+        }
+        else UpdateAllSlot(SlotType.Bag); // 가방 뷰 갱신
+
+        // [Phase 3: 상태 재동기화]
+        // 재료가 소모되었으므로 현재 켜져있는 제작대의 버튼 UI(보유량 텍스트, 활성화 여부)를 다시 갱신해야 합니다.
+        // (예: Subject<IWorkStationHandler>.Publish(...) 등을 통해 RefreshWorkStationUI를 다시 호출)
+        if (_currentWorkStationBtns != null)
+        {
+            RefreshWorkStationUI(_currentWorkStationBtns);
+        }
+    }
 }
 
 

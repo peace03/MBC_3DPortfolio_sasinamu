@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6cb09a11ec0d354a98a86382046027f, type: 3}
-  m_Name: CureKit_S
+  m_Name: CS_SmallKit
   m_EditorClassIdentifier: Assembly-CSharp::CureKitData
   sprite: {fileID: 21300000, guid: 69765d6126cb1014bb960435449664da, type: 3}
   objectPrefab: {fileID: 4167982541088531470, guid: 8af4529808c22e0408b160617327ff73, type: 3}

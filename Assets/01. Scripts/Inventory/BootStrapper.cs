@@ -68,6 +68,8 @@ public class BootStrapper : MonoBehaviour
         Subject<IButtonHandler>.Attach(_InvenPresent);          //버리기 누름       발생
         Subject<ICusorPointerHandler>.Attach(_InvenPresent);    //커서 인아웃       발생
         Subject<IBoxHandler>.Attach(_InvenPresent);             //상자 상호작용     발생
+        Subject<IWorkStation>.Attach(_InvenPresent);            //제작대 상호작용     발생
+        Subject<ICraftItemHandler>.Attach(_InvenPresent);       //제작대 생성버튼 상호작용 발생
     }
     private void OnDisable()
     {
@@ -79,6 +81,8 @@ public class BootStrapper : MonoBehaviour
         Subject<IButtonHandler>.Detach(_InvenPresent);
         Subject<ICusorPointerHandler>.Detach(_InvenPresent);
         Subject<IBoxHandler>.Detach(_InvenPresent);
+        Subject<IWorkStation>.Detach(_InvenPresent);   
+        Subject<ICraftItemHandler>.Detach(_InvenPresent);  
     }
 
     public void InitBoxes()

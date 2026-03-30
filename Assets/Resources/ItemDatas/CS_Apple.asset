@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 844c10e751a1bc4419c2daa87a0cc5f6, type: 3}
+  m_Name: CS_Apple
+  m_EditorClassIdentifier: Assembly-CSharp::FoodData
+  sprite: {fileID: 0}
+  objectPrefab: {fileID: 0}
+  _id: 0
+  _name: 
+  _weight: 0
+  _explain: 
+  waterRestoreAmount: 0
+  energyRestoreAmount: 0

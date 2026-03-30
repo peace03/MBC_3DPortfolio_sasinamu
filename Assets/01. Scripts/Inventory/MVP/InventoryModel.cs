@@ -189,17 +189,44 @@ public class InventoryModel
     {
         return _Slots;
     }
-    //슬롯 용량 설정
-
-    //인벤토리 다 찼는지 확인
-    //? countable이 다 안찼을 땐 어캄?
-    public void CheckFullInventory()
+    //특정 아이템의 총 보유량을 메모리에서 긁어오는 함수
+    public int GetTotalItemCount(int itemID)
     {
-        fullInventory = true;
-        foreach(var item in _Slots)
+        int total = 0;
+        for (int i = 0; i < _capacity; i++)
         {
-            if (item == null) fullInventory = false;
+            if (_Slots[i] is CountableItem cItem && cItem._data.ID == itemID)
+            {
+                total += cItem.CurAmount;
+            }
         }
-        Debug.Log($"인벤토리 다 꽉찼는지: {fullInventory}");
+        return total;
+    }
+    //특정 아이템을 지정된 수량만큼 차감하고, '남은 차감량'을 반환하는 함수 (로우 레벨 제어)
+    public int ConsumeItem(SlotType slotType, int itemID, int amountToConsume)
+    {
+        for (int i = 0; i < _capacity; i++)
+        {
+            if (amountToConsume <= 0) break; // 모두 차감했으면 루프 종료
+
+            if (_Slots[i] is CountableItem cItem && cItem._data.ID == itemID)
+            {
+                if (cItem.CurAmount <= amountToConsume)
+                {
+                    // 슬롯에 있는 양보다 빼야 할 양이 같거나 많으면: 슬롯을 파괴(null)하고 남은 차감량 계산
+                    amountToConsume -= cItem.CurAmount;
+                    _Slots[i] = null;
+                }
+                else
+                {
+                    // 슬롯에 여유가 있다면: 수량만 깎고 차감 완료(0) 처리
+                    cItem.SetCurAmount(cItem.CurAmount - amountToConsume);
+                    amountToConsume = 0;
+                }
+                // 수량이 변했으므로 View에게 픽셀을 다시 그리라고 브로드캐스팅
+                Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, i));
+            }
+        }
+        return amountToConsume;
     }
 }
