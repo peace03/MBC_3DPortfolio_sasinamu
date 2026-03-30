@@ -20,7 +20,7 @@ public class PlayerFire : MonoBehaviour,
     private BulletFactory bulletFactory;                    // 총알 공장
     private Coroutine reloadingCoroutine;                   // 장전 코루틴
 
-    private void Awake()
+    private void Start()
     {
         // 초기화
         curFireMode = FireMode.Single;

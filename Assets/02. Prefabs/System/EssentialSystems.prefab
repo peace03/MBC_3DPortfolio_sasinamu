@@ -2451,7 +2451,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapUI
   mapCamera: {fileID: 5241096551846704781}
-  moveSensitivity: 0.05
+  mapTarget: {fileID: 0}
+  minMoveSensitivity: 0.00005
+  maxMoveSensitivity: 0.2
   zoomSensitivity: 10
   minMapSize: 50
   maxMapSize: 1000
@@ -5963,10 +5965,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2409284757158053652}
   - {fileID: 3633614818146368841}
   - {fileID: 1199613020013214072}
   - {fileID: 3052498911383777997}
-  - {fileID: 2409284757158053652}
   - {fileID: 1083883726150283614}
   - {fileID: 426393498472296781}
   - {fileID: 6965074871552459822}

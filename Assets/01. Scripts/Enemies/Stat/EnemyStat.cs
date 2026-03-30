@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyStat : MonoBehaviour, IDamageable
 {
@@ -48,10 +49,19 @@ public class EnemyStat : MonoBehaviour, IDamageable
     public float MaxPatrolDistance => maxPatrolDistance;
     #endregion
 
+    private NavMeshAgent enemyAgent;        // 길 찾기 AI
+
     private void OnEnable()
     {
-        // Hp 설정
         curHp = maxHp;
+    }
+
+    // 초기화 함수
+    public void Init(NavMeshAgent agent)
+    {
+        // 초기화
+        enemyAgent = agent;
+        enemyAgent.speed = moveSpeed;
     }
 
     // 피격 함수
@@ -68,7 +78,16 @@ public class EnemyStat : MonoBehaviour, IDamageable
 
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, maxAttackDistance);
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, maxChaseDistance);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, maxReturnDistance);
+
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, maxPatrolDistance);
     }
 }
