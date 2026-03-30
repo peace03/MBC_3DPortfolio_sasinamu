@@ -57,6 +57,14 @@ Preset:
     value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_RigImportErrors
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_RigImportWarnings
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_AnimationImportErrors
     value: 
     objectReference: {fileID: 0}
@@ -141,10 +149,6 @@ Preset:
     value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: m_ImportPhysicalCameras
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
     propertyPath: m_ImportVisibility
     value: 1
     objectReference: {fileID: 0}
@@ -209,18 +213,6 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: generateMeshLods
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: meshLodGenerationFlags
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: maximumMeshLod
-    value: -1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
     propertyPath: meshOptimizationFlags
     value: -1
     objectReference: {fileID: 0}
@@ -259,10 +251,6 @@ Preset:
   - target: {fileID: 0}
     propertyPath: m_UseFileScale
     value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_StrictVertexDataChecks
-    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: normalSmoothAngle
@@ -381,10 +369,6 @@ Preset:
     value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: m_ImportBlendShapeDeformPercent
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
     propertyPath: m_RemapMaterialsIfMaterialImportModeIsNone
     value: 0
     objectReference: {fileID: 0}
@@ -405,8 +389,3 @@ Preset:
     value: 
     objectReference: {fileID: 0}
   m_ExcludedProperties: []
-  m_CoupledType:
-    m_NativeTypeID: 0
-    m_ManagedTypePPtr: {fileID: 0}
-    m_ManagedTypeFallback: 
-  m_CoupledProperties: []

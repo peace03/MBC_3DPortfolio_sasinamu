@@ -38,6 +38,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88bd13fabf96a4cc1aaf221e40805c5c, type: 3}
   m_Name: RadiantRenderFeature
   m_EditorClassIdentifier: 
+  m_Active: 1
+  renderingPath: 1
+  ignorePostProcessingOption: 1
+  ignoreOverlayCameras: 1
+  camerasLayerMask:
+    m_Bits: 4294967295
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -395,7 +395,7 @@ MonoBehaviour:
   _itemName: {fileID: 2823604380230067058}
   _itemNum: {fileID: 3651756173951729715}
   _slider: {fileID: 1348262587347564862}
-  defaultImage: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  defaultImage: {fileID: 21300000, guid: 404732b8e0da2524e802b2c7a5e5c91f, type: 3}
   clickImage: {fileID: 21300000, guid: bc453cd741ad3ad4a929a58e75cb7b07, type: 3}
 --- !u!1 &6981925895481234213
 GameObject:

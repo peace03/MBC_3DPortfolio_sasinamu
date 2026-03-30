@@ -28,11 +28,6 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
     //private Action<SlotSource, int> onCusorEnter;    //커서가 슬롯 들어갈 때 호출
     //private Action onCusorExit;                      //커서가 슬롯 벗어날 때 호출
 
-    private void Awake()
-    {
-        defaultImage = _image.sprite;
-    }
-
     public void Initialize(int index, SlotType slotType, VirtualSlot virtualSlot)
     {
         _index = index;
