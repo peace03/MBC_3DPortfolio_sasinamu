@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletData
   sprite: {fileID: 0}
   objectPrefab: {fileID: 0}
-  _id: 0
-  _name: 
-  _weight: 0
-  _explain: 
-  maxAmount: 0
+  _id: 17
+  _name: "S\uD615 \uCD1D\uC54C"
+  _weight: 0.1
+  _explain: "\uCD1D\uC54C"
+  maxAmount: 100
   bulletType: 0
-  damage: 0
-  durabilityDamage: 0
+  damage: 9
+  durabilityDamage: 1

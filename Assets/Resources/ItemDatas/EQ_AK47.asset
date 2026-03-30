@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   sprite: {fileID: 0}
   objectPrefab: {fileID: 0}
-  _id: 0
-  _name: 
-  _weight: 0
-  _explain: 
-  _consumableType: 0
-  maxDurability: 0
-  bulletType: 0
-  fireSpeed: 0
-  maxAmmo: 0
+  _id: 11
+  _name: AK-47
+  _weight: 4.5
+  _explain: "\uCD1D\uC774\uB2E4"
+  _consumableType: 2
+  maxDurability: 100
+  bulletType: 1
+  fireSpeed: 2
+  maxAmmo: 30

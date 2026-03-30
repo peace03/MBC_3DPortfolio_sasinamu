@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WorkStationBtn : MonoBehaviour
+public class CreateItemBtn : MonoBehaviour
 {
     [System.Serializable]
     public struct NeedItem
@@ -37,7 +37,7 @@ public class WorkStationBtn : MonoBehaviour
         _reqText.text = formattedText;
 
         // 시각적 피드백 (녹색/적색)
-        GetComponent<Image>().color = canCraft ? new Color(0.5f, 1f, 0.3f) : new Color(1f, 0f, 0f, 0.3f);
+        GetComponent<Image>().color = canCraft ? new Color(0.55f, 1f, 0.3f, 0.3f) : new Color(1f, 0f, 0f, 0.3f);
     }
 
     public void SetColor(Color color)

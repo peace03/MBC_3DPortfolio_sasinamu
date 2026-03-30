@@ -20,7 +20,7 @@ public class BootStrapper : MonoBehaviour
     [SerializeField] private int _quickCapacity = 6;    //퀵슬롯
     [SerializeField] private int _storageCapacity = 60; //창고
     [SerializeField] private int _boxCapacity = 5;     //상자
-                     private int _equipCapacity = 5;    //장비
+                     private int _equipCapacity = 4;    //장비
 
     private void Awake()
     {
@@ -40,6 +40,8 @@ public class BootStrapper : MonoBehaviour
         _InvenPresent = new InventoryPresenter(_facadeView, 
             _equipInvenModel, _bagInvenModel, _storageInvenModel, _quickInvenModel,
             _itemManager);
+
+        //WorkStationView 따로 초기화
 
         //모델별 슬롯 용량 초기화
         _equipInvenModel.Init(_equipCapacity);
@@ -70,6 +72,7 @@ public class BootStrapper : MonoBehaviour
         Subject<IBoxHandler>.Attach(_InvenPresent);             //상자 상호작용     발생
         Subject<IWorkStation>.Attach(_InvenPresent);            //제작대 상호작용     발생
         Subject<ICraftItemHandler>.Attach(_InvenPresent);       //제작대 생성버튼 상호작용 발생
+        _facadeView.InitWorkStationView();
     }
     private void OnDisable()
     {

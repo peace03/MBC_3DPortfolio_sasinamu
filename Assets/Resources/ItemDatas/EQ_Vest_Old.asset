@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableData
   sprite: {fileID: 0}
   objectPrefab: {fileID: 0}
-  _id: 0
-  _name: 
-  _weight: 0
-  _explain: 
-  _consumableType: 0
-  maxDurability: 0
+  _id: 12
+  _name: "\uD558\uC704 \uBC29\uC5B4\uAD6C"
+  _weight: 4
+  _explain: "\uC870\uB07C"
+  _consumableType: 1
+  maxDurability: 100

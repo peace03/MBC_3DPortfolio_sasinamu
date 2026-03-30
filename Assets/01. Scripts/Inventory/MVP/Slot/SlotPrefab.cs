@@ -30,7 +30,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
 
     private void Awake()
     {
-        defaultImage = _image.sprite;
+        //defaultImage = _image.sprite;
     }
 
     public void Initialize(int index, SlotType slotType, VirtualSlot virtualSlot)
@@ -76,7 +76,7 @@ public class SlotPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IDropH
         _itemName.gameObject.SetActive(true);
         _itemNum.gameObject.SetActive(false);
         _slider.gameObject.SetActive(true);
-        Debug.Log("호출");
+        //Debug.Log("호출");
     }
     //비어있는 슬롯일 때
     public void SetSlot()

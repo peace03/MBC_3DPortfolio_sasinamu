@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a583f234123e8841890f27452df94da, type: 3}
   m_Name: BR_Stone
   m_EditorClassIdentifier: Assembly-CSharp::CountableData
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: f2a2a201bac293141bba60538218181a, type: 3}
   objectPrefab: {fileID: 0}
-  _id: 0
-  _name: 
-  _weight: 0
-  _explain: 
-  maxAmount: 0
+  _id: 2
+  _name: "\uB3CC"
+  _weight: 2.5
+  _explain: "\uB3CC\uC774\uB2E4"
+  maxAmount: 6
