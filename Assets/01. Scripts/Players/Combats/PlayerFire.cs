@@ -75,10 +75,8 @@ public class PlayerFire : MonoBehaviour,
             // 종료
             return;
 
-        // S형 총알 받아오기
-        Bullet bullet = bulletFactory.SmallBulletPool.Get();
         // 사격(플레이어 이름, 플레이어 레이어, 사격 위치, 사격 각도)
-        bullet.FireBullet(name, gameObject.layer, firePoint.position, firePoint.rotation);
+        bulletFactory.SmallBulletPool.Get().FireBullet(name, gameObject.layer, firePoint.position, firePoint.rotation);
         // 마지막 사격 시간 갱신
         lastFireTime = Time.time;
 

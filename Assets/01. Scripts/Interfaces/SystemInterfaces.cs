@@ -24,7 +24,7 @@ public interface IDamageable
 // 적 죽음 관리 인터페이스
 public interface IEnemyDeadHandler
 {
-    public void OnEnemyDead(Vector3 position);
+    public void OnEnemyDead(GameObject prefab, Vector3 position);
 }
 
 // 적 일시정지 관리 인터페이스

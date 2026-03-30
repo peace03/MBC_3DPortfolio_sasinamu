@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BootStrapper : MonoBehaviour
+public class BootStrapper : MonoBehaviour, IEnemyDeadHandler
 {
     [SerializeField] private ItemManager _itemManager;
 
@@ -70,6 +70,8 @@ public class BootStrapper : MonoBehaviour
         Subject<IBoxHandler>.Attach(_InvenPresent);             //상자 상호작용     발생
         Subject<IWorkStation>.Attach(_InvenPresent);            //제작대 상호작용     발생
         Subject<ICraftItemHandler>.Attach(_InvenPresent);       //제작대 생성버튼 상호작용 발생
+
+        Subject<IEnemyDeadHandler>.Attach(this);
     }
     private void OnDisable()
     {
@@ -82,7 +84,9 @@ public class BootStrapper : MonoBehaviour
         Subject<ICusorPointerHandler>.Detach(_InvenPresent);
         Subject<IBoxHandler>.Detach(_InvenPresent);
         Subject<IWorkStation>.Detach(_InvenPresent);   
-        Subject<ICraftItemHandler>.Detach(_InvenPresent);  
+        Subject<ICraftItemHandler>.Detach(_InvenPresent);
+
+        Subject<IEnemyDeadHandler>.Detach(this);
     }
 
     public void InitBoxes()
@@ -96,5 +100,12 @@ public class BootStrapper : MonoBehaviour
             //모델 초기화(아이템 랜덤생성)
             _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
         }
+    }
+
+    public void OnEnemyDead(GameObject prefab, Vector3 position)
+    {
+        InventoryModel boxmodel = new InventoryModel();
+        Instantiate(prefab, position, Quaternion.identity).GetComponent<Box>().SetModel(boxmodel);
+        _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
     }
 }

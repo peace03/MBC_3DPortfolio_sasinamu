@@ -4,9 +4,6 @@ using UnityEngine;
 public class Box : MonoBehaviour, IInteractable
 {
     [Header("정보")]
-    // GameObject 대신 아이템 객체(아마... Item?)로 바꾸시기!
-    // 바꾸시면서 Interfaces/SystemInterfaces.cs에 IBoxHandler고치기
-    //[SerializeField] private List<GameObject> boxItems = new();     // 상자 아이템들
     private InventoryModel _boxModel;
     public InventoryModel BoxModel => _boxModel;
 

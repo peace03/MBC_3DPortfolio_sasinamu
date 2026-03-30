@@ -14,7 +14,6 @@ public class MenuBarUI : MonoBehaviour
     [SerializeField] private GameObject statUI;             // 스탯 UI
     [SerializeField] private GameObject mapUI;              // 지도 UI
     [SerializeField] private GameObject settingsUI;         // 설정 UI
-    [SerializeField] private GameObject boxUI;              // 상자 UI
 
     private UIType curSubUI;                                // 최근 서브 UI
 
@@ -95,9 +94,6 @@ public class MenuBarUI : MonoBehaviour
             case UIType.Settings:
                 settingsUI.SetActive(false);
                 break;
-            case UIType.Box:
-                Debug.Log("상자는 어떻게 하지....");
-                break;
         }
     }
 
@@ -121,9 +117,6 @@ public class MenuBarUI : MonoBehaviour
                 break;
             case UIType.Settings:
                 settingsUI.SetActive(true);
-                break;
-            case UIType.Box:
-                Debug.Log("상자...");
                 break;
         }
 

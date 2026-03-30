@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour,
     [SerializeField] private GameObject controlManualAllUI;             // 조작 설명 전체 UI
     [SerializeField] private GameObject controlManualDetailUI;          // 조작 설명 상세 UI
     [SerializeField] private GameObject menuBarUI;                      // 메뉴 바 UI
+    [SerializeField] private GameObject boxUI;                          // 상자 UI
 
     private Stack<GameObject> openedUIStack = new();                    // 열려있는 UI 스택
 
@@ -129,10 +130,6 @@ public class UIManager : MonoBehaviour,
     // 상자 함수
     public void OnBox(InventoryModel model)
     {
-        // 아이템들의 수만큼
-        //foreach (var item in items)
-        //    Debug.Log($"[Item] {item.name}");
-
         // 상자 UI 열기
         OpenUI(UIType.Box);
     }
@@ -170,6 +167,13 @@ public class UIManager : MonoBehaviour,
                 // 메뉴 바 UI 업데이트 함수
                 menuBarUI.GetComponent<MenuBarUI>().UpdateMenuBarUI(type);
                 break;
+            // 상자라면
+            case UIType.Box:
+                ChangeUI(menuBarUI, UIType.Inventory);
+                menuBarUI.GetComponent<MenuBarUI>().UpdateMenuBarUI(UIType.Inventory);
+                // 상자 UI 열기
+                OpenUI(boxUI, type);
+                break;
         }
 
         // 조작 설명 UI 닫기
@@ -186,6 +190,17 @@ public class UIManager : MonoBehaviour,
             // 최근 UI 닫기
             openedUIStack.Pop().SetActive(false);
 
+        // 다음 UI 열기
+        nextUI.SetActive(true);
+        // 현재 UI 종류 변경
+        curOpenUIType = type;
+        // 열려있는 UI 스택에 추가
+        openedUIStack.Push(nextUI);
+    }
+
+    // UI 열기 함수
+    private void OpenUI(GameObject nextUI, UIType type)
+    {
         // 다음 UI 열기
         nextUI.SetActive(true);
         // 현재 UI 종류 변경

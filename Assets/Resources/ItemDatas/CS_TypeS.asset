@@ -20,5 +20,5 @@ MonoBehaviour:
   _explain: 
   maxAmount: 0
   bulletType: 0
-  damage: 0
+  damage: 9
   durabilityDamage: 0

@@ -1,18 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Pool;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
 {
-    private BT_Node root;                                               // BT의 뿌리(시작) 노드
-
-    [Header("총알")]
-    [SerializeField] private BulletFactory bulletFactory;               // 총알 공장
-
     [Header("위치")]
-    [SerializeField] private Transform player;                          // 플레이어
     [SerializeField] private Transform returnPoint;                     // 복귀 지점
     [SerializeField] private Transform patrolPoint;                     // 순찰 지점
     [SerializeField] private Transform firePoint;                       // 사격 위치
@@ -27,6 +22,12 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
     [SerializeField] private bool isIdle = false;                       // 대기 여부
     [SerializeField] private float startIdleTime;                       // 대기 시작 시간
 
+    private IObjectPool<EnemyBT> poolRef;                               // 적 오브젝트 풀 주소
+
+    private BT_Node root;                                               // BT의 뿌리(시작) 노드
+    private BulletFactory bulletFactory;                                // 총알 공장
+    private Transform player;                                           // 플레이어
+
     private EnemyStat stat;                                             // 스탯
     private EnemyRotate rot;                                            // 회전
     private NavMeshAgent agent;                                         // 이동 AI
@@ -34,7 +35,7 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
     private EnemyFire fire;                                             // 사격
     private EnemyAnimationChanger anim;                                 // 애니메이션
 
-    private void Awake()
+    private void Start()
     {
         // BT 생성
         root = new BT_Selector(new List<BT_Node>
@@ -88,8 +89,6 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
 
     private void OnEnable()
     {
-        // 초기화
-        InitEnemy();
         // 적 멈춤 이벤트 구독
         Subject<IEnemyPauseHandler>.Attach(this);
     }
@@ -112,28 +111,25 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
     }
 
     // 적 초기화 함수
-    private void InitEnemy()
+    public void Init(Transform player, BulletFactory factory, IObjectPool<EnemyBT> pool)
     {
-        // 체력 UI 비활성화
+        // 초기화
+        this.player = player;
         hpUI.gameObject.SetActive(false);
-
-        // 적 컴포넌트 받아오기
-        stat = GetComponent<EnemyStat>();
-        rot = GetComponent<EnemyRotate>();
         agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+        stat = GetComponent<EnemyStat>();
+        stat.Init(agent);
+        rot = GetComponent<EnemyRotate>();
         fire = GetComponent<EnemyFire>();
         anim = GetComponent<EnemyAnimationChanger>();
-
-        // 새로 생성
         path = new();
-
-        // 회전 막기
-        agent.updateRotation = false;
-
-        // 컴포넌트 초기화
-        stat.Init(agent);
+        bulletFactory = factory;
         fire.Init(bulletFactory, player, firePoint, stat.MaxSpreadAngle);
+        poolRef = pool;
     }
+
+    public void SetPointPosition(Vector3 pos) => returnPoint.parent.position = pos;
 
     // 적 멈춤 함수
     public void OnEnemyPause(bool state) => isGamePause = state;
@@ -151,9 +147,7 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
         // 애니메이션 변경
         anim.ChangeAnimation(EnemyAnimState.Dead);
         // 적 오브젝트 비활성화
-        gameObject.SetActive(false);
-        // 적 죽음 이벤트 발생 ★ 상자 만들어주기 ★
-        Subject<IEnemyDeadHandler>.Publish(h => h.OnEnemyDead(transform.position));
+        poolRef.Release(this);
         // 성공 반환
         return BT_NodeStatus.Success;
     }

@@ -35,8 +35,6 @@ public class BulletFactory : MonoBehaviour
     // 총알 설정 함수
     private Bullet CreateBullet(GameObject prefab, IObjectPool<Bullet> poolRef, Transform container)
     {
-        // ★ 총알 데미지 추가하기 ★
-
         // 오브젝트 생성
         GameObject bullet = Instantiate(prefab);
         // 오브젝트 풀 주소 설정
