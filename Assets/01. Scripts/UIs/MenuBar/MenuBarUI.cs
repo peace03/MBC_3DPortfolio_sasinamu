@@ -4,10 +4,19 @@ using UnityEngine.UI;
 public class MenuBarUI : MonoBehaviour
 {
     [Header("버튼")]
-    [SerializeField] private Button invButton;          // 가방 버튼
-    [SerializeField] private Button statButton;         // 스탯 버튼
-    [SerializeField] private Button mapButton;          // 지도 버튼
-    [SerializeField] private Button settingsButton;     // 설정 버튼
+    [SerializeField] private Button invButton;              // 가방 버튼
+    [SerializeField] private Button statButton;             // 스탯 버튼
+    [SerializeField] private Button mapButton;              // 지도 버튼
+    [SerializeField] private Button settingsButton;         // 설정 버튼
+
+    [Header("UI")]
+    [SerializeField] private GameObject inventoryUI;        // 가방 UI
+    [SerializeField] private GameObject statUI;             // 스탯 UI
+    [SerializeField] private GameObject mapUI;              // 지도 UI
+    [SerializeField] private GameObject settingsUI;         // 설정 UI
+    [SerializeField] private GameObject boxUI;              // 상자 UI
+
+    private UIType curSubUI;                                // 최근 서브 UI
 
     private void Awake()
     {
@@ -24,8 +33,17 @@ public class MenuBarUI : MonoBehaviour
             settingsButton.onClick.AddListener(SettingsButton);
     }
 
+    // 메뉴 바 UI 갱신 함수
+    public void UpdateMenuBarUI(UIType type)
+    {
+        // 메뉴 버튼들 변경
+        UpdateMenuButtons(type);
+        // 서브 UI 변경
+        OpenSubUI(type);
+    }
+
     // 메뉴 버튼들 갱신 함수
-    public void UpdateMenuButtons(UIType type)
+    private void UpdateMenuButtons(UIType type)
     {
         // 메뉴 버튼들 초기화
         invButton.interactable = true;
@@ -59,39 +77,69 @@ public class MenuBarUI : MonoBehaviour
         }
     }
 
-    // 가방 버튼 함수
-    private void InventoryButton()
+    // 서브 UI 닫기 함수
+    private void CloseSubUI()
     {
-        // 메뉴 버튼들 갱신
-        UpdateMenuButtons(UIType.Inventory);
-        // 버튼으로 UI 열기 이벤트 발생
-        Subject<IOpenUIByButtonHandler>.Publish(h => h.OnOpenUIByButton(UIType.Inventory));
+        // UI 종류에 따라서
+        switch (curSubUI)
+        {
+            case UIType.Inventory:
+                inventoryUI.SetActive(false);
+                break;
+            case UIType.Stat:
+                statUI.SetActive(false);
+                break;
+            case UIType.Map:
+                mapUI.SetActive(false);
+                break;
+            case UIType.Settings:
+                settingsUI.SetActive(false);
+                break;
+            case UIType.Box:
+                Debug.Log("상자는 어떻게 하지....");
+                break;
+        }
     }
+
+    // 서브 UI 열기 함수
+    private void OpenSubUI(UIType type)
+    {
+        // 이전 UI 닫기
+        CloseSubUI();
+
+        // UI 종류에 따라서
+        switch (type)
+        {
+            case UIType.Inventory:
+                inventoryUI.SetActive(true);
+                break;
+            case UIType.Stat:
+                statUI.SetActive(true);
+                break;
+            case UIType.Map:
+                mapUI.SetActive(true);
+                break;
+            case UIType.Settings:
+                settingsUI.SetActive(true);
+                break;
+            case UIType.Box:
+                Debug.Log("상자...");
+                break;
+        }
+
+        // 현재 서브 UI 변경
+        curSubUI = type;
+    }
+
+    // 가방 버튼 함수
+    private void InventoryButton() => UpdateMenuBarUI(UIType.Inventory);
 
     // 스탯 버튼 함수
-    private void StatButton()
-    {
-        // 메뉴 버튼들 갱신
-        UpdateMenuButtons(UIType.Stat);
-        // 버튼으로 UI 열기 이벤트 발생
-        Subject<IOpenUIByButtonHandler>.Publish(h => h.OnOpenUIByButton(UIType.Stat));
-    }
+    private void StatButton() => UpdateMenuBarUI(UIType.Stat);
 
     // 지도 버튼 함수
-    private void MapButton()
-    {
-        // 메뉴 버튼들 갱신
-        UpdateMenuButtons(UIType.Map);
-        // 버튼으로 UI 열기 이벤트 발생
-        Subject<IOpenUIByButtonHandler>.Publish(h => h.OnOpenUIByButton(UIType.Map));
-    }
+    private void MapButton() => UpdateMenuBarUI(UIType.Map);
 
     // 설정 버튼 함수
-    private void SettingsButton()
-    {
-        // 메뉴 버튼들 갱신
-        UpdateMenuButtons(UIType.Settings);
-        // 버튼으로 UI 열기 이벤트 발생
-        Subject<IOpenUIByButtonHandler>.Publish(h => h.OnOpenUIByButton(UIType.Settings));
-    }
+    private void SettingsButton() => UpdateMenuBarUI(UIType.Settings);
 }

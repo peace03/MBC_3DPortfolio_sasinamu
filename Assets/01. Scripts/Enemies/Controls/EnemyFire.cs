@@ -25,10 +25,11 @@ public class EnemyFire : MonoBehaviour
         // 랜덤 탄 퍼짐 각도 구하기
         float randomAngle = Random.Range(-spreadAngle, spreadAngle);
         // 방향 각도에 탄 퍼짐 각도 더하기
-        Quaternion finalRot = Quaternion.LookRotation(dir.normalized) * Quaternion.Euler(0, randomAngle, 0);
+        //Quaternion finalRot = Quaternion.LookRotation(dir.normalized) * Quaternion.Euler(0, randomAngle, 0);
         // L형 총알 받아오기
         Bullet bullet = bulletFactory.LargeBulletPool.Get();
         // 사격(적 이름, 적 레이어, 사격 위치, 총알 각도)
-        bullet.FireBullet(transform.parent.name, gameObject.layer, firePoint.position, finalRot);
+        //bullet.FireBullet(transform.parent.name, gameObject.layer, firePoint.localPosition, finalRot);
+        bullet.FireBullet(transform.parent.name, gameObject.layer, firePoint.position, Quaternion.LookRotation(dir.normalized));
     }
 }

@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
 {
@@ -15,6 +18,7 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
     [SerializeField] private Transform firePoint;                       // 사격 위치
 
     [Header("정보")]
+    [SerializeField] private Slider hpUI;                               // 체력 UI
     [SerializeField] private bool isGamePause;                          // 일시정지 여부
     [SerializeField] private float lastAttackTime;                      // 마지막 공격 시간
     [SerializeField] private float lastDamagedTime;                     // 마지막 피격 시간
@@ -24,7 +28,9 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
     [SerializeField] private float startIdleTime;                       // 대기 시작 시간
 
     private EnemyStat stat;                                             // 스탯
-    private EnemyMove move;                                             // 이동
+    private EnemyRotate rot;                                            // 회전
+    private NavMeshAgent agent;                                         // 이동 AI
+    private NavMeshPath path;                                           // 이동 경로
     private EnemyFire fire;                                             // 사격
     private EnemyAnimationChanger anim;                                 // 애니메이션
 
@@ -78,13 +84,12 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
                 new BT_Action(Idle)
             })
         });
-
-        // 초기화
-        InitEnemy();
     }
 
     private void OnEnable()
     {
+        // 초기화
+        InitEnemy();
         // 적 멈춤 이벤트 구독
         Subject<IEnemyPauseHandler>.Attach(this);
     }
@@ -109,14 +114,24 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
     // 적 초기화 함수
     private void InitEnemy()
     {
+        // 체력 UI 비활성화
+        hpUI.gameObject.SetActive(false);
+
         // 적 컴포넌트 받아오기
         stat = GetComponent<EnemyStat>();
-        move = GetComponent<EnemyMove>();
+        rot = GetComponent<EnemyRotate>();
+        agent = GetComponent<NavMeshAgent>();
         fire = GetComponent<EnemyFire>();
         anim = GetComponent<EnemyAnimationChanger>();
 
+        // 새로 생성
+        path = new();
+
+        // 회전 막기
+        agent.updateRotation = false;
+
         // 컴포넌트 초기화
-        move.Init(stat.MoveSpeed);
+        stat.Init(agent);
         fire.Init(bulletFactory, player, firePoint, stat.MaxSpreadAngle);
     }
 
@@ -158,6 +173,13 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
         // 피격 상태가 되었다면
         if (stat.IsDamaged)
         {
+            // 체력 UI가 비활성화 중이라면
+            if (!hpUI.gameObject.activeSelf)
+                // 체력 UI 활성화
+                hpUI.gameObject.SetActive(true);
+
+            // 체력 UI 값 반영
+            hpUI.value = stat.HpRatio;
             // 마지막 피격 시간 저장
             lastDamagedTime = Time.time;
             // 피격 상태 초기화
@@ -186,8 +208,16 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
             // 실패 반환
             return BT_NodeStatus.Failure;
 
+        // 멈춘 상태가 아니라면
+        if (!agent.isStopped)
+        {
+            // 멈추기
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+        }
+
         // 회전
-        move.RotateToTarget(player);
+        rot.RotateToTarget(player);
         // 사격
         fire.FireBullet();
         // 공격한 시간 저장
@@ -214,10 +244,15 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
             // 복귀가 필요한 상태로 변경
             needToReturn = true;
 
+        // 멈춘 상태라면
+        if (agent.isStopped)
+            // 멈춘 상태 풀기
+            agent.isStopped = false;
+
         // 회전
-        move.RotateToTarget(player);
+        rot.RotateToTarget(player);
         // 이동
-        move.MoveToTarget(player.position + dir.normalized * stat.MaxAttackDistance, 0.1f);
+        agent.SetDestination(player.position);
         // 애니메이션 변경
         anim.ChangeAnimation(EnemyAnimState.Move);
         // 진행 중 반환
@@ -246,9 +281,9 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
         }
 
         // 회전
-        move.RotateToTarget(returnPoint);
+        rot.RotateToTarget(returnPoint);
         // 이동
-        move.MoveToTarget(returnPoint.position, 0.1f);
+        agent.SetDestination(returnPoint.position);
         // 애니메이션 변경
         anim.ChangeAnimation(EnemyAnimState.Move);
         // 진행 중 반환
@@ -268,16 +303,76 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
             // 성공 반환
             return BT_NodeStatus.Success;
 
-        // 지름이 1인 원에서 뽑은 랜덤 위치에 최대 순찰 거리를 곱해서 저장
-        Vector3 rand = Random.insideUnitSphere * stat.MaxPatrolDistance;
-        // 높이 제거
-        rand.y = 0f;
+        // 순찰 지점 저장할 변수 선언
+        Vector3 targetPoint;
+        // 순찰 지점 찾음 여부
+        bool isFound = SetPatrolPoint(out targetPoint);
+
+        // 순찰 지점을 못찾았다면
+        if (!isFound)
+            // 실패 반환
+            return BT_NodeStatus.Failure;
+
         // 순찰 지점의 위치를 복귀 지점의 위치에 랜덤 위치를 더한 값으로 설정
-        patrolPoint.position = returnPoint.position + rand;
+        patrolPoint.position = targetPoint;
         // 순찰 지점 설정 필요 없음
         needToSetPatrolPoint = false;
         // 성공 반환
         return BT_NodeStatus.Success;
+    }
+
+    // 순찰 지점 정하는 함수
+    private bool SetPatrolPoint(out Vector3 target)
+    {
+        // 최대 10번까지 랜덤으로 정하기
+        for (int i = 0; i < 10; i++)
+        {
+            // 지름이 1인 원에서 뽑은 랜덤 위치에 최대 순찰 거리를 곱해서 저장
+            Vector3 rand = Random.insideUnitSphere * stat.MaxPatrolDistance;
+
+            // 근처 바닥을 찾았다면
+            if (NavMesh.SamplePosition(returnPoint.position + rand, out var hit, 2f, NavMesh.AllAreas))
+            {
+                // 경로 계산 시도가 성공했고 갈 수 있는 길이라면
+                if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
+                {
+                    // 경로의 거리가 지름의 0.6배보다 크다면
+                    if (CalculatePathDistance(path) > stat.MaxPatrolDistance * 0.6f)
+                        // 다시 경로 찾기
+                        continue;
+
+                    // 순찰 지점 저장
+                    target = hit.position;
+                    // 순찰 지점 찾음
+                    return true;
+                }
+            }
+        }
+
+        // 초기화
+        target = Vector3.zero;
+        // 순찰 지점 못찾음
+        return false;
+    }
+
+    // 경로 거리 계산 함수
+    private float CalculatePathDistance(NavMeshPath path)
+    {
+        // 경로 계산에 실패했거나, 너무 근처에 있다면
+        if (path.corners.Length < 2)
+            // 계산 종료
+            return 0f;
+
+        // 거리를 저장할 변수 선언
+        float distance = 0f;
+
+        // 꺾이는 지점 개수만큼
+        for (int i = 0; i < path.corners.Length - 1; i++)
+            // 거리 더하기
+            distance += Vector3.Distance(path.corners[i], path.corners[i + 1]);
+
+        // 거리 반환
+        return distance;
     }
 
     // 순찰 함수
@@ -295,9 +390,9 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
         }
 
         // 회전
-        move.RotateToTarget(patrolPoint);
+        rot.RotateToTarget(patrolPoint);
         // 이동
-        move.MoveToTarget(patrolPoint.position, 0.1f);
+        agent.SetDestination(patrolPoint.position);
         // 애니메이션 변경
         anim.ChangeAnimation(EnemyAnimState.Move);
         // 진행 중 반환

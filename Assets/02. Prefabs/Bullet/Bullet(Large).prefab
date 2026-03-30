@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca9c4a04938002d4189e38e48acca919, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
+  attackerName: 
   attackerLayer:
     serializedVersion: 2
     m_Bits: 0

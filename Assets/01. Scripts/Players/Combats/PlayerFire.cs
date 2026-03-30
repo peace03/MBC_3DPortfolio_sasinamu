@@ -20,7 +20,7 @@ public class PlayerFire : MonoBehaviour,
     private BulletFactory bulletFactory;                    // 총알 공장
     private Coroutine reloadingCoroutine;                   // 장전 코루틴
 
-    private void Awake()
+    private void Start()
     {
         // 초기화
         curFireMode = FireMode.Single;
@@ -133,8 +133,8 @@ public class PlayerFire : MonoBehaviour,
     // 장전 함수
     public void OnReload()
     {
-        // 장전 중이라면
-        if (isReloading)
+        // 장전 코루틴이 비어있지 않다면
+        if (reloadingCoroutine != null)
             // 종료
             return;
 
@@ -171,6 +171,8 @@ public class PlayerFire : MonoBehaviour,
         Debug.Log("장전 끝!");
         // 정전 종료
         isReloading = false;
+        // 장전 코루틴 초기화
+        reloadingCoroutine = null;
     }
 
     // 장전 취소 함수

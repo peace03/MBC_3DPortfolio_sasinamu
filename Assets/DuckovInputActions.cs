@@ -504,6 +504,34 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""GameStart"",
+            ""id"": ""392a666f-3b20-4790-904c-a70779b9d3d3"",
+            ""actions"": [
+                {
+                    ""name"": ""Close"",
+                    ""type"": ""Button"",
+                    ""id"": ""1527a6d1-55f9-4ac9-87a2-e57142162ced"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""25651a20-f0eb-47a1-8589-0b28a112b3e8"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Close"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -526,12 +554,16 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         // Mouse
         m_Mouse = asset.FindActionMap("Mouse", throwIfNotFound: true);
         m_Mouse_Position = m_Mouse.FindAction("Position", throwIfNotFound: true);
+        // GameStart
+        m_GameStart = asset.FindActionMap("GameStart", throwIfNotFound: true);
+        m_GameStart_Close = m_GameStart.FindAction("Close", throwIfNotFound: true);
     }
 
     ~@DuckovInputActions()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, DuckovInputActions.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Mouse.enabled, "This will cause a leak and performance issues, DuckovInputActions.Mouse.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_GameStart.enabled, "This will cause a leak and performance issues, DuckovInputActions.GameStart.Disable() has not been called.");
     }
 
     /// <summary>
@@ -927,6 +959,102 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="MouseActions" /> instance referencing this action map.
     /// </summary>
     public MouseActions @Mouse => new MouseActions(this);
+
+    // GameStart
+    private readonly InputActionMap m_GameStart;
+    private List<IGameStartActions> m_GameStartActionsCallbackInterfaces = new List<IGameStartActions>();
+    private readonly InputAction m_GameStart_Close;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "GameStart".
+    /// </summary>
+    public struct GameStartActions
+    {
+        private @DuckovInputActions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public GameStartActions(@DuckovInputActions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "GameStart/Close".
+        /// </summary>
+        public InputAction @Close => m_Wrapper.m_GameStart_Close;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_GameStart; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="GameStartActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(GameStartActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="GameStartActions" />
+        public void AddCallbacks(IGameStartActions instance)
+        {
+            if (instance == null || m_Wrapper.m_GameStartActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GameStartActionsCallbackInterfaces.Add(instance);
+            @Close.started += instance.OnClose;
+            @Close.performed += instance.OnClose;
+            @Close.canceled += instance.OnClose;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="GameStartActions" />
+        private void UnregisterCallbacks(IGameStartActions instance)
+        {
+            @Close.started -= instance.OnClose;
+            @Close.performed -= instance.OnClose;
+            @Close.canceled -= instance.OnClose;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GameStartActions.UnregisterCallbacks(IGameStartActions)" />.
+        /// </summary>
+        /// <seealso cref="GameStartActions.UnregisterCallbacks(IGameStartActions)" />
+        public void RemoveCallbacks(IGameStartActions instance)
+        {
+            if (m_Wrapper.m_GameStartActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="GameStartActions.AddCallbacks(IGameStartActions)" />
+        /// <seealso cref="GameStartActions.RemoveCallbacks(IGameStartActions)" />
+        /// <seealso cref="GameStartActions.UnregisterCallbacks(IGameStartActions)" />
+        public void SetCallbacks(IGameStartActions instance)
+        {
+            foreach (var item in m_Wrapper.m_GameStartActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_GameStartActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="GameStartActions" /> instance referencing this action map.
+    /// </summary>
+    public GameStartActions @GameStart => new GameStartActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player" which allows adding and removing callbacks.
     /// </summary>
@@ -1040,5 +1168,20 @@ public partial class @DuckovInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPosition(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "GameStart" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="GameStartActions.AddCallbacks(IGameStartActions)" />
+    /// <seealso cref="GameStartActions.RemoveCallbacks(IGameStartActions)" />
+    public interface IGameStartActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Close" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnClose(InputAction.CallbackContext context);
     }
 }

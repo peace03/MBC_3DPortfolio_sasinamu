@@ -418,6 +418,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "GameStart",
+            "id": "392a666f-3b20-4790-904c-a70779b9d3d3",
+            "actions": [
+                {
+                    "name": "Close",
+                    "type": "Button",
+                    "id": "1527a6d1-55f9-4ac9-87a2-e57142162ced",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "25651a20-f0eb-47a1-8589-0b28a112b3e8",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Close",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

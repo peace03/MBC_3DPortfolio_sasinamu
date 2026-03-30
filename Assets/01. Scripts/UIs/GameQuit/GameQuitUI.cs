@@ -6,7 +6,7 @@ public class GameQuitUI : MonoBehaviour
 {
     [Header("버튼")]
     [SerializeField] private Button gameQuitButton;             // 게임 종료 버튼
-    [SerializeField] private Button gameQuitCancelButton;       // 게임 종료 취소 버튼
+    [SerializeField] private Button closeButton;                // 닫기 버튼
 
     private void Awake()
     {
@@ -14,14 +14,14 @@ public class GameQuitUI : MonoBehaviour
         if (gameQuitButton != null)
             gameQuitButton.onClick.AddListener(QuitGame);
 
-        if (gameQuitCancelButton != null)
-            gameQuitCancelButton.onClick.AddListener(CancelGameQuit);
+        if (closeButton != null)
+            closeButton.onClick.AddListener(CancelGameQuit);
     }
 
     private void OnEnable()
     {
         // 초기화
-        EventSystem.current.SetSelectedGameObject(gameQuitCancelButton.gameObject);
+        EventSystem.current.SetSelectedGameObject(closeButton.gameObject);
     }
 
     // 게임 종료 함수
@@ -38,12 +38,12 @@ public class GameQuitUI : MonoBehaviour
         #endif
     }
 
-    // 게임 종료 취소
+    // 닫기 버튼 함수
     private void CancelGameQuit()
     {
         // 게임 종료 UI 닫기
         gameObject.SetActive(false);
-        // 게임 종료 취소 이벤트 발행
-        Subject<IGameQuitCancelHandler>.Publish(h => h.OnGameQuitCancel());
+        // 팝업 UI 닫기 이벤트 발행
+        Subject<IPopupUIClosedHandler>.Publish(h => h.OnClosedPopupUI());
     }
 }

@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &59390165988893872
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 717.6
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 61.003902
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 629.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70783633
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.70637655
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -89.882
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      propertyPath: m_Name
+      value: kamaz_wood_truck_red (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8230503464320089534}
+  m_SourcePrefab: {fileID: 100100000, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+--- !u!1 &870205022349449697 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 31af3d964af2df549b95ab36b14f1256, type: 3}
+  m_PrefabInstance: {fileID: 59390165988893872}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &8230503464320089534
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870205022349449697}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 8.11, y: 9.13, z: 22.54}
+  m_Center: {x: 0, y: 3.62, z: -2.12}

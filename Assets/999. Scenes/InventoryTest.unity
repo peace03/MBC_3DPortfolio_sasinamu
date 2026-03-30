@@ -2520,6 +2520,11 @@ MonoBehaviour:
   statButton: {fileID: 158082562}
   mapButton: {fileID: 391881385}
   settingsButton: {fileID: 1762407900}
+  inventoryUI: {fileID: 0}
+  statUI: {fileID: 0}
+  mapUI: {fileID: 0}
+  settingsUI: {fileID: 0}
+  boxUI: {fileID: 0}
 --- !u!1 &225402214
 GameObject:
   m_ObjectHideFlags: 0
@@ -4394,9 +4399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamePauseUI
   mainMenuScene: 0
   continueButton: {fileID: 1156525773}
-  settingsButton: {fileID: 2029012858}
   mainMenuButton: {fileID: 1176820269}
-  gameQuitButton: {fileID: 1106795740}
 --- !u!1 &457039615
 GameObject:
   m_ObjectHideFlags: 0
@@ -7037,15 +7040,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::T_UIManager
   curOpenUIType: 0
   gamePauseUI: {fileID: 439783816}
+  settingsUI: {fileID: 972939332}
+  gameQuitUI: {fileID: 0}
   gameOverUI: {fileID: 1761213747}
   controlManualAllUI: {fileID: 399518646}
   controlManualDetailUI: {fileID: 0}
   menuBarUI: {fileID: 198002451}
-  inventoryUI: {fileID: 1288161652}
-  statUI: {fileID: 322478571}
-  mapUI: {fileID: 785006424}
-  settingsUI: {fileID: 972939332}
-  boxUI: {fileID: 1796334073}
 --- !u!1 &774888201
 GameObject:
   m_ObjectHideFlags: 0
@@ -7137,7 +7137,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapUI
   mapCamera: {fileID: 0}
-  moveSensitivity: 0.05
+  mapTarget: {fileID: 0}
+  minMoveSensitivity: 0.00005
+  maxMoveSensitivity: 0.2
   zoomSensitivity: 10
   minMapSize: 50
   maxMapSize: 1000

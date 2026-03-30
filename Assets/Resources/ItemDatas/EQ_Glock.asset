@@ -20,5 +20,6 @@ MonoBehaviour:
   _explain: "\uAD8C\uCD1D\uC774\uB2E4."
   _consumableType: 2
   maxDurability: 100
+  bulletType: 0
   fireSpeed: 1
   maxAmmo: 8

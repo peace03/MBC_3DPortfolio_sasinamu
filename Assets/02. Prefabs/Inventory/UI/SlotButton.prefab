@@ -188,10 +188,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31334a63b02131449b40cde9ea1d6dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlotPrefab
+  _backImage: {fileID: 0}
   _image: {fileID: 2135549707535516785}
   _itemName: {fileID: 2823604380230067058}
   _itemNum: {fileID: 3651756173951729715}
+  _slider: {fileID: 0}
   defaultImage: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  clickImage: {fileID: 0}
 --- !u!1 &6981925895481234213
 GameObject:
   m_ObjectHideFlags: 0

@@ -26,7 +26,6 @@ public enum EnemyAnimState
 public enum SceneType
 {
     Start,          // 시작
-    Custom,         // 꾸미기
     Bunker,         // 벙커
     Game,           // 게임
     End             // 끝
@@ -37,10 +36,11 @@ public enum UIType
 {
     None,           // 없음
     GamePause,      // 일시정지 UI
+    Settings,       // 세팅 UI
+    GameQuit,       // 게임종료 UI
     GameOver,       // 게임오버 UI
     Inventory,      // 가방 UI
     Stat,           // 스탯 UI
-    Map,            // 맵 UI
-    Settings,       // 세팅 UI
+    Map,            // 지도 UI
     Box             // 상자 UI
 }
