@@ -43,6 +43,8 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
             _equipInvenModel, _bagInvenModel, _storageInvenModel, _quickInvenModel,
             _itemManager);
 
+        //WorkStationView 따로 초기화
+
         //모델별 슬롯 용량 초기화
         _equipInvenModel.Init(_equipCapacity);
         _bagInvenModel.Init(_bagCapacity);
@@ -75,6 +77,8 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
 
         Subject<IEnemyDeadHandler>.Attach(this);
         Subject<IPlayerQuickSlotHandler>.Attach(this);
+
+        _facadeView.InitWorkStationView();
     }
     private void OnDisable()
     {

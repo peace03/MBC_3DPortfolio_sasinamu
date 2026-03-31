@@ -91,7 +91,7 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler,
         Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
         //가상 슬롯 비활성화 상태면 종료
         if (!_virtualSlot.gameObject.activeSelf) return;
-        Debug.Log("아이템 드롭!!");
+        //Debug.Log("아이템 드롭!!");
 
         //슬롯 교환 이벤트 발생
         Subject<ISlotExchangeHandler>.Publish(h =>h.OnExchangeSlot

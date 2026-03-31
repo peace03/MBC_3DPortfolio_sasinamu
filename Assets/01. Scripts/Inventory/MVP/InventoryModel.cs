@@ -128,7 +128,11 @@ public class InventoryModel
                 PutGunItem(index, null);
                 Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             }
-            else Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+        }
+        else if (item is VestItem vest)
+        {
+
         }
         else if (item is FoodItem foodItem)
         {
@@ -136,7 +140,6 @@ public class InventoryModel
             Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
             Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             PutItem(slotType, index, null);
-            
         }
     }
 

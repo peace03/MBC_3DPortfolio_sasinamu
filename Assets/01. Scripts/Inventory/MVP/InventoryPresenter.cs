@@ -13,7 +13,7 @@ public enum SlotType
 
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
     ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler,
-    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler
+    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler, IDamageable
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
@@ -30,7 +30,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     private SlotType _slotTypeRight = SlotType.None;
     private int _slotIndexRight;
     //현재 활성화된 제작대의 버튼 리스트를 기억해둘 캐싱 변수
-    private List<WorkStationBtn> _currentWorkStationBtns;
+    private List<CreateItemBtn> _currentWorkStationBtns;
 
 
     public InventoryPresenter(FacadeView view,
@@ -78,6 +78,11 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         CreateItem(1);
         CreateItem(18);
         CreateItem(9);
+        int[] ids = new int[] { 6, 5, 7, 16, 2, 13};
+        for (int i = 0; i < ids.Length; i++)
+        {
+            CreateItem(ids[i]);
+        }
     }
 
     //ItemData의 id로 객체 생성하도록 M에 요청
@@ -115,7 +120,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         toItem = GetModelItem(toSlotType, toIndex);
         if (fromSlotType == SlotType.Equip || toSlotType == SlotType.Equip)
             if (!CanExchange(fromSlotType, fromIndex, fromItem, toSlotType, toIndex, toItem)) return; //교환 불가능하면 종료
-        Debug.Log("슬롯 교환 호출!!");
+        //Debug.Log("슬롯 교환 호출!!");
         //아이템 적재
         if (fromItem is CountableItem fcount && toItem is CountableItem tcount)
             if (fcount._data.ID == tcount._data.ID)
@@ -192,18 +197,18 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     {
         switch (equipIndex)
         {
-            case 0:
-            case 1:
+            case 0: //총
+            case 1: //총
                 if (other is GunItem) return true;
                 break;
-            case 2:
+            case 2: //가방
                 if (other is BagItem) return true;
                 break;
-            case 3:
-                if (other is ConsumableItem consume1 && consume1.Type == ConsumableType.Helmat) return true;
+            case 3: //조끼
+                if (other is VestItem consume2 && consume2.Type == ConsumableType.Vest) return true;
                 break;
             case 4:
-                if (other is ConsumableItem consume2 && consume2.Type == ConsumableType.Vest) return true;
+                //if (other is ConsumableItem consume1 && consume1.Type == ConsumableType.Helmat) return true;
                 break;
             default:
                 break;
@@ -246,17 +251,18 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
     #endregion
 
-    //슬롯 클릭되었을 때 실행
+    //슬롯 클릭되었을 때 호출
     public void OnSlotLeftClick(SlotType slotType, int index)
     {
+        //클릭된 슬롯 위치 저장
         _slotTypeLeft = slotType;
         _slotIndexLeft = index;
     }
     public void OnSlotRightClick(SlotType slotType, int index)
     {
+        //클릭된 슬롯 위치 저장
         _slotTypeRight = slotType;
         _slotIndexRight = index;
-        Debug.Log($"{_slotTypeRight}, {_slotIndexRight}");
 
         //Use 버튼 표시 가능 판단
         Item item = GetModel(slotType).GetItem(index);
@@ -308,14 +314,20 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         //박스 모델 초기화
         boxModel.Init(boxCapacity);
         //모델에 아이템 랜덤 생성
-        int[] IDs = new int[] { 1,8,9,13,16,18,20 };
+        //int[] IDs = new int[] { 1,8,9,13,16,18,20 };
         for (int i = 0; i < Random.Range(1, boxCapacity); i++)
         {
-            Item item = _itemManager.CreateItemInstance(IDs[Random.Range(0, IDs.Length)]);
+            Item item = _itemManager.CreateItemInstance(Random.Range(1, 24));
             //Debug.Log($"생성된 아이템:{item._data.Name}");
             boxModel.AddItem(item);
         }
         _boxModel = boxModel;
+    }
+
+    //플레이어 피격시 호출
+    public void Damaged(string name, float amount)
+    {
+        
     }
 
     //상자 상호작용 시 호출
@@ -327,8 +339,9 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     }
 
     // [UI 열림 이벤트 구독 응답] - BootStrapper에서 Attach 해주어야 함!
-    public void OnActiveWorkSationUI(List<WorkStationBtn> btns)
+    public void OnActiveWorkSationUI(List<CreateItemBtn> btns)
     {
+        Debug.Log("P - 제작대 UI 활성화 무전 수신!");
         // 1. 넘어온 버튼 리스트를 메모리에 캐싱합니다.
         _currentWorkStationBtns = btns;
 
@@ -337,7 +350,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     }
 
     // 1. 제작대 UI가 열리거나 아이템이 갱신될 때 버튼 상태를 검증하는 로직
-    public void RefreshWorkStationUI(List<WorkStationBtn> btns)
+    public void RefreshWorkStationUI(List<CreateItemBtn> btns)
     {
         foreach (var btn in btns)
         {
@@ -357,14 +370,14 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
                 string itemName = _itemManager.GetItemNameByID(needItem.id); // ItemManager에 이름 가져오는 기능이 필요함
                 reqTextStr += $"{itemName} ({totalOwned}/{needItem.count})\n";
             }
-
+            Debug.Log($"만들 수 있?:{canCraft} 텍스트: {reqTextStr}");
             // View에게 계산된 결과 전달
             btn.UpdateUI(canCraft, reqTextStr);
         }
     }
 
     // 2. 제작 버튼 클릭 시 실행될 핵심 트랜잭션
-    public void OnCraftButtonClicked(WorkStationBtn btn)
+    public void OnCraftButtonClicked(CreateItemBtn btn)
     {
         // [Phase 1: 재료 차감 (Sequential Consumption)]
         foreach (var needItem in btn.NeedItemList)
@@ -402,9 +415,6 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
             RefreshWorkStationUI(_currentWorkStationBtns);
         }
     }
+
+    
 }
-
-
-
-
-

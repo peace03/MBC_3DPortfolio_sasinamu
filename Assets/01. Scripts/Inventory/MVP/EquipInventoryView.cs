@@ -13,7 +13,7 @@ public class EquipInventoryView : MonoBehaviour
         //장비 인벤토리 슬롯 생성
         _equipSlots = new List<EquipmentSlot>();
         //슬롯들 추가
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 4; i++)
         {
             _equipSlots.Add(transform.GetChild(i).GetComponent<EquipmentSlot>());
             _equipSlots[i].Initialize(i, virtualSlot);
