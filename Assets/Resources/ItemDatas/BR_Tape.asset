@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a583f234123e8841890f27452df94da, type: 3}
   m_Name: BR_Tape
   m_EditorClassIdentifier: Assembly-CSharp::CountableData
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: c53646087694c2c4e936b9d9a1b85f29, type: 3}
   objectPrefab: {fileID: 0}
   _id: 4
   _name: "\uD14C\uC774\uD504"

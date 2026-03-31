@@ -50,7 +50,7 @@ public interface ISlotExchangeHandler
 //아이템 착용 인터페이스
 public interface IEquipWear
 {
-    public void OnGunDestroy(int index, Item item);
+    public void OnGunDestroy(int index, Item item); //무기 파괴될 때
     public void OnGunSwap(int index1, Item item1, int index2, Item item2); //무기끼리 교환할 때
     public void OnEquipWear(int index, Item item); //장비 한개 장착될 때
 }

@@ -128,7 +128,7 @@ public class InventoryModel
                 PutGunItem(index, null);
                 Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             }
-            else Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
         }
         else if (item is FoodItem foodItem)
         {

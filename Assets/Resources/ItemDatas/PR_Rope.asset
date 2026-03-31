@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5a7d8cd8ec2a5409b8ef53c28e1993, type: 3}
   m_Name: PR_Rope
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: d24c1df5373783846b6608620a8f5570, type: 3}
   objectPrefab: {fileID: 0}
   _id: 9
   _name: "\uB85C\uD504"

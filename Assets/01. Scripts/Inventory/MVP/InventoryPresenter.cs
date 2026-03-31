@@ -398,8 +398,3 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         }
     }
 }
-
-
-
-
-
