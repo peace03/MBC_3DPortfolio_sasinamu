@@ -28,8 +28,8 @@ public class ItemManager : MonoBehaviour
                 return new CureKitItem(cureKitData, cureKitData.MaxDurability);
             case GunData gunData:
                 return new GunItem(gunData, Random.Range(1, gunData.MaxAmmo), gunData.MaxDurability);
-            case ConsumableData consumableData:
-                return new ConsumableItem(consumableData, consumableData.MaxDurability);
+            case VestData consumableData:
+                return new VestItem(consumableData, consumableData.MaxDurability);
             case FoodData foodData:
                 return new FoodItem(foodData);
             case BagData bagData:

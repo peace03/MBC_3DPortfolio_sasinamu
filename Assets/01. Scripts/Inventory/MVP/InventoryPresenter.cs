@@ -13,7 +13,7 @@ public enum SlotType
 
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
     ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler,
-    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler
+    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler, IDamageable
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
@@ -68,7 +68,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
     void Test()
     {
-        int[] ids = new int[] { 6, 5, 7, 16, 2 };
+        int[] ids = new int[] { 6, 5, 7, 16, 2, 13};
         for (int i = 0; i < ids.Length; i++)
         {
             CreateItem(ids[i]);
@@ -186,18 +186,18 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     {
         switch (equipIndex)
         {
-            case 0:
-            case 1:
+            case 0: //총
+            case 1: //총
                 if (other is GunItem) return true;
                 break;
-            case 2:
+            case 2: //가방
                 if (other is BagItem) return true;
                 break;
-            case 3:
-                if (other is ConsumableItem consume2 && consume2.Type == ConsumableType.Vest) return true;
+            case 3: //조끼
+                if (other is VestItem consume2 && consume2.Type == ConsumableType.Vest) return true;
                 break;
             case 4:
-                if (other is ConsumableItem consume1 && consume1.Type == ConsumableType.Helmat) return true;
+                //if (other is ConsumableItem consume1 && consume1.Type == ConsumableType.Helmat) return true;
                 break;
             default:
                 break;
@@ -240,17 +240,18 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
     #endregion
 
-    //슬롯 클릭되었을 때 실행
+    //슬롯 클릭되었을 때 호출
     public void OnSlotLeftClick(SlotType slotType, int index)
     {
+        //클릭된 슬롯 위치 저장
         _slotTypeLeft = slotType;
         _slotIndexLeft = index;
     }
     public void OnSlotRightClick(SlotType slotType, int index)
     {
+        //클릭된 슬롯 위치 저장
         _slotTypeRight = slotType;
         _slotIndexRight = index;
-        //Debug.Log($"{_slotTypeRight}, {_slotIndexRight}");
 
         //Use 버튼 표시 가능 판단
         Item item = GetModel(slotType).GetItem(index);
@@ -310,6 +311,12 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
             boxModel.AddItem(item);
         }
         _boxModel = boxModel;
+    }
+
+    //플레이어 피격시 호출
+    public void Damaged(string name, float amount)
+    {
+        
     }
 
     //상자 상호작용 시 호출
@@ -397,4 +404,6 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
             RefreshWorkStationUI(_currentWorkStationBtns);
         }
     }
+
+    
 }

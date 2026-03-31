@@ -130,13 +130,16 @@ public class InventoryModel
             }
             Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
         }
+        else if (item is VestItem vest)
+        {
+
+        }
         else if (item is FoodItem foodItem)
         {
             Debug.Log(foodItem.Energy + " " + foodItem.Thirst);
             Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
             Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             PutItem(slotType, index, null);
-            
         }
     }
 
