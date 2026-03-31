@@ -1,9 +1,7 @@
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
 
-public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler
+public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelectedQuickSlotHandler, IEquipWear
 {
     #region Player Info
     [Header("정보")]
@@ -88,6 +86,8 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler
     {
         // 아이템 사용 이벤트 구독
         Subject<IUseItemHandler>.Attach(this);
+        // 퀵슬롯 선택 이벤트 구독
+        Subject<ISelectedQuickSlotHandler>.Attach(this);
     }
 
     private void Update()
@@ -102,6 +102,8 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler
     {
         // 아이템 사용 이벤트 구독 해제
         Subject<IUseItemHandler>.Detach(this);
+        // 퀵슬롯 선택 이벤트 구독 해제
+        Subject<ISelectedQuickSlotHandler>.Detach(this);
     }
 
     // 초기화
@@ -206,8 +208,35 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler
         ChangeHungerAndThirstUI();
     }
 
+    public void OnSelectedWeapon(GunItem gun)
+    {
+        if (gun == null)
+        {
+            UpdateAttackAndDefensePowers(0f, DefensePower);
+            return;
+        }
+
+        GunData data = gun._data as GunData;
+        UpdateAttackAndDefensePowers(data.BulletData.Damage, defensePower);
+    }
+
+    public void OnGunDestroy(int index, Item item)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnGunSwap(int index1, Item item1, int index2, Item item2)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnEquipWear(int index, Item item)
+    {
+
+    }
+
     // 공격력, 방어력 갱신 함수
-    public void UpdateAttackAndDefensePowers(float attack, float defense)
+    private void UpdateAttackAndDefensePowers(float attack, float defense)
     {
         Debug.Log($"[변경 전] 공격력 : {attackPower} / 방어력 : {defensePower}");
         // 공격력

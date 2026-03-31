@@ -69,6 +69,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     void Test()
     {
         CreateItem(10);
+        CreateItem(11);
         CreateItem(1);
         CreateItem(13);
         CreateItem(20);

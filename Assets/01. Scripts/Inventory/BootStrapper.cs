@@ -53,8 +53,8 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
     }
     private void Start()
     {
-        
         _InvenPresent.InitializePresenter();
+        OnQuickSlot(1);
     }
 
     //이벤트 구독, 해제
@@ -113,8 +113,9 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
     {
         // 1, 2
         if (slotNumber < 3)
-            Subject<ISelectedQuickSlotHandler>.Publish(h => h.OnSelectedQuickSlot(_equipInvenModel.GetItem(slotNumber - 1)));
+            Subject<ISelectedQuickSlotHandler>.
+                Publish(h => h.OnSelectedWeapon(_equipInvenModel.GetItem(slotNumber - 1) as GunItem));
         else
-            Subject<ISelectedQuickSlotHandler>.Publish(h => h.OnSelectedQuickSlot(_quickInvenModel.GetItem(slotNumber - 3)));
+            _quickInvenModel.UseItem(SlotType.Quick, slotNumber - 3);
     }
 }

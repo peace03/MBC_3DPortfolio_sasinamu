@@ -4,9 +4,11 @@ using UnityEngine;
 public class GunData : ConsumableData
 {
     [Header("총 정보")]
+    [SerializeField] private BulletData bulletData;
     [SerializeField] private int fireSpeed; //발사속도
     [SerializeField] private int maxAmmo; //최대 탄약 수
 
+    public BulletData BulletData => bulletData;
     public int FireSpeed => fireSpeed;
     public int MaxAmmo => maxAmmo;
 }

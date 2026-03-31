@@ -20,6 +20,6 @@ MonoBehaviour:
   _explain: "\uCD1D\uC774\uB2E4"
   _consumableType: 2
   maxDurability: 100
-  bulletType: 1
+  bulletData: {fileID: 11400000, guid: fef106df39e1dbb43b4bd7f1f4bba787, type: 2}
   fireSpeed: 2
   maxAmmo: 30

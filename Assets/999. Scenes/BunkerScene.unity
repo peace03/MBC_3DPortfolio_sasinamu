@@ -1458,7 +1458,6 @@ MonoBehaviour:
   statUI: {fileID: 821413897}
   mapUI: {fileID: 785006424}
   settingsUI: {fileID: 1144071980}
-  boxUI: {fileID: 1796334073}
 --- !u!1 &225402214
 GameObject:
   m_ObjectHideFlags: 0
@@ -3517,13 +3516,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::T_UIManager
   curOpenUIType: 0
+  hudUI: {fileID: 0}
+  controlManualDetailUI: {fileID: 831482193}
+  quickSlotUI: {fileID: 0}
   gamePauseUI: {fileID: 439783816}
   settingsUI: {fileID: 1499555706}
   gameQuitUI: {fileID: 2014764874}
   gameOverUI: {fileID: 1761213747}
-  controlManualAllUI: {fileID: 399518646}
-  controlManualDetailUI: {fileID: 831482193}
   menuBarUI: {fileID: 198002451}
+  boxUI: {fileID: 0}
 --- !u!1 &774888201
 GameObject:
   m_ObjectHideFlags: 0
@@ -6810,6 +6811,63 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!1001 &1692717364
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 581.2478
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00001
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 378.2306
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 677960439380913226, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700102511531434518, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
+      propertyPath: m_Name
+      value: Portal
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bfba1e240796a22449d822aecb62bd67, type: 3}
 --- !u!1 &1718125029
 GameObject:
   m_ObjectHideFlags: 0
@@ -7544,6 +7602,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96ae94f6dc4982340ad86e90111abc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStat
+  hpSlider: {fileID: 0}
+  hpText: {fileID: 0}
+  hungerSlider: {fileID: 0}
+  thirstSlider: {fileID: 0}
   lastUsedStamTime: 0
   lastDecreaseHungerAndThirstTime: 0
   curHp: 0
@@ -8442,3 +8504,4 @@ SceneRoots:
   - {fileID: 101015706}
   - {fileID: 2064414016}
   - {fileID: 147235131}
+  - {fileID: 1692717364}
