@@ -127,6 +127,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
                 }
         PutModelItem(fromSlotType, fromIndex, toItem);
         PutModelItem(toSlotType, toIndex, fromItem);
+        Subject<IEquipmentSlotHandler>.Publish(h => h.OnEquipmentSlot(_equipModel));
         //UI 업데이트는 자동으로 됨
     }
     //모델의 해당 인덱스 아이템 가져오기

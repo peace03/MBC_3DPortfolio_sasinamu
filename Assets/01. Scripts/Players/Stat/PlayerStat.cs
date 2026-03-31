@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelectedQuickSlotHandler, IEquipWear
+public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelectedQuickSlotHandler
 {
     #region Player Info
     [Header("정보")]
@@ -208,42 +208,26 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelected
         ChangeHungerAndThirstUI();
     }
 
-    public void OnSelectedWeapon(GunItem gun)
+    public void OnSelectedQuickSlot(Item item) => UpdateAttackPower(item);
+
+    // 공격력 갱신 함수
+    private void UpdateAttackPower(Item item)
     {
+        var gun = item as GunItem;
+
         if (gun == null)
         {
-            UpdateAttackAndDefensePowers(0f, DefensePower);
+            attackPower = 0f;
             return;
         }
 
         GunData data = gun._data as GunData;
-        UpdateAttackAndDefensePowers(data.BulletData.Damage, defensePower);
+        attackPower = data.BulletData.Damage;
     }
 
-    public void OnGunDestroy(int index, Item item)
+    private void UpdateDefensePower(Item item)
     {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnGunSwap(int index1, Item item1, int index2, Item item2)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnEquipWear(int index, Item item)
-    {
-
-    }
-
-    // 공격력, 방어력 갱신 함수
-    private void UpdateAttackAndDefensePowers(float attack, float defense)
-    {
-        Debug.Log($"[변경 전] 공격력 : {attackPower} / 방어력 : {defensePower}");
-        // 공격력
-        attackPower = attack;
-        // 방어력
-        defensePower = defense;
-        Debug.Log($"[변경 후] 공격력 : {attackPower} / 방어력 : {defensePower}");
+        Debug.Log("방어력 갱신하기");
     }
 
     // 현재 가방 무게 갱신 함수

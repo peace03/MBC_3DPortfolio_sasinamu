@@ -82,5 +82,5 @@ public interface IQuickSlotStateHandler
 
 public interface ISelectedQuickSlotHandler
 {
-    public void OnSelectedWeapon(GunItem gun);
+    public void OnSelectedQuickSlot(Item item);
 }

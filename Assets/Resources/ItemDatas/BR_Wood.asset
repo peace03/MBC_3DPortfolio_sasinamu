@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a583f234123e8841890f27452df94da, type: 3}
   m_Name: BR_Wood
   m_EditorClassIdentifier: Assembly-CSharp::CountableData
-  sprite: {fileID: 21300000, guid: 4b51c37929e2a3a4f9435582807ba77a, type: 3}
+  sprite: {fileID: 21300000, guid: 3e29f419bcb31d64d8c540d74d0c7915, type: 3}
   objectPrefab: {fileID: 8920821526112881925, guid: 2637a4cf6e4665340b13e298e61166c8, type: 3}
   _id: 1
   _name: "\uB098\uBB34"

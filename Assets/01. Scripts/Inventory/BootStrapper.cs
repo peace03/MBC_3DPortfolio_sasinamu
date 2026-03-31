@@ -20,7 +20,9 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
     [SerializeField] private int _quickCapacity = 6;    //퀵슬롯
     [SerializeField] private int _storageCapacity = 60; //창고
     [SerializeField] private int _boxCapacity = 5;     //상자
-                     private int _equipCapacity = 5;    //장비
+                     private int _equipCapacity = 4;    //장비
+
+    private int curSelectedSlotNum;
 
     private void Awake()
     {
@@ -72,6 +74,7 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
         Subject<ICraftItemHandler>.Attach(_InvenPresent);       //제작대 생성버튼 상호작용 발생
 
         Subject<IEnemyDeadHandler>.Attach(this);
+        Subject<IPlayerQuickSlotHandler>.Attach(this);
     }
     private void OnDisable()
     {
@@ -87,6 +90,7 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
         Subject<ICraftItemHandler>.Detach(_InvenPresent);
 
         Subject<IEnemyDeadHandler>.Detach(this);
+        Subject<IPlayerQuickSlotHandler>.Detach(this);
     }
 
     //public void InitBoxes()
@@ -111,11 +115,16 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
 
     public void OnQuickSlot(int slotNumber)
     {
+        if (curSelectedSlotNum == slotNumber)
+            return;
+
         // 1, 2
         if (slotNumber < 3)
             Subject<ISelectedQuickSlotHandler>.
-                Publish(h => h.OnSelectedWeapon(_equipInvenModel.GetItem(slotNumber - 1) as GunItem));
+                Publish(h => h.OnSelectedQuickSlot(_equipInvenModel.GetItem(slotNumber - 1) as GunItem));
         else
             _quickInvenModel.UseItem(SlotType.Quick, slotNumber - 3);
+
+        curSelectedSlotNum = slotNumber;
     }
 }

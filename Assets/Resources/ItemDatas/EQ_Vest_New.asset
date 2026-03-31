@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d453a00785041ef42bdca453d56035c0, type: 3}
   m_Name: EQ_Vest_New
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableData
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: a15f37ef199494348b3acd0bf754d87b, type: 3}
   objectPrefab: {fileID: 0}
   _id: 13
   _name: "\uC0C1\uC704 \uBC29\uC5B4\uAD6C"

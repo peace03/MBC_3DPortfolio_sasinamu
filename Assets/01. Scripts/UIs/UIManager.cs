@@ -185,6 +185,7 @@ public class UIManager : MonoBehaviour,
             // 상자라면
             case UIType.Box:
                 ChangeUI(menuBarUI, UIType.Inventory);
+                OnQuickSlotState(true);
                 menuBarUI.GetComponent<MenuBarUI>().UpdateMenuBarUI(UIType.Inventory);
                 // 상자 UI 열기
                 OpenUI(boxUI, type);
@@ -258,7 +259,6 @@ public class UIManager : MonoBehaviour,
             var openUI = openedUIStack.Pop();
             // UI 닫기
             openUI.SetActive(false);
-            Debug.Log($"{openUI.name} 닫힘");
         }
 
         // 게임 시간이 멈춰있다면
