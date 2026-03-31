@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d453a00785041ef42bdca453d56035c0, type: 3}
+  m_Script: {fileID: 11500000, guid: 4923eeaea27213b4590b14b8683ea05e, type: 3}
   m_Name: EQ_Vest_Old
-  m_EditorClassIdentifier: Assembly-CSharp::ConsumableData
+  m_EditorClassIdentifier: Assembly-CSharp::VestData
   sprite: {fileID: 0}
   objectPrefab: {fileID: 0}
   _id: 12
@@ -20,3 +20,4 @@ MonoBehaviour:
   _explain: "\uC870\uB07C"
   _consumableType: 1
   maxDurability: 100
+  defensive: 10

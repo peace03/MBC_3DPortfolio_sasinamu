@@ -247,6 +247,9 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
             default:
                 break;
         }
+
+        Subject<IInventoryWeightHandler>.Publish(h => h.OnInventoryWeight(_equipModel.GetTotalWeight()
+                                                + _bagModel.GetTotalWeight() + _quickModel.GetTotalWeight()));
     }
 
 

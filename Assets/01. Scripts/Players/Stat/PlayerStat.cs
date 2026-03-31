@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler//, ISelectedQuickSlotHandler
+public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, IInventoryWeightHandler
 {
     #region Player Info
     [Header("정보")]
@@ -69,8 +69,6 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler//, ISelect
     public float AutoFireDelayTime => autoFireDelayTime;
     #endregion
 
-    private ItemManager itemManager;                                    // 아이템 매니저
-
     private void Awake()
     {
         // 초기화
@@ -86,8 +84,8 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler//, ISelect
     {
         // 아이템 사용 이벤트 구독
         Subject<IUseItemHandler>.Attach(this);
-        // 퀵슬롯 선택 이벤트 구독
-        //Subject<ISelectedQuickSlotHandler>.Attach(this);
+        
+        Subject<IInventoryWeightHandler>.Attach(this);
     }
 
     private void Update()
@@ -102,12 +100,9 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler//, ISelect
     {
         // 아이템 사용 이벤트 구독 해제
         Subject<IUseItemHandler>.Detach(this);
-        // 퀵슬롯 선택 이벤트 구독 해제
-        //Subject<ISelectedQuickSlotHandler>.Detach(this);
+        
+        Subject<IInventoryWeightHandler>.Detach(this);
     }
-
-    // 초기화
-    public void Init(ItemManager manager) => itemManager = manager;
 
     // 피격 함수
     public void Damaged(string name, float amount)
@@ -208,39 +203,11 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler//, ISelect
         ChangeHungerAndThirstUI();
     }
 
-    public void OnSelectedQuickSlot(Item item) => UpdateAttackPower(item);
+    public void UpdateAttackPower(float power) => attackPower = power;
 
-    // 공격력 갱신 함수
-    private void UpdateAttackPower(Item item)
-    {
-        var gun = item as GunItem;
+    public void UpdateDefensePower(float power) => defensePower = power;
 
-        if (gun == null)
-        {
-            attackPower = 0f;
-            return;
-        }
-
-        GunData data = gun._data as GunData;
-        attackPower = data.BulletData.Damage;
-    }
-
-    private void UpdateDefensePower(Item item)
-    {
-        Debug.Log("방어력 갱신하기");
-    }
-
-    // 현재 가방 무게 갱신 함수
-    public void UpdateCurrentInventoryWeight(float weight)
-    {
-        Debug.Log($"[변경 전] 가방 무게 : {curInvWeight}");
-        // 현재 가방 무게
-        curInvWeight = weight;
-        Debug.Log($"[변경 후] 가방 무게 : {curInvWeight}");
-    }
-
-    // 현재 무게 갱신 함수
-    public void UpdateCurrentWeight(float weight) => curInvWeight = weight;
+    public void OnInventoryWeight(float weight) => curInvWeight = weight;
 
     private void OnDrawGizmos()
     {

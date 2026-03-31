@@ -45,6 +45,11 @@ public interface IOpenUIByButtonHandler
     public void OnOpenUIByButton(UIType type);
 }
 
+public interface IDeadUIHandler
+{
+    public void OnDeadUI(string name);
+}
+
 // UI 상태 관리 인터페이스
 public interface IUIStateHandler
 {
@@ -79,6 +84,7 @@ public interface IQuickSlotStateHandler
 {
     public void OnQuickSlotState(bool state);
 }
+
 public interface IEquipmentSlotHandler
 {
     public void OnEquipmentSlot(InventoryModel model);
@@ -87,4 +93,9 @@ public interface IEquipmentSlotHandler
 public interface IQuickSlotHandler
 {
     public void OnQuickSlot(InventoryModel model);
+}
+
+public interface IInventoryWeightHandler
+{
+    public void OnInventoryWeight(float weight);
 }

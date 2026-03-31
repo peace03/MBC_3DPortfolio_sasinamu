@@ -7,6 +7,9 @@ public class PlayerQuickSlot : MonoBehaviour, IQuickSlotHandler, IPlayerQuickSlo
 
     private InventoryModel quickSlotModel;
 
+    private int curSelectedSlot = 1;
+    public int CurSelectedSlot => curSelectedSlot;
+
     private void Awake()
     {
         quickSlots = new Item[quickSlotCount];
@@ -32,6 +35,8 @@ public class PlayerQuickSlot : MonoBehaviour, IQuickSlotHandler, IPlayerQuickSlo
 
     public void OnQuickSlot(int slotNumber)
     {
+        curSelectedSlot = slotNumber;
+
         if (slotNumber > 2)
             quickSlotModel.UseItem(SlotType.Quick, slotNumber - 3);
     }

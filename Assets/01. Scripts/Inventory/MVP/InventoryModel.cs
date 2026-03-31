@@ -232,4 +232,15 @@ public class InventoryModel
         }
         return amountToConsume;
     }
+
+    public float GetTotalWeight()
+    {
+        float totalWeight = 0f;
+
+        foreach (var slot in _Slots)
+            if (slot != null)
+                totalWeight += slot._data.Weight;
+
+        return totalWeight;
+    }
 }

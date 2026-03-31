@@ -51,3 +51,8 @@ public interface IPlayerQuickSlotHandler
 {
     public void OnQuickSlot(int slotNumber);
 }
+
+public interface IPlayerVisualHandler
+{
+    public void OnPlayerVisual(PlayerVisualType type, PlayerVisualState state);
+}

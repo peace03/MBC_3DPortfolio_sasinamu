@@ -46,5 +46,6 @@ public class PlayerManager : MonoBehaviour
         interact.Init(stat);
         fire.Init(stat, bulletFactory);
 
+        equipment.Init(stat, quickSlot);
     }
 }
