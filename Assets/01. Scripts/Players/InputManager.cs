@@ -34,6 +34,8 @@ public class InputManager : MonoBehaviour, IUIStateHandler
     private Vector2 lastMoveInput;                  // 마지막 이동 입력 값
     public Vector2 LastMoveInput => lastMoveInput;
 
+    private int curQuickSlot;
+
     private void Awake()
     {
         // 초기화

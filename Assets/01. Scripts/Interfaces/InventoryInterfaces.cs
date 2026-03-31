@@ -55,11 +55,6 @@ public interface IEquipWear
     public void OnEquipWear(int index, Item item); //장비 한개 장착될 때
 }
 
-public interface IEquipmentSlotHandler
-{
-    public void OnEquipmentSlot(InventoryModel model);
-}
-
 //아이템 UI 업데이트 인터페이스
 public interface ISlotChanged
 {

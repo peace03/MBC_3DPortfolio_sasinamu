@@ -79,8 +79,12 @@ public interface IQuickSlotStateHandler
 {
     public void OnQuickSlotState(bool state);
 }
-
-public interface ISelectedQuickSlotHandler
+public interface IEquipmentSlotHandler
 {
-    public void OnSelectedQuickSlot(Item item);
+    public void OnEquipmentSlot(InventoryModel model);
+}
+
+public interface IQuickSlotHandler
+{
+    public void OnQuickSlot(InventoryModel model);
 }

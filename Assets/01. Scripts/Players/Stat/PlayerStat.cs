@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelectedQuickSlotHandler
+public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler//, ISelectedQuickSlotHandler
 {
     #region Player Info
     [Header("정보")]
@@ -87,7 +87,7 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelected
         // 아이템 사용 이벤트 구독
         Subject<IUseItemHandler>.Attach(this);
         // 퀵슬롯 선택 이벤트 구독
-        Subject<ISelectedQuickSlotHandler>.Attach(this);
+        //Subject<ISelectedQuickSlotHandler>.Attach(this);
     }
 
     private void Update()
@@ -103,7 +103,7 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelected
         // 아이템 사용 이벤트 구독 해제
         Subject<IUseItemHandler>.Detach(this);
         // 퀵슬롯 선택 이벤트 구독 해제
-        Subject<ISelectedQuickSlotHandler>.Detach(this);
+        //Subject<ISelectedQuickSlotHandler>.Detach(this);
     }
 
     // 초기화

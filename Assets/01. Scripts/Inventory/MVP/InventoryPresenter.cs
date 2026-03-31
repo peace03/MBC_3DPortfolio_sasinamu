@@ -242,6 +242,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
                 break;
             case SlotType.Quick:
                 _view.UpdateSingleSlot_Quick(index, item);
+                Subject<IQuickSlotHandler>.Publish(h => h.OnQuickSlot(model));
                 break;
             default:
                 break;

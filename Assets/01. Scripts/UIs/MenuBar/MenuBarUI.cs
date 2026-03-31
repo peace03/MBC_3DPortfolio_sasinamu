@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MenuBarUI : MonoBehaviour
@@ -57,6 +58,7 @@ public class MenuBarUI : MonoBehaviour
             case UIType.Inventory:
                 // 장비 버튼 클릭 불가
                 invButton.interactable = false;
+                EventSystem.current.SetSelectedGameObject(invButton.gameObject);
                 break;
             // 스탯이라면
             case UIType.Stat:
@@ -67,6 +69,7 @@ public class MenuBarUI : MonoBehaviour
             case UIType.Map:
                 // 지도 버튼 클릭 불가
                 mapButton.interactable = false;
+                EventSystem.current.SetSelectedGameObject(mapButton.gameObject);
                 break;
             // 설정이라면
             case UIType.Settings:

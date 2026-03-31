@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHandler
+public class BootStrapper : MonoBehaviour, IEnemyDeadHandler
 {
     [SerializeField] private ItemManager _itemManager;
 
@@ -21,8 +21,6 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
     [SerializeField] private int _storageCapacity = 60; //창고
     [SerializeField] private int _boxCapacity = 5;     //상자
                      private int _equipCapacity = 4;    //장비
-
-    private int curSelectedSlotNum;
 
     private void Awake()
     {
@@ -58,7 +56,6 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
     private void Start()
     {
         _InvenPresent.InitializePresenter();
-        OnQuickSlot(1);
     }
 
     //이벤트 구독, 해제
@@ -76,7 +73,6 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
         Subject<ICraftItemHandler>.Attach(_InvenPresent);       //제작대 생성버튼 상호작용 발생
 
         Subject<IEnemyDeadHandler>.Attach(this);
-        Subject<IPlayerQuickSlotHandler>.Attach(this);
 
         _facadeView.InitWorkStationView();
     }
@@ -94,7 +90,6 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
         Subject<ICraftItemHandler>.Detach(_InvenPresent);
 
         Subject<IEnemyDeadHandler>.Detach(this);
-        Subject<IPlayerQuickSlotHandler>.Detach(this);
     }
 
     //public void InitBoxes()
@@ -115,20 +110,5 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
         InventoryModel boxmodel = new InventoryModel();
         Instantiate(prefab, position, Quaternion.identity).GetComponent<Box>().SetModel(boxmodel);
         _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
-    }
-
-    public void OnQuickSlot(int slotNumber)
-    {
-        if (curSelectedSlotNum == slotNumber)
-            return;
-
-        // 1, 2
-        if (slotNumber < 3)
-            Subject<ISelectedQuickSlotHandler>.
-                Publish(h => h.OnSelectedQuickSlot(_equipInvenModel.GetItem(slotNumber - 1) as GunItem));
-        else
-            _quickInvenModel.UseItem(SlotType.Quick, slotNumber - 3);
-
-        curSelectedSlotNum = slotNumber;
     }
 }

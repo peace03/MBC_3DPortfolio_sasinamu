@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler
+public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuickSlotHandler
 {
     [SerializeField] private int equipmentCount;
     [SerializeField] private Item[] equipments;        // 0, 1 : 총 / 2 : 가방 / 3 : 방어구
@@ -30,7 +30,11 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler
             equipments[i] = model.GetItem(i);
     }
 
-
+    public void OnQuickSlot(int slotNumber)
+    {
+        if (slotNumber < 3)
+            Debug.Log("퀵슬롯");
+    }
 
     // 장전 관리 함수
 }
