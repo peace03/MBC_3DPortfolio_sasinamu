@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BootStrapper : MonoBehaviour, IEnemyDeadHandler
+public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHandler
 {
     [SerializeField] private ItemManager _itemManager;
 
@@ -12,8 +12,8 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler
     private InventoryModel _storageInvenModel;  //창고    Model
     private InventoryModel _quickInvenModel;    //퀵슬롯  Model
     private InventoryPresenter _InvenPresent;
-    [SerializeField] Transform boxesObj;       //박스 오브젝트가 들어잇는 빈 오브젝트
-    [SerializeField] int boxNum;                //박스 개수
+    //[SerializeField] Transform boxesObj;       //박스 오브젝트가 들어잇는 빈 오브젝트
+    //[SerializeField] int boxNum;                //박스 개수
 
     [Header("인벤토리 용량")]
     [SerializeField] private int _bagCapacity = 20;     //가방
@@ -46,7 +46,7 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler
         _bagInvenModel.Init(_bagCapacity);
         _storageInvenModel.Init(_storageCapacity);
         _quickInvenModel.Init(_quickCapacity);
-        InitBoxes();
+        //InitBoxes();
 
         //Test
 
@@ -89,23 +89,32 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler
         Subject<IEnemyDeadHandler>.Detach(this);
     }
 
-    public void InitBoxes()
-    {
-        for (int i = 0; i < boxNum; i++)
-        {
-            //모델 생성
-            InventoryModel boxmodel = new InventoryModel();
-            boxesObj.GetChild(i).GetComponent<Box>().SetModel(boxmodel);
-            //Debug.Log($"박스 모델{boxmodel} 생성");
-            //모델 초기화(아이템 랜덤생성)
-            _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
-        }
-    }
+    //public void InitBoxes()
+    //{
+    //    for (int i = 0; i < boxNum; i++)
+    //    {
+    //        //모델 생성
+    //        InventoryModel boxmodel = new InventoryModel();
+    //        boxesObj.GetChild(i).GetComponent<Box>().SetModel(boxmodel);
+    //        //Debug.Log($"박스 모델{boxmodel} 생성");
+    //        //모델 초기화(아이템 랜덤생성)
+    //        _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
+    //    }
+    //}
 
     public void OnEnemyDead(GameObject prefab, Vector3 position)
     {
         InventoryModel boxmodel = new InventoryModel();
         Instantiate(prefab, position, Quaternion.identity).GetComponent<Box>().SetModel(boxmodel);
         _InvenPresent.InitBoxModel(boxmodel, _boxCapacity);
+    }
+
+    public void OnQuickSlot(int slotNumber)
+    {
+        // 1, 2
+        if (slotNumber < 3)
+            Subject<ISelectedQuickSlotHandler>.Publish(h => h.OnSelectedQuickSlot(_equipInvenModel.GetItem(slotNumber - 1)));
+        else
+            Subject<ISelectedQuickSlotHandler>.Publish(h => h.OnSelectedQuickSlot(_quickInvenModel.GetItem(slotNumber - 3)));
     }
 }

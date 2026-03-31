@@ -74,3 +74,13 @@ public interface IControlManualHandler
 {
     public void OnControlManual();
 }
+
+public interface IQuickSlotStateHandler
+{
+    public void OnQuickSlotState(bool state);
+}
+
+public interface ISelectedQuickSlotHandler
+{
+    public void OnSelectedQuickSlot(Item item);
+}

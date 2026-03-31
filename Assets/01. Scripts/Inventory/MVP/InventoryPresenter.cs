@@ -53,7 +53,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         Test();
         //Debug.Log("실행2");
         UpdateAllSlot(SlotType.Bag);
-        UpdateAllSlot(SlotType.Box);
+        //UpdateAllSlot(SlotType.Box);
         //Debug.Log("실행3");
     }
 
@@ -68,6 +68,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
     void Test()
     {
+        CreateItem(10);
         CreateItem(1);
         CreateItem(13);
         CreateItem(20);
@@ -318,7 +319,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     //상자 상호작용 시 호출
     public void OnBox(InventoryModel boxModel)
     {
-        Debug.Log("호출");
+        //Debug.Log("호출");
         _boxModel = boxModel;
         UpdateAllSlot(SlotType.Box);
     }

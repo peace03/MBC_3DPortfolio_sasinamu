@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour,
     IGamePauseHandler, IPopupUIClosedHandler, IPlayerDeadHandler, IControlManualHandler, IInventoryHandler,
-    IMapHandler, IBoxHandler
+    IMapHandler, IBoxHandler, IQuickSlotStateHandler
 {
     [Header("정보")]
     [SerializeField] private UIType curOpenUIType = UIType.None;        // 현재 열린 UI 종류
 
     [Header("UI")]
+    [SerializeField] private GameObject hudUI;                          // 상시 표시 정보 UI
+    [SerializeField] private GameObject controlManualDetailUI;          // 조작 설명 상세 UI
+    [SerializeField] private GameObject quickSlotUI;                    // 퀵슬롯 UI
     [SerializeField] private GameObject gamePauseUI;                    // 일시정지 UI
     [SerializeField] private GameObject settingsUI;                     // 설정 UI
     [SerializeField] private GameObject gameQuitUI;                     // 게임 종료 UI
     [SerializeField] private GameObject gameOverUI;                     // 게임 오버 UI
-    [SerializeField] private GameObject controlManualAllUI;             // 조작 설명 전체 UI
-    [SerializeField] private GameObject controlManualDetailUI;          // 조작 설명 상세 UI
     [SerializeField] private GameObject menuBarUI;                      // 메뉴 바 UI
     [SerializeField] private GameObject boxUI;                          // 상자 UI
 
@@ -37,6 +38,7 @@ public class UIManager : MonoBehaviour,
         Subject<IMapHandler>.Attach(this);
         // 상자 이벤트 구독
         Subject<IBoxHandler>.Attach(this);
+        Subject<IQuickSlotStateHandler>.Attach(this);
     }
 
     private void OnDisable()
@@ -55,6 +57,7 @@ public class UIManager : MonoBehaviour,
         Subject<IMapHandler>.Detach(this);
         // 상자 이벤트 구독 해제
         Subject<IBoxHandler>.Detach(this);
+        Subject<IQuickSlotStateHandler>.Detach(this);
     }
 
     // 일시정지 함수
@@ -134,6 +137,8 @@ public class UIManager : MonoBehaviour,
         OpenUI(UIType.Box);
     }
 
+    public void OnQuickSlotState(bool state) => quickSlotUI.SetActive(state);
+
     // UI 열기 함수
     private void OpenUI(UIType type)
     {
@@ -146,6 +151,8 @@ public class UIManager : MonoBehaviour,
                 Time.timeScale = 0f;
                 // UI 변경
                 ChangeUI(gamePauseUI, type);
+                // 퀵슬롯 UI 닫기
+                OnQuickSlotState(false);
                 break;
             // 설정이라면
             case UIType.Settings:
@@ -160,10 +167,18 @@ public class UIManager : MonoBehaviour,
                 Time.timeScale = 0f;
                 ChangeUI(gameOverUI, type);
                 break;
-            // 가방 혹은 지도라면
+            // 가방이라면
             case UIType.Inventory:
+                ChangeUI(menuBarUI, type);
+                // 퀵슬롯 UI 열기
+                OnQuickSlotState(true);
+                // 메뉴 바 UI 업데이트 함수
+                menuBarUI.GetComponent<MenuBarUI>().UpdateMenuBarUI(type);
+                break;
+            // 지도라면
             case UIType.Map:
                 ChangeUI(menuBarUI, type);
+                OnQuickSlotState(false);
                 // 메뉴 바 UI 업데이트 함수
                 menuBarUI.GetComponent<MenuBarUI>().UpdateMenuBarUI(type);
                 break;
@@ -176,8 +191,8 @@ public class UIManager : MonoBehaviour,
                 break;
         }
 
-        // 조작 설명 UI 닫기
-        controlManualAllUI.SetActive(false);
+        // 상시 표시 정보 UI 닫기
+        hudUI.SetActive(false);
         // UI 상태 이벤트 발생
         PublishUIState();
     }
@@ -251,8 +266,10 @@ public class UIManager : MonoBehaviour,
             // 게임 시간 시작
             Time.timeScale = 1f;
 
-        // 조작 설명 UI 열기
-        controlManualAllUI.SetActive(true);
+        // 상시 표시 정보 UI 열기
+        hudUI.SetActive(true);
+        // 퀵슬롯 UI 열기
+        OnQuickSlotState(true);
         // 현재 열린 UI 종류 바꾸기
         curOpenUIType = UIType.None;
         // UI 상태 이벤트 발생

@@ -102,13 +102,16 @@ public class MenuBarUI : MonoBehaviour
     {
         // 이전 UI 닫기
         CloseSubUI();
+        // 현재 서브 UI 변경
+        curSubUI = type;
 
         // UI 종류에 따라서
         switch (type)
         {
             case UIType.Inventory:
                 inventoryUI.SetActive(true);
-                break;
+                Subject<IQuickSlotStateHandler>.Publish(h => h.OnQuickSlotState(true));
+                return;
             case UIType.Stat:
                 statUI.SetActive(true);
                 break;
@@ -120,8 +123,7 @@ public class MenuBarUI : MonoBehaviour
                 break;
         }
 
-        // 현재 서브 UI 변경
-        curSubUI = type;
+        Subject<IQuickSlotStateHandler>.Publish(h => h.OnQuickSlotState(false));
     }
 
     // 가방 버튼 함수

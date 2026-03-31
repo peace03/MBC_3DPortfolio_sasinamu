@@ -119,14 +119,14 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         //아이템 상태창 세팅
         Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotIn(_slotType, _index));
-        Debug.Log("상태창 활성화");
+        //Debug.Log("상태창 활성화");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         //아이템 상태창 비활성화
         Subject<ICusorPointerHandler>.Publish(h => h.OnCusorSlotExit());
-        Debug.Log("상태창 비활성화");
+        //Debug.Log("상태창 비활성화");
     }
     #endregion
 

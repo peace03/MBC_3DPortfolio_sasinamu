@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CountableData
   sprite: {fileID: 0}
   objectPrefab: {fileID: 0}
-  _id: 0
-  _name: 
-  _weight: 0
-  _explain: 
-  maxAmount: 0
+  _id: 3
+  _name: "\uC2E4"
+  _weight: 0.2
+  _explain: "\uC2E4\uC774\uB2E4"
+  maxAmount: 6

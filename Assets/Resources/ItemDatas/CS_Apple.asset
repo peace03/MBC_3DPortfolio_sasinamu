@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodData
   sprite: {fileID: 0}
   objectPrefab: {fileID: 0}
-  _id: 0
-  _name: 
-  _weight: 0
-  _explain: 
-  waterRestoreAmount: 0
-  energyRestoreAmount: 0
+  _id: 24
+  _name: "\uC0AC\uACFC"
+  _weight: 0.2
+  _explain: "\uC0AC\uACFC\uB2E4"
+  waterRestoreAmount: 5
+  energyRestoreAmount: 10

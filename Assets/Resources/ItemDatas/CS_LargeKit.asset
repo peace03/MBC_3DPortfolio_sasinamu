@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CureKitData
   sprite: {fileID: 0}
   objectPrefab: {fileID: 0}
-  _id: 0
-  _name: 
-  _weight: 0
-  _explain: 
-  _consumableType: 0
-  maxDurability: 0
-  cureAmount: 0
-  durabilityConsumetion: 0
+  _id: 20
+  _name: "\uC911\uD615 \uC751\uAE09 \uD0A4\uD2B8 "
+  _weight: 1.5
+  _explain: "\uCE58\uB8CC\uD574\uC900\uB2E4!"
+  _consumableType: 2
+  maxDurability: 100
+  cureAmount: 45
+  durabilityConsumetion: -10
