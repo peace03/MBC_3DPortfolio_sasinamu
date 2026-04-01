@@ -9,6 +9,10 @@ public class ItemManager : MonoBehaviour
     [Header("플레이어 위치")]
     [SerializeField] private Transform _player;
 
+    [Header("오버플로우 전용 동적 상자 프리팹")]
+    [SerializeField] private GameObject _droppedBoxPrefab;
+
+    public Vector3 Player => new Vector3(_player.position.x, _player.position.y, _player.position.z);
     public void Init()
     {
         _itemDatas = new List<ItemData>(Resources.LoadAll<ItemData>("ItemDatas"));
@@ -17,6 +21,7 @@ public class ItemManager : MonoBehaviour
     //아이템 인스턴스 생성
     public Item CreateItemInstance(int id) // int id
     {
+        if (id == 999) return null; //제외 id면 끝내기
         //Item newItem;
         switch (ReturnItemData_One(id))
         {
@@ -59,6 +64,20 @@ public class ItemManager : MonoBehaviour
     {
         Transform transform = Instantiate(gameObject).GetComponent<Transform>();
         transform.position = _player.position;
+    }
+
+    // [추가] 아이템을 담은 상자를 월드에 스폰하는 함수
+    public GameObject CreateDroppedBoxInWorld(Vector3 dropPosition)
+    {
+        if (_droppedBoxPrefab == null)
+        {
+            Debug.LogError("인스펙터에 DroppedBox 프리팹이 연결되지 않았습니다!");
+            return null;
+        }
+
+        // 지정된 위치에 상자 프리팹 메모리 할당 및 생성
+        GameObject newBox = Instantiate(_droppedBoxPrefab, dropPosition, Quaternion.identity);
+        return newBox;
     }
 
     public string GetItemNameByID(int id)

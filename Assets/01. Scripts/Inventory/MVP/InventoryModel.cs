@@ -30,6 +30,7 @@ public class InventoryModel
     //아이템 추가 메서드
     public bool AddItem(Item newItem)
     {
+        if (newItem == null) return false;
         bool success;
         //countable일 때
         if(newItem is CountableItem newCountableItem)

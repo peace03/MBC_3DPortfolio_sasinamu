@@ -13,7 +13,7 @@ public enum SlotType
 
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
     ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler,
-    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler, IDamageable,
+    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler,
     IRepairableHandler, IEquipmentDestroyHandler
 {
     private FacadeView _view;
@@ -78,7 +78,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
     void Test()
     {
-        int[] ids = new int[] { 1,2,3,4,5,6,7,8,14, 15};
+        int[] ids = new int[] { 1,2,3,4,5,6,7,13,14, 15};
         for (int i = 0; i < ids.Length; i++)
         {
             CreateItem(ids[i]);
@@ -322,20 +322,24 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         //박스 모델 초기화
         boxModel.Init(boxCapacity);
         //모델에 아이템 랜덤 생성
-        //int[] IDs = new int[] { 1,8,9,13,16,18,20 };
+        int[] exclusionIDs = new int[] { 12, 9, 16, 10, 11, 8 }; //제외아이템
         for (int i = 0; i < Random.Range(1, boxCapacity); i++)
         {
-            Item item = _itemManager.CreateItemInstance(Random.Range(1, 24));
+            int id = Random.Range(1, 24);
+            foreach (int j in exclusionIDs) //제외 아이템이면 다시생성
+            {
+                if (id == j)
+                {
+                    i--;
+                    id = 999;
+                }
+                break;
+            }
+            Item item = _itemManager.CreateItemInstance(id);
             //Debug.Log($"생성된 아이템:{item._data.Name}");
             boxModel.AddItem(item);
         }
         _boxModel = boxModel;
-    }
-
-    //플레이어 피격시 호출
-    public void Damaged(string name, float amount)
-    {
-        
     }
 
     //상자 상호작용 시 호출
@@ -469,33 +473,38 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     // 장비창 2번 슬롯(가방)의 상태를 확인하고 용량과 데이터를 갱신합니다.
     public void UpdateBagCapacityState()
     {
-        int baseCapacity = 10; // 플레이어의 기본 뼈대 슬롯 개수
+        int baseCapacity = 10;
         int newCapacity = baseCapacity;
 
-        // 1. 장비창(Equip) 2번 슬롯에 가방 아이템이 있는지 확인
         Item bagSlotItem = _equipModel.GetItem(2);
         if (bagSlotItem is BagItem bag)
         {
-            newCapacity += bag.AddSlotNum; // 작은 가방 +3, 큰 가방 +6 연산
+            newCapacity += bag.AddSlotNum;
         }
 
-        // 이미 용량이 동기화되어 있다면 불필요한 연산을 생략합니다.
         if (_bagModel.Capacity == newCapacity) return;
 
-        // 2. Model에게 용량 변경 및 압축을 지시하고, 가방 밖으로 튕겨져 나온 아이템 수령
+        // 1. Model에게 용량 변경 및 초과 아이템 추출 지시
         List<Item> overflowItems = _bagModel.ChangeCapacity(newCapacity);
 
-        // 3. 넘치는 아이템들을 플레이어 주변 바닥에 물리적으로 스폰 (드랍)
-        foreach (var item in overflowItems)
+        // 2. 오버플로우가 발생했다면 '단일 상자'를 스폰하여 데이터 캐리어로 활용
+        if (overflowItems != null && overflowItems.Count > 0)
         {
-            _itemManager.CreateItemObjInWorld(item._data.ObjectPrefab);
-            Debug.Log($"[시스템] 가방 공간 부족으로 '{item._data.Name}' 아이템이 바닥에 떨어졌습니다.");
+            // 💡 상자가 떨어질 위치 계산 (현재 View의 위치 혹은 의존성 주입된 플레이어의 위치 기준)
+            Vector3 dropPos = _itemManager.Player;
+
+            // ItemManager에게 상자 스폰 지시
+            GameObject boxObj = _itemManager.CreateDroppedBoxInWorld(dropPos);
+
+            // 스폰된 상자의 컴포넌트를 가져와 추출된 짐(메모리)을 강제 주입
+            Box droppedBox = boxObj.GetComponent<Box>();
+            if (droppedBox != null)
+            {
+                droppedBox.InitOverflowItems(overflowItems);
+            }
         }
 
-        // 4. View에게 새로운 용량만큼 UI 슬롯 픽셀을 활성화하라고 브로드캐스팅
         _view.UpdateBagCapacityUI(newCapacity);
-
-        // 5. 아이템들이 앞으로 압축(정렬)되었으므로 가방 UI 전체를 다시 그립니다.
         UpdateAllSlot(SlotType.Bag);
     }
 

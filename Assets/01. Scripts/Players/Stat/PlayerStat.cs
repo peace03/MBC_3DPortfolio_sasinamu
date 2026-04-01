@@ -125,6 +125,7 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelected
                 // 3번 슬롯을 파괴하라는 통합 신호 발송
                 Subject<IEquipmentDestroyHandler>.Publish(h => h.OnEquipmentDestroyed(3));
             }
+            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(SlotType.Equip, 3));
         }
 
         // 데미지 입음
