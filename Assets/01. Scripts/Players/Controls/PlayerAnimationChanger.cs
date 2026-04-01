@@ -27,6 +27,7 @@ public class PlayerAnimationChanger : MonoBehaviour, IPlayerDeadHandler
         animHashDictionary.Add(PlayerAnimState.Walk, Animator.StringToHash("Walk"));
         animHashDictionary.Add(PlayerAnimState.WalkWithWeapon, Animator.StringToHash("WalkWithWeapon"));
         animHashDictionary.Add(PlayerAnimState.Run, Animator.StringToHash("Run"));
+        animHashDictionary.Add(PlayerAnimState.RunWithWeapon, Animator.StringToHash("RunWithWeapon"));
         animHashDictionary.Add(PlayerAnimState.Roll, Animator.StringToHash("Roll"));
         animHashDictionary.Add(PlayerAnimState.Dead, Animator.StringToHash("Dead"));
     }

@@ -44,6 +44,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.gameObject.name);
         // 비활성화 중이거나, 발사 주체의 레이어와 닿은 오브젝트의 레이어가 같다면(아군이라면)
         if (!gameObject.activeSelf || attackerLayer == other.gameObject.layer)
             // 종료

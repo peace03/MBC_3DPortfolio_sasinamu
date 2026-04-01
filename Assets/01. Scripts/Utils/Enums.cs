@@ -12,6 +12,7 @@ public enum PlayerAnimState
     Walk,               // 이동
     WalkWithWeapon,     // 무기 들고 이동
     Run,                // 달리기
+    RunWithWeapon,
     Roll,               // 구르기
     Dead                // 죽음
 }

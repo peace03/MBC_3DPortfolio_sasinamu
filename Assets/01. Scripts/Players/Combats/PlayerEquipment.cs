@@ -8,9 +8,6 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuic
     private PlayerStat stat;
     private PlayerQuickSlot quickSlot;
 
-    private float attackPower;
-    private float defensePower;
-
     private void Awake()
     {
         equipments = new Item[equipmentCount];

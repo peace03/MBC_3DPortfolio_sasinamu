@@ -126,8 +126,11 @@ public class UIManager : MonoBehaviour,
             OpenUI(UIType.Map);
         // 현재 열린 UI가 지도이라면
         else if (curOpenUIType == UIType.Map)
+        {
             // UI 닫기
             CloseAllUI();
+            Subject<ICameraHandler>.Publish(h => h.OnCamera(false));
+        }
     }
 
     // 상자 함수

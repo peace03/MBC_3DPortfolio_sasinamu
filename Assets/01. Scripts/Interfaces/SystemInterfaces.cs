@@ -99,3 +99,13 @@ public interface IInventoryWeightHandler
 {
     public void OnInventoryWeight(float weight);
 }
+
+public interface ICameraHandler
+{
+    public void OnCamera(bool state);
+}
+
+public interface IStageClearHandler
+{
+    public void OnStageClear(int stage);
+}

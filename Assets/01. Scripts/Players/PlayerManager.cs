@@ -23,6 +23,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
+        Application.targetFrameRate = 30;
         // 초기화
         InitPlayer();
     }
@@ -37,15 +38,14 @@ public class PlayerManager : MonoBehaviour
         rotate = player.GetComponent<PlayerRotate>();
         interact = player.GetComponent<PlayerInteract>();
         fire = player.GetComponent<PlayerFire>();
-        equipment = player.GetComponent<PlayerEquipment>();
         quickSlot = player.GetComponent<PlayerQuickSlot>();
+        equipment = player.GetComponent<PlayerEquipment>();
 
         // 컴포넌트 초기화
         move.Init(stat, anim, inputManager);
         rotate.Init(inputManager);
         interact.Init(stat);
         fire.Init(stat, bulletFactory);
-
         equipment.Init(stat, quickSlot);
     }
 }

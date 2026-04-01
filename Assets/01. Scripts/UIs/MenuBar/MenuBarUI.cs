@@ -113,8 +113,7 @@ public class MenuBarUI : MonoBehaviour
         {
             case UIType.Inventory:
                 inventoryUI.SetActive(true);
-                Subject<IQuickSlotStateHandler>.Publish(h => h.OnQuickSlotState(true));
-                return;
+                break;
             case UIType.Stat:
                 statUI.SetActive(true);
                 break;
@@ -126,7 +125,8 @@ public class MenuBarUI : MonoBehaviour
                 break;
         }
 
-        Subject<IQuickSlotStateHandler>.Publish(h => h.OnQuickSlotState(false));
+        Subject<IQuickSlotStateHandler>.Publish(h => h.OnQuickSlotState(curSubUI == UIType.Inventory));
+        Subject<ICameraHandler>.Publish(h => h.OnCamera(curSubUI == UIType.Map));
     }
 
     // 가방 버튼 함수

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
@@ -6,7 +5,8 @@ using UnityEngine.Pool;
 public class EnemyManager : MonoBehaviour
 {
     [Header("프리팹")]
-    [SerializeField] private GameObject enemyPrefab;            // 적 프리팹
+    [SerializeField] private GameObject enemy1Prefab;           // 적1 프리팹
+    [SerializeField] private GameObject enemy2Prefab;           // 적2 프리팹
     [SerializeField] private GameObject boxPrefab;              // 상자 프리팹
 
     [Header("플레이어")]
@@ -37,7 +37,21 @@ public class EnemyManager : MonoBehaviour
 
     private EnemyBT CreateEnemy()
     {
-        GameObject enemy = Instantiate(enemyPrefab);
+        GameObject enemy = null;
+
+        switch (Random.Range(0, 2))
+        {
+            case 0:
+                enemy = Instantiate(enemy1Prefab);
+                break;
+            case 1:
+                enemy = Instantiate(enemy2Prefab);
+                break;
+        }
+
+        if (enemy == null)
+            return null;
+
         enemy.transform.parent = enemyContainer;
         return enemy.GetComponentInChildren<EnemyBT>();
     }

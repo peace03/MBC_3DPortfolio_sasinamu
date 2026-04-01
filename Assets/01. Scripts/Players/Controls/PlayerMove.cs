@@ -73,7 +73,7 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
         if (curMoveInput.magnitude <= 0)
         {
             // 대기 모습으로 변경
-            //anim.ChangePlayerAnimation(PlayerAnimState.Idle);
+            anim.ChangePlayerAnimation(PlayerAnimState.Idle);
             // 종료
             return;
         }
@@ -92,13 +92,21 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
             // 고정적으로 눌러주기
             yVelocity = -2f;
 
-        if (pressedRunKey)
-            anim.ChangePlayerAnimation(PlayerAnimState.Run);
-        else if (stat.AttackPower == 0)
-            // 걷는 모습(애니메이션)으로 변경
-            anim.ChangePlayerAnimation(PlayerAnimState.Walk);
+        if (stat.AttackPower == 0)
+        {
+            if (pressedRunKey)
+                anim.ChangePlayerAnimation(PlayerAnimState.Run);
+            else
+                // 걷는 모습(애니메이션)으로 변경
+                anim.ChangePlayerAnimation(PlayerAnimState.Walk);
+        }
         else
-            anim.ChangePlayerAnimation(PlayerAnimState.WalkWithWeapon);
+        {
+            if (pressedRunKey)
+                anim.ChangePlayerAnimation(PlayerAnimState.RunWithWeapon);
+            else
+                anim.ChangePlayerAnimation(PlayerAnimState.WalkWithWeapon);
+        }
 
         // 방향에 값 반영
         dir.y = yVelocity;
@@ -177,6 +185,8 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
             // 프레임 단위로 기다리기
             yield return null;
         }
+
+        yield return new WaitForSeconds(0.1f);
 
         // 구르기 종료
         isRolling = false;
