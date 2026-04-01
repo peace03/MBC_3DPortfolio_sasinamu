@@ -8,7 +8,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - End
   - Water
   - UI
   - Object
@@ -20,7 +20,7 @@ TagManager:
   - MapIcon
   - Limit
   - Fog
-  - End
+  - 
   - 
   - 
   - 

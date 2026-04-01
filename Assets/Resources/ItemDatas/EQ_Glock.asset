@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423e60717d1b3bb4fbeaa32d534a04e5, type: 3}
   m_Name: EQ_Glock
   m_EditorClassIdentifier: Assembly-CSharp::GunData
-  sprite: {fileID: 21300000, guid: 5a26878b22735834bb57055b81d08b59, type: 3}
+  sprite: {fileID: 21300000, guid: e5596600e526d8d42ad8178c8c755a3e, type: 3}
   objectPrefab: {fileID: 0}
   _id: 10
   _name: "\uAE00\uB85D"

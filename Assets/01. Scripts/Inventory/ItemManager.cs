@@ -12,6 +12,7 @@ public class ItemManager : MonoBehaviour
     public void Init()
     {
         _itemDatas = new List<ItemData>(Resources.LoadAll<ItemData>("ItemDatas"));
+        Subject<IItemDataHandler>.Publish(h => h.OnItemData(_itemDatas));
     }
 
     //아이템 인스턴스 생성

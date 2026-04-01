@@ -18,11 +18,13 @@ public class PlayerQuickSlot : MonoBehaviour, IQuickSlotHandler, IPlayerQuickSlo
     private void OnEnable()
     {
         Subject<IQuickSlotHandler>.Attach(this);
+        Subject<IPlayerQuickSlotHandler>.Attach(this);
     }
 
     private void OnDisable()
     {
         Subject<IQuickSlotHandler>.Detach(this);
+        Subject<IPlayerQuickSlotHandler>.Detach(this);
     }
 
     public void OnQuickSlot(InventoryModel model)
@@ -31,13 +33,21 @@ public class PlayerQuickSlot : MonoBehaviour, IQuickSlotHandler, IPlayerQuickSlo
 
         for (int i = 0; i < quickSlotCount; i++)
             quickSlots[i] = model.GetItem(i);
+
+        OnQuickSlot(curSelectedSlot);
     }
 
     public void OnQuickSlot(int slotNumber)
     {
-        curSelectedSlot = slotNumber;
+        if (curSelectedSlot != slotNumber)
+            curSelectedSlot = slotNumber;
 
-        if (slotNumber > 2)
-            quickSlotModel.UseItem(SlotType.Quick, slotNumber - 3);
+        if (slotNumber < 3)
+            return;
+
+        if (quickSlots[slotNumber - 3] != null)
+            Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerHoldingItem(quickSlots[slotNumber - 3].Object));
+        else
+            Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerHoldingItem(null));
     }
 }

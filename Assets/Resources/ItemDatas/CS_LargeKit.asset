@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6cb09a11ec0d354a98a86382046027f, type: 3}
   m_Name: CS_LargeKit
   m_EditorClassIdentifier: Assembly-CSharp::CureKitData
-  sprite: {fileID: 21300000, guid: f687350d0ee447e40a1e221e20b5864d, type: 3}
+  sprite: {fileID: 21300000, guid: e09af3bf6ba6348408ebd0f4b3a0ef55, type: 3}
   objectPrefab: {fileID: 0}
   _id: 20
   _name: "\uC911\uD615 \uC751\uAE09 \uD0A4\uD2B8 "

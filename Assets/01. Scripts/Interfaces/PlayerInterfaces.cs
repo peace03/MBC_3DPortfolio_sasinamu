@@ -1,3 +1,5 @@
+using UnityEngine;
+
 // 플레이어 달리기 관리 인터페이스
 public interface IPlayerRunHandler
 {
@@ -55,4 +57,5 @@ public interface IPlayerQuickSlotHandler
 public interface IPlayerVisualHandler
 {
     public void OnPlayerVisual(PlayerVisualType type, PlayerVisualState state);
+    public void OnPlayerHoldingItem(GameObject item);
 }

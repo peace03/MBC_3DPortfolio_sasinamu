@@ -29,9 +29,10 @@ public enum PlayerVisualState
     None,
     Glock,
     AK47,
-    NewVest,
-    OldVest,
-    LargeInv
+    Vest,
+    SmallInv,
+    LargeInv,
+    Items
 }
 
 // 적 애니메이션 상태

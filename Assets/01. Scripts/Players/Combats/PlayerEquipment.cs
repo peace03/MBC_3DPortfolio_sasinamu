@@ -83,10 +83,8 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuic
             var data = item._data as VestData;
             stat.UpdateDefensePower(data.Defensive);
 
-            if (data.Defensive == 10f)
-                Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerVisual(PlayerVisualType.Vest, PlayerVisualState.OldVest));
-            else
-                Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerVisual(PlayerVisualType.Vest, PlayerVisualState.NewVest));
+            if (data.Defensive == 20f)
+                Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerVisual(PlayerVisualType.Vest, PlayerVisualState.Vest));
         }
         else
         {

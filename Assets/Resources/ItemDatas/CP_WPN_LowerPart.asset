@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a583f234123e8841890f27452df94da, type: 3}
   m_Name: CP_WPN_LowerPart
   m_EditorClassIdentifier: Assembly-CSharp::CountableData
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 9a4772a6827901b46a52a079dcc0fa87, type: 3}
   objectPrefab: {fileID: 0}
   _id: 16
   _name: "\uD558\uC704 \uBB34\uAE30 \uBD80\uD488"

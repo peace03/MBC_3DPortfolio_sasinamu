@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf7c3f04bfdd35f449e8baccd5211aa0, type: 3}
   m_Name: EQ_Bag_Large
   m_EditorClassIdentifier: Assembly-CSharp::BagData
-  sprite: {fileID: 21300000, guid: 2fda5011e66580c49a2e4b3649faa58e, type: 3}
+  sprite: {fileID: 21300000, guid: 980ba59cfed9a6642930d601b7ad7ac0, type: 3}
   objectPrefab: {fileID: 919132149155446097, guid: bd5133273aac68943bf1bb5f5b6aac05, type: 3}
   _id: 15
   _name: "\uD070 \uAC00\uBC29"

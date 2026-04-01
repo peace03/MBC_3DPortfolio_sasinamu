@@ -2,12 +2,16 @@ using UnityEngine;
 
 public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
 {
-    [Header("프리팹")]
+    [Header("장비 프리팹")]
     [SerializeField] private GameObject glockRightArm;
     [SerializeField] private GameObject ak47Arms;
-    [SerializeField] private GameObject newVest;
-    [SerializeField] private GameObject oldVest;
+    [SerializeField] private GameObject vest;
+    [SerializeField] private GameObject smallInv;
     [SerializeField] private GameObject largeInv;
+
+    [Header("퀵슬롯 프리팹")]
+    [SerializeField] private GameObject itemArms;
+    [SerializeField] private Transform itemPosition;
 
     [Header("정보")]
     [SerializeField] private GameObject leftArm;
@@ -64,6 +68,7 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
         rightArmTorus.SetActive(false);
         glockRightArm.SetActive(false);
         ak47Arms.SetActive(false);
+        itemArms.SetActive(false);
 
         switch (armState)
         {
@@ -78,23 +83,21 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
             case PlayerVisualState.AK47:
                 ak47Arms.SetActive(true);
                 break;
+            case PlayerVisualState.Items:
+                itemArms.SetActive(true);
+                break;
         }
     }
 
     private void ChangeVest()
     {
-        newVest.SetActive(false);
-        oldVest.SetActive(false);
-
         switch (vestState)
         {
             case PlayerVisualState.None:
-                return;
-            case PlayerVisualState.NewVest:
-                newVest.SetActive(true);
+                vest.SetActive(false);
                 break;
-            case PlayerVisualState.OldVest:
-                oldVest.SetActive(true);
+            case PlayerVisualState.Vest:
+                vest.SetActive(true);
                 break;
         }
     }
@@ -102,6 +105,7 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
     private void ChangeInventory()
     {
         inventory.SetActive(false);
+        smallInv.SetActive(false);
         largeInv.SetActive(false);
 
         switch (invState)
@@ -109,9 +113,27 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
             case PlayerVisualState.None:
                 inventory.SetActive(true);
                 break;
+            case PlayerVisualState.SmallInv:
+                inventory.SetActive(true);
+                smallInv.SetActive(true);
+                break;
             case PlayerVisualState.LargeInv:
                 largeInv.SetActive(true);
                 break;
         }
+    }
+
+    public void OnPlayerHoldingItem(GameObject item)
+    {
+        armState = PlayerVisualState.Items;
+        ChangeArm();
+
+        if (item == null)
+            return;
+
+        GameObject holdingItem = Instantiate(item);
+        holdingItem.transform.GetChild(0).Rotate(0, 90f, 0);
+        holdingItem.transform.SetParent(itemPosition, false);
+        holdingItem.SetActive(true);
     }
 }

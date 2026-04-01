@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844c10e751a1bc4419c2daa87a0cc5f6, type: 3}
   m_Name: CS_ChocoMilk
   m_EditorClassIdentifier: Assembly-CSharp::FoodData
-  sprite: {fileID: 21300000, guid: 0055477624b259a4e98724ddabc44a6e, type: 3}
+  sprite: {fileID: 21300000, guid: 037136afeaea40546ba6ed6e786a7636, type: 3}
   objectPrefab: {fileID: 0}
   _id: 20
   _name: "\uCD08\uCF54\uC6B0\uC720"

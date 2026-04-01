@@ -109,3 +109,8 @@ public interface IStageClearHandler
 {
     public void OnStageClear(int stage);
 }
+
+public interface IItemDataHandler
+{
+    public void OnItemData(List<ItemData> datas);
+}
