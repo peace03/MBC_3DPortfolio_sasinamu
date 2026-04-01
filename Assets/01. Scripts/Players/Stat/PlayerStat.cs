@@ -112,6 +112,21 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, ISelected
     // 피격 함수
     public void Damaged(string name, float amount)
     {
+        // 영구 보존 구역(GameDataManager)에서 3번 슬롯(조끼)의 메모리 주소를 끌어옵니다.
+        Item vestItem = GameDataManager.Instance.EquipModel.GetItem(3);
+
+        // 조끼를 입고 있다면
+        if (vestItem is VestItem vest)
+        {
+            // 조끼 내구도 차감 (데미지 계산 공식은 기획에 맞게 적용)
+            // 비트 연산 결과 내구도가 0 이하로 떨어졌다면
+            if (vest.DecreaseDurability() <= 0)
+            {
+                // 3번 슬롯을 파괴하라는 통합 신호 발송
+                Subject<IEquipmentDestroyHandler>.Publish(h => h.OnEquipmentDestroyed(3));
+            }
+        }
+
         // 데미지 입음
         curHp -= amount;
         // 체력 UI 변경

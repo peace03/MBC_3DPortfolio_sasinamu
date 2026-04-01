@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CS_Apple
   m_EditorClassIdentifier: Assembly-CSharp::FoodData
   sprite: {fileID: 21300000, guid: 45f5fd5979eb56944b6a59b95b877e17, type: 3}
-  objectPrefab: {fileID: 0}
+  objectPrefab: {fileID: 2648450601235852074, guid: 84d9c16a96e7da64185b78ede66a78bb, type: 3}
   _id: 24
   _name: "\uC0AC\uACFC"
   _weight: 0.2

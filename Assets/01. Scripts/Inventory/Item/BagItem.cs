@@ -7,6 +7,8 @@ public class BagItem : Item
 {
     public BagItem(BagData data) : base(data) { }
 
+    public int AddSlotNum => (_data as BagData).AddSlotNum;
+
     public override List<(string statName, string statValue)> GetItemStats()
     {
         var list = base.GetItemStats();

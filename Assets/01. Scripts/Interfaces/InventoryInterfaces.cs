@@ -38,6 +38,12 @@ public interface IFireBullet
 {
     public void OnUseGunItem(SlotType slotType, int index); //내구도 감소량
 }
+// 무기, 조끼 등 모든 장비의 파괴 이벤트를 처리하는 범용 인터페이스
+public interface IEquipmentDestroyHandler
+{
+    // 파괴될 장비가 위치한 슬롯 인덱스를 매개변수로 받습니다.
+    void OnEquipmentDestroyed(int slotIndex);
+}
 
 
 //아이템 교환 인터페이스

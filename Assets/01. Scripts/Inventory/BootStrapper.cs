@@ -16,7 +16,7 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
     //[SerializeField] int boxNum;                //박스 개수
 
     [Header("인벤토리 용량")]
-    [SerializeField] private int _bagCapacity = 20;     //가방
+    [SerializeField] private int _bagCapacity = 10;     //가방
     [SerializeField] private int _quickCapacity = 6;    //퀵슬롯
     [SerializeField] private int _storageCapacity = 60; //창고
     [SerializeField] private int _boxCapacity = 5;     //상자
@@ -32,11 +32,24 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
         //View별 용량 초기화
         _facadeView.InitViews(_bagCapacity, _quickCapacity, _storageCapacity, _boxCapacity);
 
+        // [수정된 부분] DataManager를 통한 모델 의존성 확보
+        // -------------------------------------------------------------
+        // GameDataManager에 초기화를 요청합니다. (이미 생성되어 있다면 내부에서 무시됨)
+        GameDataManager.Instance.InitInventoriesOnce(
+            _equipCapacity, _bagCapacity, _storageCapacity, _quickCapacity
+        );
+
+        // GameDataManager가 쥐고 있는 원본 메모리 주소를 끌어옵니다.
+        _equipInvenModel = GameDataManager.Instance.EquipModel;
+        _bagInvenModel = GameDataManager.Instance.BagModel;
+        _storageInvenModel = GameDataManager.Instance.StorageModel;
+        _quickInvenModel = GameDataManager.Instance.QuickModel;
+
         //모델 생성
-        _equipInvenModel = new InventoryModel();
-        _bagInvenModel = new InventoryModel();
-        _storageInvenModel = new InventoryModel();
-        _quickInvenModel = new InventoryModel();
+        //_equipInvenModel = new InventoryModel();
+        //_bagInvenModel = new InventoryModel();
+        //_storageInvenModel = new InventoryModel();
+        //_quickInvenModel = new InventoryModel();
 
         //User Presenter에 M, V 연결
         _InvenPresent = new InventoryPresenter(_facadeView, 
@@ -72,11 +85,15 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
         Subject<IButtonHandler>.Attach(_InvenPresent);          //버리기 누름       발생
         Subject<ICusorPointerHandler>.Attach(_InvenPresent);    //커서 인아웃       발생
         Subject<IBoxHandler>.Attach(_InvenPresent);             //상자 상호작용     발생
+
         Subject<IWorkStation>.Attach(_InvenPresent);            //제작대 상호작용     발생
         Subject<ICraftItemHandler>.Attach(_InvenPresent);       //제작대 생성버튼 상호작용 발생
+        Subject<IRepairableHandler>.Attach(_InvenPresent);      //다리 상호작용     발생
 
         Subject<IEnemyDeadHandler>.Attach(this);
         Subject<IPlayerQuickSlotHandler>.Attach(this);
+
+        Subject<IEquipmentDestroyHandler>.Attach(_InvenPresent);
 
         _facadeView.InitWorkStationView();
     }
@@ -90,11 +107,15 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler, IPlayerQuickSlotHa
         Subject<IButtonHandler>.Detach(_InvenPresent);
         Subject<ICusorPointerHandler>.Detach(_InvenPresent);
         Subject<IBoxHandler>.Detach(_InvenPresent);
+
         Subject<IWorkStation>.Detach(_InvenPresent);   
         Subject<ICraftItemHandler>.Detach(_InvenPresent);
+        Subject<IRepairableHandler>.Detach(_InvenPresent);
 
         Subject<IEnemyDeadHandler>.Detach(this);
         Subject<IPlayerQuickSlotHandler>.Detach(this);
+
+        Subject<IEquipmentDestroyHandler>.Detach(_InvenPresent);
     }
 
     //public void InitBoxes()

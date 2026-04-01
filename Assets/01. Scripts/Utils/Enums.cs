@@ -27,8 +27,11 @@ public enum SceneType
 {
     Start,          // 시작
     Bunker,         // 벙커
+    Bunker_Y,         // 벙커_Y
     Game,           // 게임
-    End             // 끝
+    Game_Y,           // 게임_Y
+    End,             // 끝
+    InvenTest
 }
 
 // UI 종류
@@ -42,5 +45,7 @@ public enum UIType
     Inventory,      // 가방 UI
     Stat,           // 스탯 UI
     Map,            // 지도 UI
-    Box             // 상자 UI
+    Box,            // 상자 UI
+    CraftingTable,  // 제작대 UI (추가)
+    KeyMaker        // 열쇠가공기 UI (추가)
 }

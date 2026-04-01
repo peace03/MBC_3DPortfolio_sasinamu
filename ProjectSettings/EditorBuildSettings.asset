@@ -9,14 +9,20 @@ EditorBuildSettings:
     path: Assets/999. Scenes/StartScene.unity
     guid: 9a20d48a1bedd6c49b70ca6e5f0cadf6
   - enabled: 1
+    path: Assets/999. Scenes/BunkerScene 1.unity
+    guid: f9c4c8771f3ef89409b5a7e46dd17158
+  - enabled: 1
     path: Assets/999. Scenes/BunkerScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/999. Scenes/GameScene.unity
-    guid: c5b09beddb5397d4fbfdbe16f4fbc17a
+    path: Assets/999. Scenes/GameScene_Y.unity
+    guid: ac9bec184bbeb4a45a9a3119bfd7a1fe
   - enabled: 1
     path: Assets/999. Scenes/EndScene.unity
     guid: b3ddd6d23a7f2244c88adce58b68bbfc
+  - enabled: 1
+    path: Assets/999. Scenes/InventoryTest.unity
+    guid: 34aa2880cc8ac0b48a0fddaf81910239
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 4b145ca0e08207d40830df931021097d, type: 3}
   m_UseUCBPForAssetBundles: 0

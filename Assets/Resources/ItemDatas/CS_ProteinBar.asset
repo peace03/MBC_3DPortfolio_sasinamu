@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CS_ProteinBar
   m_EditorClassIdentifier: Assembly-CSharp::FoodData
   sprite: {fileID: 21300000, guid: e91f64a13c5f1d845a2d6806ce1e9978, type: 3}
-  objectPrefab: {fileID: 0}
+  objectPrefab: {fileID: 4096288219335787852, guid: 7820b564951a272428646a606d78428c, type: 3}
   _id: 23
   _name: "\uD504\uB85C\uD2F4\uBC14"
   _weight: 0.4

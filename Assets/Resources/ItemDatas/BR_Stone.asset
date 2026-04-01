@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BR_Stone
   m_EditorClassIdentifier: Assembly-CSharp::CountableData
   sprite: {fileID: 21300000, guid: 33c4d8a8ea01a2e47b0151aa36183e35, type: 3}
-  objectPrefab: {fileID: 0}
+  objectPrefab: {fileID: 6025669582288112470, guid: 41a95477b52b5e8439d4140084eff1e7, type: 3}
   _id: 2
   _name: "\uB3CC"
   _weight: 2.5

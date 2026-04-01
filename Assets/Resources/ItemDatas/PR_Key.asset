@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PR_Key
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   sprite: {fileID: 21300000, guid: b3ace10554d4d8747b25240638f7e7cf, type: 3}
-  objectPrefab: {fileID: 0}
+  objectPrefab: {fileID: 8133198587253987349, guid: fe708b53dab67684a8962ee2e60d60e7, type: 3}
   _id: 8
   _name: "\uBD81\uBD80 \uCEA0\uD504 \uD6C4\uBB38 \uC5F4\uC1E0"
   _weight: 0.5

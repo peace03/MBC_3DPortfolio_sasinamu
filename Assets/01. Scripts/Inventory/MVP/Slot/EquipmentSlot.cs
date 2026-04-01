@@ -33,8 +33,15 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private int _index; //슬롯 인덱스
     public int Index => _index;
 
-    private void Awake()
+    //private void Awake()
+    //{
+    //}
+
+    public void Initialize(int index, VirtualSlot virtualSlot)
     {
+        _index = index;
+        _virtualSlot = virtualSlot;
+        
         //코드로 이미지, 네임 로드
         _backImage = transform.GetChild(0).GetComponent<Image>();
         _image = transform.GetChild(1).GetComponent<Image>();
@@ -42,12 +49,6 @@ public class EquipmentSlot : MonoBehaviour, IBeginDragHandler, IDragHandler,
         _slider = transform.GetChild(3).GetComponent<Slider>();
         defaultImage = _image.sprite;
         SetSlot();
-    }
-
-    public void Initialize(int index, VirtualSlot virtualSlot)
-    {
-        _index = index;
-        _virtualSlot = virtualSlot;
     }
 
     public void SetSlot(Sprite sprite, string name)

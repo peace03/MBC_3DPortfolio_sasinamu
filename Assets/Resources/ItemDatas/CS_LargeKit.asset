@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CS_LargeKit
   m_EditorClassIdentifier: Assembly-CSharp::CureKitData
   sprite: {fileID: 21300000, guid: f687350d0ee447e40a1e221e20b5864d, type: 3}
-  objectPrefab: {fileID: 0}
+  objectPrefab: {fileID: 4958438580327131134, guid: 3256f405048217041abd79e5ea6492e5, type: 3}
   _id: 20
   _name: "\uC911\uD615 \uC751\uAE09 \uD0A4\uD2B8 "
   _weight: 1.5

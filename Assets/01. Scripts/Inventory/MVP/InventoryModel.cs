@@ -121,15 +121,6 @@ public class InventoryModel
             else Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
             Debug.Log(cureItem.CurDurability);
         }
-        else if (item is GunItem gunItem)
-        {
-            if (gunItem.DecreaseDurability() <= 0f)
-            {
-                PutGunItem(index, null);
-                Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
-            }
-            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
-        }
         else if (item is VestItem vest)
         {
 
@@ -140,6 +131,21 @@ public class InventoryModel
             Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
             Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             PutItem(slotType, index, null);
+        }
+    }
+
+    //총 발사시 내구도 감도
+    public void FireGun(SlotType slotType, int index)
+    {
+        Item item = _Slots[index];
+        if (item is GunItem gunItem)
+        {
+            if (gunItem.DecreaseDurability() <= 0f)
+            {
+                PutGunItem(index, null);
+                Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
+            }
+            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
         }
     }
 
@@ -182,7 +188,7 @@ public class InventoryModel
     {
         return _Slots[index];
     }
-    public GameObject GetItemObject (int index)
+    public GameObject GetItemImage (int index)
     {
         GameObject gameObject = _Slots[index]._data.ObjectPrefab;
         return gameObject;
@@ -201,6 +207,11 @@ public class InventoryModel
             if (_Slots[i] is CountableItem cItem && cItem._data.ID == itemID)
             {
                 total += cItem.CurAmount;
+            }
+            //적재 불가 아이템
+            else if (_Slots[i] != null && _Slots[i]._data.ID == itemID)
+            {
+                total += 1;
             }
         }
         return total;
@@ -229,7 +240,68 @@ public class InventoryModel
                 // 수량이 변했으므로 View에게 픽셀을 다시 그리라고 브로드캐스팅
                 Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, i));
             }
+            //적재 불가 아이템
+            else if (_Slots[i] != null && _Slots[i]._data.ID == itemID)
+            {
+                _Slots[i] = null;
+                amountToConsume -= 1;
+            }
         }
         return amountToConsume;
+    }
+
+    // [확정적 오버할당 핵심 로직] 가방 용량이 변할 때 데이터를 압축하고 넘치는 아이템을 반환합니다.
+    public List<Item> ChangeCapacity(int newCapacity)
+    {
+        List<Item> overflowItems = new List<Item>();
+
+        // 1. 용량이 줄어들었을 경우 (압축 진행)
+        if (newCapacity < _capacity)
+        {
+            int insertIndex = 0;
+
+            // 앞에서부터 빈칸(null)을 무시하고 뒤의 아이템을 당겨옵니다. (메모리 단편화 해결)
+            for (int i = 0; i < _capacity; i++)
+            {
+                if (_Slots[i] != null)
+                {
+                    // 현재 아이템이 있어야 할 자리(insertIndex)가 아니라면 당겨옵니다.
+                    if (i != insertIndex)
+                    {
+                        _Slots[insertIndex] = _Slots[i];
+                        _Slots[i] = null;
+                    }
+                    insertIndex++;
+                }
+            }
+
+            // 압축 후에도 '새로운 용량(newCapacity)'을 초과하는 뒤쪽 아이템들은 오버플로우로 수집합니다.
+            for (int i = newCapacity; i < _Slots.Count; i++)
+            {
+                if (_Slots[i] != null)
+                {
+                    overflowItems.Add(_Slots[i]);
+                    _Slots[i] = null; // 가방 안에서는 완전히 삭제
+                }
+            }
+        }
+
+        // 2. 물리적 배열 크기 및 논리적 용량 갱신
+        _capacity = newCapacity;
+
+        // 리스트 크기가 새로운 용량보다 작다면 빈 슬롯(null)을 추가하여 확장합니다.
+        while (_Slots.Count < _capacity)
+        {
+            _Slots.Add(null);
+        }
+
+        // 리스트 크기가 새로운 용량보다 크다면 초과된 빈 꼬리 메모리를 잘라냅니다. (최적화)
+        if (_Slots.Count > _capacity)
+        {
+            _Slots.RemoveRange(_capacity, _Slots.Count - _capacity);
+        }
+
+        // 버려야 할 초과 아이템들을 Presenter에게 보고합니다.
+        return overflowItems;
     }
 }

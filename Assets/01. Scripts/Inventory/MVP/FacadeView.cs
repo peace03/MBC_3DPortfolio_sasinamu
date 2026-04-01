@@ -104,4 +104,10 @@ public class FacadeView : MonoBehaviour, ISlotClickRightHandler
         //Debug.Log($"{_interactButton.UseButton.GetChild(0).GetComponent<TextMeshProUGUI>().text}");
         _interactButton.UseButton.gameObject.SetActive(setActive);
     }
+
+    // 파사드 패턴 규칙에 따라 Presenter가 BagView에 접근할 수 있게 열어줍니다.
+    public void UpdateBagCapacityUI(int newCapacity)
+    {
+        _bagView.UpdateCapacityUI(newCapacity);
+    }
 }

@@ -13,7 +13,8 @@ public enum SlotType
 
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
     ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler,
-    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler, IDamageable
+    IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler, IDamageable,
+    IRepairableHandler, IEquipmentDestroyHandler
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
@@ -48,13 +49,22 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     //초기화
     public void InitializePresenter()
     {
+        // 1. 아이템 무한 증식 원천 차단 (상태 플래그 검증)
+        // GameDataManager를 통해 게임 전체 수명주기(Application Domain) 중 딱 1번만 실행되도록 보장합니다.
+        if (GameDataManager.Instance.HasSpawnedInitialItems == false)
+        {
+            Test(); // 초기 아이템 지급
+            GameDataManager.Instance.HasSpawnedInitialItems = true; // 지급 완료 처리
+        }
+
+        // [추가된 부분] 씬이 바뀔 때, 이전 씬에서 보존된 Model의 용량대로 View의 UI 칸수를 맞춰줍니다.
+        _view.UpdateBagCapacityUI(_bagModel.Capacity);
+
         //_bagInvenView.SetEvent(OnSlotDragDrop, UpdateStatPanel); //구독시키기
-        //Debug.Log("실행1");
-        Test();
-        //Debug.Log("실행2");
+        UpdateAllSlot(SlotType.Equip);
         UpdateAllSlot(SlotType.Bag);
-        //UpdateAllSlot(SlotType.Box);
-        //Debug.Log("실행3");
+        UpdateAllSlot(SlotType.Quick);
+        UpdateAllSlot(SlotType.Storage);
     }
 
     public void UpdateAllSlot(SlotType slotType)
@@ -68,17 +78,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
     void Test()
     {
-        CreateItem(10);
-        CreateItem(11);
-        CreateItem(1);
-        CreateItem(13);
-        CreateItem(20);
-        CreateItem(16);
-        CreateItem(8);
-        CreateItem(1);
-        CreateItem(18);
-        CreateItem(9);
-        int[] ids = new int[] { 6, 5, 7, 16, 2, 13};
+        int[] ids = new int[] { 1,2,3,4,5,6,7,8,14, 15};
         for (int i = 0; i < ids.Length; i++)
         {
             CreateItem(ids[i]);
@@ -132,6 +132,14 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
                 }
         PutModelItem(fromSlotType, fromIndex, toItem);
         PutModelItem(toSlotType, toIndex, fromItem);
+
+        // [추가된 부분] 만약 교체된 슬롯 중 하나라도 '장비창의 가방(2번 인덱스)' 이라면 용량 제어 메서드 호출
+        if ((fromSlotType == SlotType.Equip && fromIndex == 2) ||
+            (toSlotType == SlotType.Equip && toIndex == 2))
+        {
+            UpdateBagCapacityState();
+        }
+
         Subject<IEquipmentSlotHandler>.Publish(h => h.OnEquipmentSlot(_equipModel));
         //UI 업데이트는 자동으로 됨
     }
@@ -295,7 +303,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     public void OnUseGunItem(SlotType slotType, int index)
     {
         InventoryModel model = GetModel(slotType);
-        model.UseItem(slotType, index);
+        model.FireGun(slotType, index);
     }
     //아이템 버리기 버튼 눌렀을 때 실행
     public void OnDropButtenDown()
@@ -303,7 +311,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         if (_slotTypeRight == SlotType.None) return;
         InventoryModel model = GetModel(_slotTypeRight);
         //오브젝트 생성
-        _itemManager.CreateItemObjInWorld(model.GetItemObject(_slotIndexRight));
+        _itemManager.CreateItemObjInWorld(model.GetItemImage(_slotIndexRight));
         //Model에서 삭제
         model.PutItem(_slotTypeRight, _slotIndexRight, null);
     }
@@ -416,5 +424,102 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         }
     }
 
-    
+    // [IRepairableHandler 구현] 1. 재료가 충분한지 검증하고 UI에 띄울 텍스트를 만들어줍니다.
+    public bool CheckCanRepair(List<NeedItem> needItems, out string reqTextStr)
+    {
+        bool canRepair = true;
+        reqTextStr = "";
+
+        foreach (var needItem in needItems)
+        {
+            // 가방과 퀵슬롯만 검사 (기획에 따라 _storageModel.GetTotalItemCount 추가 가능)
+            int totalOwned = _bagModel.GetTotalItemCount(needItem.id)
+                           + _quickModel.GetTotalItemCount(needItem.id);
+
+            if (totalOwned < needItem.count) canRepair = false;
+
+            string itemName = _itemManager.GetItemNameByID(needItem.id);
+            reqTextStr += $"{itemName} ({totalOwned}/{needItem.count})  ";
+        }
+
+        return canRepair;
+    }
+
+    // [IRepairableHandler 구현] 2. 수리를 시작하면 실제로 인벤토리에서 재료를 깎아냅니다.
+    public bool ConsumeRepairItems(List<NeedItem> needItems)
+    {
+        // 검증 로직 한 번 더 수행 (안전망)
+        if (!CheckCanRepair(needItems, out _)) return false;
+
+        foreach (var needItem in needItems)
+        {
+            int remaining = needItem.count;
+            // 가방에서 먼저 빼고, 부족하면 퀵슬롯에서 마저 뺌
+            remaining = _bagModel.ConsumeItem(SlotType.Bag, needItem.id, remaining);
+            if (remaining > 0) remaining = _quickModel.ConsumeItem(SlotType.Quick, needItem.id, remaining);
+        }
+
+        // 뷰(UI) 갱신
+        UpdateAllSlot(SlotType.Bag);
+        UpdateAllSlot(SlotType.Quick);
+
+        return true;
+    }
+
+    // 장비창 2번 슬롯(가방)의 상태를 확인하고 용량과 데이터를 갱신합니다.
+    public void UpdateBagCapacityState()
+    {
+        int baseCapacity = 10; // 플레이어의 기본 뼈대 슬롯 개수
+        int newCapacity = baseCapacity;
+
+        // 1. 장비창(Equip) 2번 슬롯에 가방 아이템이 있는지 확인
+        Item bagSlotItem = _equipModel.GetItem(2);
+        if (bagSlotItem is BagItem bag)
+        {
+            newCapacity += bag.AddSlotNum; // 작은 가방 +3, 큰 가방 +6 연산
+        }
+
+        // 이미 용량이 동기화되어 있다면 불필요한 연산을 생략합니다.
+        if (_bagModel.Capacity == newCapacity) return;
+
+        // 2. Model에게 용량 변경 및 압축을 지시하고, 가방 밖으로 튕겨져 나온 아이템 수령
+        List<Item> overflowItems = _bagModel.ChangeCapacity(newCapacity);
+
+        // 3. 넘치는 아이템들을 플레이어 주변 바닥에 물리적으로 스폰 (드랍)
+        foreach (var item in overflowItems)
+        {
+            _itemManager.CreateItemObjInWorld(item._data.ObjectPrefab);
+            Debug.Log($"[시스템] 가방 공간 부족으로 '{item._data.Name}' 아이템이 바닥에 떨어졌습니다.");
+        }
+
+        // 4. View에게 새로운 용량만큼 UI 슬롯 픽셀을 활성화하라고 브로드캐스팅
+        _view.UpdateBagCapacityUI(newCapacity);
+
+        // 5. 아이템들이 앞으로 압축(정렬)되었으므로 가방 UI 전체를 다시 그립니다.
+        UpdateAllSlot(SlotType.Bag);
+    }
+
+    public void OnEquipmentDestroyed(int slotIndex)
+    {
+        // 1. 모델(Model)에서 해당 인덱스의 아이템을 추출
+        Item destroyedItem = _equipModel.GetItem(slotIndex);
+
+        if (destroyedItem != null)
+        {
+            // 2. 단일 아이템 소모 로직을 통해 배열의 해당 인덱스를 null로 메모리 해제
+            _equipModel.ConsumeItem(SlotType.Equip, destroyedItem._data.ID, 1);
+            // (만약 인덱스로 직접 지우는 RemoveItem(slotIndex) 메서드가 있다면 그것을 사용하는 것이 더 안전합니다)
+
+            Debug.Log($"[시스템] 장비창 {slotIndex}번 슬롯의 장비가 파괴되었습니다.");
+        }
+
+        // 3. 화면(View) 강제 동기화
+        UpdateAllSlot(SlotType.Equip);
+
+        // 4. 가방(2번)이 파괴되었을 경우를 대비한 엣지 케이스 방어
+        if (slotIndex == 2) UpdateBagCapacityState();
+
+        // 5. 장비가 벗겨졌으므로 PlayerStat에 스탯을 다시 계산하라고 브로드캐스팅
+        Subject<IEquipmentSlotHandler>.Publish(h => h.OnEquipmentSlot(_equipModel));
+    }
 }

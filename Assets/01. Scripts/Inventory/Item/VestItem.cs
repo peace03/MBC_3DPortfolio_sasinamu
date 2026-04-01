@@ -10,6 +10,7 @@ public class VestItem : ConsumableItem
         
     }
 
+    //내구도 감소
     public override float DecreaseDurability()
     {
         _curDurability += -5;

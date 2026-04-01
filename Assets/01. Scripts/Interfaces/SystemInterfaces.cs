@@ -84,3 +84,9 @@ public interface ISelectedQuickSlotHandler
 {
     public void OnSelectedQuickSlot(Item item);
 }
+
+//작업대 인터페이스
+public interface ICraftingHandler { void OnCraftingTable(); }
+
+//열쇠 가공기 인터페이스
+public interface IKeyMakerHandler { void OnKeyMaker(); }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour,
     IGamePauseHandler, IPopupUIClosedHandler, IPlayerDeadHandler, IControlManualHandler, IInventoryHandler,
-    IMapHandler, IBoxHandler, IQuickSlotStateHandler
+    IMapHandler, IBoxHandler, IQuickSlotStateHandler, ICraftingHandler, IKeyMakerHandler
 {
     [Header("정보")]
     [SerializeField] private UIType curOpenUIType = UIType.None;        // 현재 열린 UI 종류
@@ -19,6 +19,8 @@ public class UIManager : MonoBehaviour,
     [SerializeField] private GameObject gameOverUI;                     // 게임 오버 UI
     [SerializeField] private GameObject menuBarUI;                      // 메뉴 바 UI
     [SerializeField] private GameObject boxUI;                          // 상자 UI
+    [SerializeField] private GameObject craftingUI;                     // 작업대 UI
+    [SerializeField] private GameObject keyMakerUI;                     // 열쇠 가공기 UI
 
     private Stack<GameObject> openedUIStack = new();                    // 열려있는 UI 스택
 
@@ -39,6 +41,10 @@ public class UIManager : MonoBehaviour,
         // 상자 이벤트 구독
         Subject<IBoxHandler>.Attach(this);
         Subject<IQuickSlotStateHandler>.Attach(this);
+        // 작업대 이벤트 구독
+        Subject<ICraftingHandler>.Attach(this);
+        // 열쇠 가공기 이벤트 구독
+        Subject<IKeyMakerHandler>.Attach(this);
     }
 
     private void OnDisable()
@@ -58,6 +64,10 @@ public class UIManager : MonoBehaviour,
         // 상자 이벤트 구독 해제
         Subject<IBoxHandler>.Detach(this);
         Subject<IQuickSlotStateHandler>.Detach(this);
+        // 작업대 이벤트 해제
+        Subject<ICraftingHandler>.Detach(this);
+        // 열쇠 가공기 이벤트 해제
+        Subject<IKeyMakerHandler>.Detach(this);
     }
 
     // 일시정지 함수
@@ -139,6 +149,10 @@ public class UIManager : MonoBehaviour,
 
     public void OnQuickSlotState(bool state) => quickSlotUI.SetActive(state);
 
+    //작업대, 열쇠가공기 호출
+    public void OnCraftingTable() => OpenUI(UIType.CraftingTable);
+    public void OnKeyMaker() => OpenUI(UIType.KeyMaker);
+
     // UI 열기 함수
     private void OpenUI(UIType type)
     {
@@ -189,6 +203,14 @@ public class UIManager : MonoBehaviour,
                 menuBarUI.GetComponent<MenuBarUI>().UpdateMenuBarUI(UIType.Inventory);
                 // 상자 UI 열기
                 OpenUI(boxUI, type);
+                break;
+            case UIType.CraftingTable:
+                ChangeUI(menuBarUI, UIType.Inventory); // 필요하다면 메뉴바 연동
+                OpenUI(craftingUI, type);
+                break;
+            case UIType.KeyMaker:
+                ChangeUI(menuBarUI, UIType.Inventory);
+                OpenUI(keyMakerUI, type);
                 break;
         }
 
