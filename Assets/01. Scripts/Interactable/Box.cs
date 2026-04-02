@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ public class Box : MonoBehaviour, IInteractable
 
             if (newLoot != null)
             {
+                Debug.Log(_boxModel);
                 // 5. 생성된 아이템을 상자 인벤토리의 i번째 슬롯에 안전하게 주입
                 _boxModel.PutItem(SlotType.Box, i, newLoot);
             }
@@ -46,18 +48,28 @@ public class Box : MonoBehaviour, IInteractable
         // [지연 초기화] 플레이어가 최초로 E키를 눌렀을 때만 힙(Heap) 메모리를 할당하고 아이템을 채웁니다.
         if (_boxModel == null)
         {
+            Debug.Log("들어오니");
             _boxModel = new InventoryModel();
+            Debug.Log(_boxModel);
             _boxModel.Init(_defaultCapacity);
             Debug.Log($"{_boxModel.Capacity}");
 
+            StartCoroutine(WaitInitBoxModel());
             // 💡 여기서 아이템이 배열에 꽂히며 확성기(Subject)가 울리지만,
             // 이미 플레이어가 상자와 상호작용하는 흐름 안에 있으므로 전혀 문제없이 화면에 그려집니다.
-            GenerateRandomLoot();
         }
 
         // 상자 이벤트 발생(상자 아이템들 정보 전달)
         Subject<IBoxHandler>.Publish(h => h.OnBox(_boxModel));
         Debug.Log("상호작용");
+    }
+
+    private IEnumerator WaitInitBoxModel()
+    {
+        Subject<IBoxModelHandler>.Publish(h => h.OnInitBoxModel(_boxModel));
+        yield return null;
+        GenerateRandomLoot();
+        yield return null;
     }
 
     // [핵심 추가] 동적 스폰된 상자에 오버플로우 데이터를 주입하는 함수

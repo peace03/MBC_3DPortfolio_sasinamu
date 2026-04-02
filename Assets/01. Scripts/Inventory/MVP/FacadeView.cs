@@ -44,6 +44,9 @@ public class FacadeView : MonoBehaviour, ISlotClickRightHandler
 
     public void InitWorkStationView()
     {
+        if (_workStaionView == null || _KeyMachineView == null)
+            return;
+
         _workStaionView.Init();
         _KeyMachineView.Init();
     }

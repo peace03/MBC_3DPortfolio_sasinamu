@@ -14,7 +14,7 @@ public enum SlotType
 public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged, 
     ISlotClickHandler, IPlayerInteractHandler, IButtonHandler, ICusorPointerHandler,
     IBoxHandler, IFireBullet, IWorkStation, ICraftItemHandler,
-    IRepairableHandler, IEquipmentDestroyHandler
+    IRepairableHandler, IEquipmentDestroyHandler, IBoxModelHandler
 {
     private FacadeView _view;
     private InventoryModel _bagModel;
@@ -235,6 +235,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     }
     public void OnUpdateSingleSlot(SlotType slotType, int index)
     {
+        Debug.Log(GetModel(slotType));
         InventoryModel model = GetModel(slotType);
         Item item = model.GetItem(index);
         switch (slotType)
@@ -533,5 +534,10 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
         // 5. 장비가 벗겨졌으므로 PlayerStat에 스탯을 다시 계산하라고 브로드캐스팅
         Subject<IEquipmentSlotHandler>.Publish(h => h.OnEquipmentSlot(_equipModel));
+    }
+
+    public void OnInitBoxModel(InventoryModel model)
+    {
+        _boxModel = model;
     }
 }

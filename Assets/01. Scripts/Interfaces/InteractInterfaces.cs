@@ -1,5 +1,10 @@
 using System.Collections.Generic;
 
+public interface IBoxModelHandler
+{
+    public void OnInitBoxModel(InventoryModel model);
+}
+
 // 다리 등 수리 가능한 오브젝트가 Presenter에게 재료 검증/소모를 요청할 때 사용
 public interface IRepairableHandler
 {
