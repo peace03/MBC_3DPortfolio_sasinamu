@@ -113,7 +113,6 @@ public class BootStrapper : MonoBehaviour, IEnemyDeadHandler
         Subject<IRepairableHandler>.Detach(_InvenPresent);
 
         Subject<IEnemyDeadHandler>.Detach(this);
-        Subject<IPlayerQuickSlotHandler>.Detach(this);
 
         Subject<IEquipmentDestroyHandler>.Detach(_InvenPresent);
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class InventoryModel
 {
@@ -122,9 +123,6 @@ public class InventoryModel
             else Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
 
             Debug.Log(cureItem.CurDurability);
-        }
-
-            //Debug.Log(cureItem.CurDurability);
         }
         //else if (item is GunItem gunItem)
         //{
@@ -264,7 +262,6 @@ public class InventoryModel
         return amountToConsume;
     }
 
-<<<<<<< HEAD
     // [확정적 오버할당 핵심 로직] 가방 용량이 변할 때 데이터를 압축하고 넘치는 아이템을 반환합니다.
     public List<Item> ChangeCapacity(int newCapacity)
     {
@@ -318,7 +315,8 @@ public class InventoryModel
 
         // 버려야 할 초과 아이템들을 Presenter에게 보고합니다.
         return overflowItems;
-=======
+    }
+
     public float GetTotalWeight()
     {
         float totalWeight = 0f;
@@ -328,6 +326,5 @@ public class InventoryModel
                 totalWeight += slot._data.Weight;
 
         return totalWeight;
->>>>>>> origin/Main
     }
 }

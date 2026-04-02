@@ -136,4 +136,3 @@ public interface IStaminaUIHandler
 {
     public void OnStaminaUI(float value);
 }
->>>>>>> origin/Main
