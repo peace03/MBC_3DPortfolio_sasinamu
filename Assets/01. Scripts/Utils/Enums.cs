@@ -1,30 +1,54 @@
 // 사격 모드
 public enum FireMode
 {
-    Single,         // 단발
-    Auto            // 연발
+    Single,             // 단발
+    Auto                // 연발
 }
 
 // 플레이어 애니메이션 상태
 public enum PlayerAnimState
 {
-    Idle,           // 대기
-    Walk            // 이동
+    Idle,               // 대기
+    Walk,               // 이동
+    WalkWithWeapon,     // 무기 들고 이동
+    Run,                // 달리기
+    RunWithWeapon,
+    Roll,               // 구르기
+    Dead                // 죽음
+}
+
+public enum PlayerVisualType
+{
+    Arm,
+    Vest,
+    Inv
+}
+
+public enum PlayerVisualState
+{
+    None,
+    Glock,
+    AK47,
+    Vest,
+    SmallInv,
+    LargeInv,
+    Items
 }
 
 // 적 애니메이션 상태
 public enum EnemyAnimState
 {
-    Idle,           // 대기
-    Move,           // 이동
-    Attack,         // 공격
-    Damaged,        // 피격
-    Dead            // 죽음
+    Idle,               // 대기
+    Move,               // 이동
+    Attack,             // 공격
+    Damaged,            // 피격
+    Dead                // 죽음
 }
 
 // 씬 종류
 public enum SceneType
 {
+
     Start,          // 시작
     Bunker,         // 벙커
     Bunker_Y,         // 벙커_Y
@@ -32,6 +56,7 @@ public enum SceneType
     Game_Y,           // 게임_Y
     End,             // 끝
     InvenTest
+
 }
 
 // UI 종류
@@ -49,4 +74,18 @@ public enum UIType
     Box,            // 상자 UI
     CraftingTable,  // 제작대 UI (추가)
     KeyMaker        // 열쇠가공기 UI (추가)
+}
+
+public enum BunkerAnimState
+{
+    Open,
+    Close
+}
+
+public enum ProgressType
+{
+    None,
+    Reloading,
+    UseItem,
+    ChangeScene
 }

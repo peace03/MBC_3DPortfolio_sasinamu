@@ -12,8 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844c10e751a1bc4419c2daa87a0cc5f6, type: 3}
   m_Name: CS_ProteinBar
   m_EditorClassIdentifier: Assembly-CSharp::FoodData
+<<<<<<< HEAD
   sprite: {fileID: 21300000, guid: e91f64a13c5f1d845a2d6806ce1e9978, type: 3}
   objectPrefab: {fileID: 4096288219335787852, guid: 7820b564951a272428646a606d78428c, type: 3}
+=======
+  sprite: {fileID: 21300000, guid: 10697bc84ce932c46ab561b1aa3618fb, type: 3}
+  objectPrefab: {fileID: 0}
+  object2DPrefab: {fileID: 8331372800034266311, guid: 42d51b1f2eb67eb4d819bbe85b0765d1, type: 3}
+>>>>>>> origin/Main
   _id: 23
   _name: "\uD504\uB85C\uD2F4\uBC14"
   _weight: 0.4

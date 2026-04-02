@@ -19,7 +19,7 @@ public class CreateItemView : MonoBehaviour
             _buttons[i].SetColor(Red);
             _buttons[i].GetComponent<Button>().interactable = false;
         }
-        Debug.Log("작업대 View 초기화 호출 완료");
+        //Debug.Log("작업대 View 초기화 호출 완료");
         Subject<IWorkStation>.Publish(h => h.OnActiveWorkSationUI(_buttons));
     }
 

@@ -45,6 +45,11 @@ public interface IOpenUIByButtonHandler
     public void OnOpenUIByButton(UIType type);
 }
 
+public interface IDeadUIHandler
+{
+    public void OnDeadUI(string name);
+}
+
 // UI 상태 관리 인터페이스
 public interface IUIStateHandler
 {
@@ -80,9 +85,9 @@ public interface IQuickSlotStateHandler
     public void OnQuickSlotState(bool state);
 }
 
-public interface ISelectedQuickSlotHandler
+public interface IEquipmentSlotHandler
 {
-    public void OnSelectedQuickSlot(Item item);
+    public void OnEquipmentSlot(InventoryModel model);
 }
 
 //작업대 인터페이스
@@ -90,3 +95,45 @@ public interface ICraftingHandler { void OnCraftingTable(); }
 
 //열쇠 가공기 인터페이스
 public interface IKeyMakerHandler { void OnKeyMaker(); }
+
+public interface IQuickSlotHandler
+{
+    public void OnQuickSlot(InventoryModel model);
+}
+
+public interface IInventoryWeightHandler
+{
+    public void OnInventoryWeight(float weight);
+}
+
+public interface ICameraHandler
+{
+    public void OnCamera(bool state);
+}
+
+public interface IStageClearHandler
+{
+    public void OnStageClear(int stage);
+}
+
+public interface IItemDataHandler
+{
+    public void OnItemData(List<ItemData> datas);
+}
+
+public interface IProgressUIHandler
+{
+    public void OnStartProgress(ProgressType type, float value);
+    public void OnCancelProgress();
+}
+
+public interface IFireModeUIHandler
+{
+    public void OnFireModeUI(FireMode mode);
+}
+
+public interface IStaminaUIHandler
+{
+    public void OnStaminaUI(float value);
+}
+>>>>>>> origin/Main

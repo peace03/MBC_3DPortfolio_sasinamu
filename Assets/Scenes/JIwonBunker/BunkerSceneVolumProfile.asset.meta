@@ -1,8 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scenes/JIwonBunker/BunkerSceneVolumProfile.asset.meta
 guid: 4298189d043861b46841e574cdf2a674
+========
+guid: 11c039377973176498e362a6fb2cd163
+>>>>>>>> origin/Main:Assets/03. Materials/Mat_Blue.mat.meta
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 11400000
+  mainObjectFileID: 2100000
   userData: 
   assetBundleName: 
   assetBundleVariant: 

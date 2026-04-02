@@ -302,7 +302,7 @@ public class InputManager : MonoBehaviour, IUIStateHandler
             // 키를 눌렀을 때
             if (context.performed)
                 // 이벤트 발생(무기 교체 혹은 퀵슬롯에 있는 아이템 사용)
-                Subject<IPlayerQuickSlotHandler>.Publish(h => h.OnQuickSlot(int.Parse(context.control.name)));
+                Subject<IPlayerQuickSlotHandler>.Publish(h => h.OnPlayerQuickSlot(int.Parse(context.control.name)));
         }
     }
 }

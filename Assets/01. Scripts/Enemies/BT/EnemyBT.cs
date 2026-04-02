@@ -182,7 +182,8 @@ public class EnemyBT : MonoBehaviour, IEnemyPauseHandler
             anim.PlayDamagedAnimation();
         }
 
-        // 진행 중 반환
+        //
+        // 중 반환
         return BT_NodeStatus.Running;
     }
 

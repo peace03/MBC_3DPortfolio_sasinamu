@@ -18,6 +18,8 @@ public class PlayerManager : MonoBehaviour
     private PlayerRotate rotate;                                // 회전
     private PlayerInteract interact;                            // 상호작용
     private PlayerFire fire;                                    // 사격
+    private PlayerEquipment equipment;
+    private PlayerQuickSlot quickSlot;
 
     private void Awake()
     {
@@ -35,14 +37,14 @@ public class PlayerManager : MonoBehaviour
         rotate = player.GetComponent<PlayerRotate>();
         interact = player.GetComponent<PlayerInteract>();
         fire = player.GetComponent<PlayerFire>();
+        quickSlot = player.GetComponent<PlayerQuickSlot>();
+        equipment = player.GetComponent<PlayerEquipment>();
 
         // 컴포넌트 초기화
         move.Init(stat, anim, inputManager);
         rotate.Init(inputManager);
         interact.Init(stat);
         fire.Init(stat, bulletFactory);
-
-        //equip.Init(mvp);
-        //mvp.Init(equip);
+        equipment.Init(stat, quickSlot);
     }
 }

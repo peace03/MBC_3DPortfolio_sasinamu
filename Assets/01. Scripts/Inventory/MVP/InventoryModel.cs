@@ -120,15 +120,28 @@ public class InventoryModel
                 Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             }
             else Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+
             Debug.Log(cureItem.CurDurability);
         }
+
+            //Debug.Log(cureItem.CurDurability);
+        }
+        //else if (item is GunItem gunItem)
+        //{
+        //    if (gunItem.DecreaseDurability() <= 0f)
+        //    {
+        //        PutGunItem(index, null);
+        //        Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
+        //    }
+        //    Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+        //}
         else if (item is VestItem vest)
         {
 
         }
         else if (item is FoodItem foodItem)
         {
-            Debug.Log(foodItem.Energy + " " + foodItem.Thirst);
+            //Debug.Log(foodItem.Energy + " " + foodItem.Thirst);
             Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
             Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             PutItem(slotType, index, null);
@@ -251,6 +264,7 @@ public class InventoryModel
         return amountToConsume;
     }
 
+<<<<<<< HEAD
     // [확정적 오버할당 핵심 로직] 가방 용량이 변할 때 데이터를 압축하고 넘치는 아이템을 반환합니다.
     public List<Item> ChangeCapacity(int newCapacity)
     {
@@ -304,5 +318,16 @@ public class InventoryModel
 
         // 버려야 할 초과 아이템들을 Presenter에게 보고합니다.
         return overflowItems;
+=======
+    public float GetTotalWeight()
+    {
+        float totalWeight = 0f;
+
+        foreach (var slot in _Slots)
+            if (slot != null)
+                totalWeight += slot._data.Weight;
+
+        return totalWeight;
+>>>>>>> origin/Main
     }
 }

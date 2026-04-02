@@ -74,7 +74,7 @@ public class Bullet : MonoBehaviour
         // 총알 위치, 각도 설정
         transform.SetPositionAndRotation(pos, rot);
         // 총알 발사
-        rb.AddForce(transform.forward * bulletSpeed, ForceMode.Impulse);
+        rb.linearVelocity = transform.forward * bulletSpeed;
         // 총알 반납 코루틴 시작
         ReturnBulletToPool();
     }

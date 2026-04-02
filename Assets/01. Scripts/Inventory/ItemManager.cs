@@ -13,6 +13,12 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private GameObject _droppedBoxPrefab;
 
     public Vector3 Player => new Vector3(_player.position.x, _player.position.y, _player.position.z);
+
+    private void Start()
+    {
+        Subject<IItemDataHandler>.Publish(h => h.OnItemData(_itemDatas));
+    }
+
     public void Init()
     {
         _itemDatas = new List<ItemData>(Resources.LoadAll<ItemData>("ItemDatas"));

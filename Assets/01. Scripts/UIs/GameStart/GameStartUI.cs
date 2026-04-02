@@ -23,6 +23,9 @@ public class GameStartUI : MonoBehaviour, IPopupUIClosedHandler
 
     private void Awake()
     {
+        Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow);
+        Application.targetFrameRate = 30;
+
         // 초기화
         if (gameStartButton != null)
             gameStartButton.onClick.AddListener(GameStart);
