@@ -33,7 +33,7 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuic
     {
         this.stat = stat;
         quickSlot = slot;
-        OnQuickSlot(slot.CurSelectedSlot);
+        OnPlayerQuickSlot(slot.CurSelectedSlot);
         UpdateDefensePower();
     }
 
@@ -42,7 +42,7 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuic
         for (int i = 0; i < equipmentCount; i++)
             equipments[i] = model.GetItem(i);
 
-        OnQuickSlot(quickSlot.CurSelectedSlot);
+        OnPlayerQuickSlot(quickSlot.CurSelectedSlot);
 
         if (equipments[2] != null)
             Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerVisual(PlayerVisualType.Inv, PlayerVisualState.LargeInv));
@@ -52,7 +52,7 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuic
         UpdateDefensePower();
     }
 
-    public void OnQuickSlot(int slotNumber)
+    public void OnPlayerQuickSlot(int slotNumber)
     {
         if (slotNumber > 2)
             return;

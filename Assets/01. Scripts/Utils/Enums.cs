@@ -67,3 +67,17 @@ public enum UIType
     Map,                // 지도 UI
     Box                 // 상자 UI
 }
+
+public enum BunkerAnimState
+{
+    Open,
+    Close
+}
+
+public enum ProgressType
+{
+    None,
+    Reloading,
+    UseItem,
+    ChangeScene
+}

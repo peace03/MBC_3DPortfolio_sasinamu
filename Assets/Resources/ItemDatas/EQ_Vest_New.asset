@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: EQ_Vest_New
   m_EditorClassIdentifier: Assembly-CSharp::VestData
   sprite: {fileID: 21300000, guid: 46b08831e5b436642b39b391826b24c2, type: 3}
-  objectPrefab: {fileID: 0}
+  objectPrefab: {fileID: 919132149155446097, guid: 6cc2e61d25163f6409af13b3a105336b, type: 3}
+  object2DPrefab: {fileID: 8331372800034266311, guid: dac76225288251042a461d77bc7bae96, type: 3}
   _id: 13
   _name: "\uC0C1\uC704 \uBC29\uC5B4\uAD6C"
   _weight: 5
-  _explain: "\uBC29\uC5B4\uD574\uC900\uB2E4"
+  _explain: "\uBC29\uC5B4\uB41C\uB2E4"
   _consumableType: 1
   maxDurability: 100
   defensive: 20

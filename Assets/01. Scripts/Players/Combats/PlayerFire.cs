@@ -20,6 +20,19 @@ public class PlayerFire : MonoBehaviour,
     private BulletFactory bulletFactory;                    // 총알 공장
     private Coroutine reloadingCoroutine;                   // 장전 코루틴
 
+    private int fireBulletCount = 0;
+
+    private float ProgressRatio
+    {
+        get
+        {
+            if (reloadingDelayTime <= 0f)
+                return 0f;
+
+            return Mathf.Clamp01((Time.time - startReloadingTime) / reloadingDelayTime);
+        }
+    }
+
     private void Start()
     {
         // 초기화
@@ -70,15 +83,29 @@ public class PlayerFire : MonoBehaviour,
     // 사격 관리 함수
     private void HandleFireBullet()
     {
-        // 사격이 불가능한 상태거나, 초기 상태가 아니고 마지막 사격 시간에서 사격 지연 시간만큼 지나지 않았거나, 장전 중이라면
-        if (!canFire || (lastFireTime != 0 && Time.time - lastFireTime < curFireDelayTime) || isReloading)
+        // 사격이 불가능한 상태거나, 초기 상태가 아니고 마지막 사격 시간에서 사격 지연 시간만큼 지나지 않았거나,
+        // 장전 중이거나, 총을 들고 있지 않다면
+        if (!canFire || (lastFireTime != 0 && Time.time - lastFireTime < curFireDelayTime)
+                                                    || isReloading || stat.AttackPower == 0)
             // 종료
             return;
 
-        // 사격(플레이어 이름, 플레이어 레이어, 사격 위치, 사격 각도)
-        bulletFactory.SmallBulletPool.Get().FireBullet(name, gameObject.layer, firePoint.position, firePoint.rotation);
+        if (fireBulletCount >= 8)
+        {
+            canFire = false;
+            OnReload();
+            return;
+        }
+
+        if (stat.AttackPower == 9)
+            // 사격(플레이어 이름, 플레이어 레이어, 사격 위치, 사격 각도)
+            bulletFactory.SmallBulletPool.Get().FireBullet(name, gameObject.layer, firePoint.position, firePoint.rotation);
+        else
+            bulletFactory.LargeBulletPool.Get().FireBullet(name, gameObject.layer, firePoint.position, firePoint.rotation);
+
         // 마지막 사격 시간 갱신
         lastFireTime = Time.time;
+        fireBulletCount++;
 
         // 단발 모드라면
         if (curFireMode == FireMode.Single)
@@ -105,8 +132,7 @@ public class PlayerFire : MonoBehaviour,
 
         // 사격 지연 시간 갱신
         UpdateFireDelayTimte();
-        // 사격 모드 UI에 이벤트 발행하기
-        Debug.Log("UI에게 사격 모드 변경 알려주기");
+        Subject<IFireModeUIHandler>.Publish(h => h.OnFireModeUI(curFireMode));
     }
 
     // 사격 지연 시간 갱신 함수
@@ -132,7 +158,7 @@ public class PlayerFire : MonoBehaviour,
     public void OnReload()
     {
         // 장전 코루틴이 비어있지 않다면
-        if (reloadingCoroutine != null)
+        if (reloadingCoroutine != null || stat.AttackPower == 0f)
             // 종료
             return;
 
@@ -159,18 +185,17 @@ public class PlayerFire : MonoBehaviour,
                 continue;
             }
 
-            Debug.Log($"장전 진행 시간 : {(Time.time - startReloadingTime):F1}초");
-            // 여기서 UI 슬라이더 값 전달하기
-
+            Subject<IProgressUIHandler>.Publish(h => h.OnStartProgress(ProgressType.Reloading, ProgressRatio));
             // 프레임 단위로 기다리기
             yield return null;
         }
 
-        Debug.Log("장전 끝!");
-        // 정전 종료
+        Subject<IProgressUIHandler>.Publish(h => h.OnStartProgress(ProgressType.Reloading, 1f));
+        // 장전 종료
         isReloading = false;
         // 장전 코루틴 초기화
         reloadingCoroutine = null;
+        fireBulletCount = 0;
     }
 
     // 장전 취소 함수
@@ -187,7 +212,6 @@ public class PlayerFire : MonoBehaviour,
         StopCoroutine(reloadingCoroutine);
         // 장전 코루틴 초기화
         reloadingCoroutine = null;
-        // 나중에 UI로 값 보내주기
-        Debug.Log("장전 취소");
+        Subject<IProgressUIHandler>.Publish(h => h.OnCancelProgress());
     }
 }

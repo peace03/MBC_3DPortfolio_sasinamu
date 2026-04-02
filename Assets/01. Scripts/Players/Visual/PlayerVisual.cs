@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
 {
+    [Header("공장")]
+    [SerializeField] private ItemFactory itemFactory;
+
     [Header("장비 프리팹")]
     [SerializeField] private GameObject glockRightArm;
     [SerializeField] private GameObject ak47Arms;
@@ -18,6 +21,8 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
     [SerializeField] private GameObject rightArm;
     [SerializeField] private GameObject rightArmTorus;
     [SerializeField] private GameObject inventory;
+
+    private ItemWorldObject curHoldingItem = null;
 
     private PlayerVisualState armState;
     private PlayerVisualState vestState;
@@ -69,6 +74,12 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
         glockRightArm.SetActive(false);
         ak47Arms.SetActive(false);
         itemArms.SetActive(false);
+
+        if (curHoldingItem != null)
+        {
+            curHoldingItem.ReturnToPool();
+            curHoldingItem = null;
+        }
 
         switch (armState)
         {
@@ -123,17 +134,36 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
         }
     }
 
-    public void OnPlayerHoldingItem(GameObject item)
+    public void OnPlayerHoldingItem(Item item)
     {
-        armState = PlayerVisualState.Items;
-        ChangeArm();
+        if (armState == PlayerVisualState.Items)
+        {
+            if (item == null)
+            {
+                curHoldingItem.ReturnToPool();
+                curHoldingItem = null;
+                return;
+            }
+            else if (curHoldingItem != null && curHoldingItem.DropItem._data.ID == item._data.ID)
+                return;
+            else if (curHoldingItem != null)
+            {
+                curHoldingItem.ReturnToPool();
+                curHoldingItem = null;
+            }
+        }
+        else
+        {
+            armState = PlayerVisualState.Items;
+            ChangeArm();
 
-        if (item == null)
-            return;
+            if (item == null)
+                return;
+        }
 
-        GameObject holdingItem = Instantiate(item);
-        holdingItem.transform.GetChild(0).Rotate(0, 90f, 0);
-        holdingItem.transform.SetParent(itemPosition, false);
-        holdingItem.SetActive(true);
+        var holdingItem = itemFactory.GetWorldItem(item);
+        holdingItem.gameObject.transform.SetParent(itemPosition, false);
+        holdingItem.gameObject.SetActive(true);
+        curHoldingItem = holdingItem;
     }
 }

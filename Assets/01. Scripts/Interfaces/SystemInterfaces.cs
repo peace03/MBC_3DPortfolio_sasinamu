@@ -114,3 +114,19 @@ public interface IItemDataHandler
 {
     public void OnItemData(List<ItemData> datas);
 }
+
+public interface IProgressUIHandler
+{
+    public void OnStartProgress(ProgressType type, float value);
+    public void OnCancelProgress();
+}
+
+public interface IFireModeUIHandler
+{
+    public void OnFireModeUI(FireMode mode);
+}
+
+public interface IStaminaUIHandler
+{
+    public void OnStaminaUI(float value);
+}

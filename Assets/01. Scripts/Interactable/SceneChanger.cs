@@ -9,6 +9,17 @@ public class SceneChanger : MonoBehaviour, IInteractable, IPlayerCancelHandler
     [SerializeField] private float changeDelayTime;     // 전환 지연 시간
     [SerializeField] private SceneType nextScene;       // 다음 씬
 
+    private float ProgressRatio
+    {
+        get
+        {
+            if (changeDelayTime <= 0)
+                return 0f;
+
+            return Mathf.Clamp01((Time.time - startChangeTime) / changeDelayTime);
+        }
+    }
+
     private Coroutine sceneChangeCoroutine;             // 씬 전환 코루틴
 
     private void OnEnable()
@@ -52,13 +63,12 @@ public class SceneChanger : MonoBehaviour, IInteractable, IPlayerCancelHandler
                 continue;
             }
 
-            Debug.Log($"씬 전환 진행 시간 : {(Time.time - startChangeTime):F1}초");
-            // 여기서 UI의 슬라이더 값 전달하기
-
+            Subject<IProgressUIHandler>.Publish(h => h.OnStartProgress(ProgressType.ChangeScene, ProgressRatio));
             // 프레임 단위로 기다리기
             yield return null;
         }
 
+        Subject<IProgressUIHandler>.Publish(h => h.OnStartProgress(ProgressType.ChangeScene, 1f));
         // 씬 전환 코루틴 초기화
         sceneChangeCoroutine = null;
 
@@ -83,7 +93,6 @@ public class SceneChanger : MonoBehaviour, IInteractable, IPlayerCancelHandler
         StopCoroutine(sceneChangeCoroutine);
         // 씬 전환 코루틴 초기화
         sceneChangeCoroutine = null;
-        // 여기서 UI의 슬라이더 값 초기화 알려주기
-        Debug.Log("UI에게 씬 전환 취소 알려줘야 함");
+        Subject<IProgressUIHandler>.Publish(h => h.OnCancelProgress());
     }
 }

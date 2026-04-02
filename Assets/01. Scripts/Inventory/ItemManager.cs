@@ -9,10 +9,14 @@ public class ItemManager : MonoBehaviour
     [Header("플레이어 위치")]
     [SerializeField] private Transform _player;
 
+    private void Start()
+    {
+        Subject<IItemDataHandler>.Publish(h => h.OnItemData(_itemDatas));
+    }
+
     public void Init()
     {
         _itemDatas = new List<ItemData>(Resources.LoadAll<ItemData>("ItemDatas"));
-        Subject<IItemDataHandler>.Publish(h => h.OnItemData(_itemDatas));
     }
 
     //아이템 인스턴스 생성

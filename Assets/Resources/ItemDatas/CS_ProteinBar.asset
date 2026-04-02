@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodData
   sprite: {fileID: 21300000, guid: 10697bc84ce932c46ab561b1aa3618fb, type: 3}
   objectPrefab: {fileID: 0}
+  object2DPrefab: {fileID: 8331372800034266311, guid: 42d51b1f2eb67eb4d819bbe85b0765d1, type: 3}
   _id: 23
   _name: "\uD504\uB85C\uD2F4\uBC14"
   _weight: 0.4

@@ -51,11 +51,11 @@ public interface IPlayerReloadHandler
 // 플레이어 퀵슬롯 관리 인터페이스
 public interface IPlayerQuickSlotHandler
 {
-    public void OnQuickSlot(int slotNumber);
+    public void OnPlayerQuickSlot(int slotNumber);
 }
 
 public interface IPlayerVisualHandler
 {
     public void OnPlayerVisual(PlayerVisualType type, PlayerVisualState state);
-    public void OnPlayerHoldingItem(GameObject item);
+    public void OnPlayerHoldingItem(Item item);
 }

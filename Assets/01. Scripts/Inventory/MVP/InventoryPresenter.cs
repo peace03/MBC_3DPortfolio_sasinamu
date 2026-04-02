@@ -72,13 +72,13 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         CreateItem(11);
         CreateItem(1);
         CreateItem(13);
-        CreateItem(20);
+        CreateItem(19);
         CreateItem(16);
         CreateItem(8);
         CreateItem(1);
         CreateItem(18);
         CreateItem(9);
-        int[] ids = new int[] { 6, 5, 7, 16, 2, 13};
+        int[] ids = new int[] { 6, 5, 7, 16, 2, 13 };
         for (int i = 0; i < ids.Length; i++)
         {
             CreateItem(ids[i]);
@@ -345,7 +345,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     // [UI 열림 이벤트 구독 응답] - BootStrapper에서 Attach 해주어야 함!
     public void OnActiveWorkSationUI(List<CreateItemBtn> btns)
     {
-        Debug.Log("P - 제작대 UI 활성화 무전 수신!");
+        //Debug.Log("P - 제작대 UI 활성화 무전 수신!");
         // 1. 넘어온 버튼 리스트를 메모리에 캐싱합니다.
         _currentWorkStationBtns = btns;
 
@@ -374,7 +374,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
                 string itemName = _itemManager.GetItemNameByID(needItem.id); // ItemManager에 이름 가져오는 기능이 필요함
                 reqTextStr += $"{itemName} ({totalOwned}/{needItem.count})\n";
             }
-            Debug.Log($"만들 수 있?:{canCraft} 텍스트: {reqTextStr}");
+            //Debug.Log($"만들 수 있?:{canCraft} 텍스트: {reqTextStr}");
             // View에게 계산된 결과 전달
             btn.UpdateUI(canCraft, reqTextStr);
         }

@@ -11,6 +11,17 @@ public class EndCollider : MonoBehaviour
 
     private float curLoadingTime;
 
+    private float ProgressRatio
+    {
+        get
+        {
+            if (loadingTime <= 0f)
+                return 0f;
+
+            return Mathf.Clamp01((Time.time - curLoadingTime) / loadingTime);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (loadingCoroutine != null)
@@ -35,11 +46,11 @@ public class EndCollider : MonoBehaviour
                 continue;
             }
 
-            Debug.Log($"씬 전환 진행 시간 : {(Time.time - curLoadingTime):F1}초");
-
+            Subject<IProgressUIHandler>.Publish(h => h.OnStartProgress(ProgressType.ChangeScene, ProgressRatio));
             yield return null;
         }
 
+        Subject<IProgressUIHandler>.Publish(h => h.OnStartProgress(ProgressType.ChangeScene, 1f));
         loadingCoroutine = null;
 
         if (SceneRegistry.GetSceneName(nextSceneType, out string sceneName))
@@ -55,6 +66,6 @@ public class EndCollider : MonoBehaviour
 
         StopCoroutine(loadingCoroutine);
         loadingCoroutine = null;
-
+        Subject<IProgressUIHandler>.Publish(h => h.OnCancelProgress());
     }
 }

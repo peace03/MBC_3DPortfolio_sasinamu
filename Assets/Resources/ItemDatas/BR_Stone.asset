@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CountableData
   sprite: {fileID: 21300000, guid: 7f80aecfca6a82e4c8a776cdb01c3c52, type: 3}
   objectPrefab: {fileID: 0}
+  object2DPrefab: {fileID: 8331372800034266311, guid: 3a1bce1a8fd5c524280ed720dccd4467, type: 3}
   _id: 2
   _name: "\uB3CC"
   _weight: 2.5

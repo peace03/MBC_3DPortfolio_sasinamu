@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletData
   sprite: {fileID: 21300000, guid: 13f125c3d27c31146a8c449ec76ca5d9, type: 3}
   objectPrefab: {fileID: 919132149155446097, guid: b941751c18db7f944afd9a25b3a19312, type: 3}
+  object2DPrefab: {fileID: 8331372800034266311, guid: cc732d9c5a6da9e4a961d028ad6fb21c, type: 3}
   _id: 18
   _name: "L\uD615 \uCD1D\uC54C"
   _weight: 0.15

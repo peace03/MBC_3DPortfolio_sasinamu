@@ -137,6 +137,7 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, IInventor
             curStamina += stamRegenRate * Time.deltaTime;
             // 스테미나 최소값, 최대값에 맞춰서 반영
             curStamina = Mathf.Clamp(curStamina, 0, maxStamina);
+            Subject<IStaminaUIHandler>.Publish(h => h.OnStaminaUI(StamRatio));
         }
     }
 
@@ -152,6 +153,7 @@ public class PlayerStat : MonoBehaviour, IDamageable, IUseItemHandler, IInventor
         curStamina = Mathf.Clamp(curStamina - amount, 0, maxStamina);
         // 스테미나 사용한 시간 갱신
         lastUsedStamTime = Time.time;
+        Subject<IStaminaUIHandler>.Publish(h => h.OnStaminaUI(StamRatio));
         // 사용 가능
         return true;
     }

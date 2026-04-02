@@ -27,7 +27,7 @@ public class EnemyFire : MonoBehaviour
         // 방향 각도에 탄 퍼짐 각도 더하기
         Quaternion finalRot = Quaternion.LookRotation(dir.normalized) * Quaternion.Euler(0, randomAngle, 0);
         // 사격(적 이름, 적 레이어, 사격 위치, 총알 각도)
-        bulletFactory.LargeBulletPool.Get()
+        bulletFactory.SmallBulletPool.Get()
             .FireBullet(transform.parent.name, gameObject.layer, firePoint.position, finalRot);
     }
 }

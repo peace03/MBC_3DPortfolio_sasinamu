@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   sprite: {fileID: 21300000, guid: e5596600e526d8d42ad8178c8c755a3e, type: 3}
   objectPrefab: {fileID: 0}
+  object2DPrefab: {fileID: 8331372800034266311, guid: a165d7015a36c8e4c9a6d76b52f118aa, type: 3}
   _id: 10
   _name: "\uAE00\uB85D"
   _weight: 2
-  _explain: "\uAD8C\uCD1D\uC774\uB2E4."
+  _explain: "\uCD1D\uC774\uB2E4"
   _consumableType: 2
   maxDurability: 100
   bulletData: {fileID: 11400000, guid: 8dfeac6f0dc4db740a2c61af07cdaa32, type: 2}
   fireSpeed: 1
-  maxAmmo: 8
+  maxAmmo: 10

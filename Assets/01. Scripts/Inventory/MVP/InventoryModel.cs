@@ -119,24 +119,24 @@ public class InventoryModel
                 Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             }
             else Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
-            Debug.Log(cureItem.CurDurability);
+            //Debug.Log(cureItem.CurDurability);
         }
-        else if (item is GunItem gunItem)
-        {
-            if (gunItem.DecreaseDurability() <= 0f)
-            {
-                PutGunItem(index, null);
-                Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
-            }
-            Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
-        }
+        //else if (item is GunItem gunItem)
+        //{
+        //    if (gunItem.DecreaseDurability() <= 0f)
+        //    {
+        //        PutGunItem(index, null);
+        //        Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
+        //    }
+        //    Subject<ISlotChanged>.Publish(h => h.OnUpdateSingleSlot(slotType, index));
+        //}
         else if (item is VestItem vest)
         {
 
         }
         else if (item is FoodItem foodItem)
         {
-            Debug.Log(foodItem.Energy + " " + foodItem.Thirst);
+            //Debug.Log(foodItem.Energy + " " + foodItem.Thirst);
             Subject<IUseItemHandler>.Publish(h => h.OnUseFoodItem(foodItem.Energy, foodItem.Thirst));
             Subject<ISlotClickRightHandler>.Publish(h => h.OnAllBtnSetActive(false));
             PutItem(slotType, index, null);
