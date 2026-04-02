@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/999. Scenes/StartScene.unity
     guid: 9a20d48a1bedd6c49b70ca6e5f0cadf6
   - enabled: 1
-    path: Assets/999. Scenes/BunkerScene 1.unity
+    path: Assets/999. Scenes/BunkerScene_Y.unity
     guid: f9c4c8771f3ef89409b5a7e46dd17158
   - enabled: 1
     path: Assets/999. Scenes/BunkerScene.unity

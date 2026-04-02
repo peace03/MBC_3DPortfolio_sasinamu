@@ -58,13 +58,16 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         }
 
         // [추가된 부분] 씬이 바뀔 때, 이전 씬에서 보존된 Model의 용량대로 View의 UI 칸수를 맞춰줍니다.
-        _view.UpdateBagCapacityUI(_bagModel.Capacity);
+        //_view.UpdateBagCapacityUI(_bagModel.Capacity);
+        // 목표 용량을 동적으로 계산하고, UI 렌더링과 모델 상태를 완벽하게 자가 치유시킵니다.
+        UpdateBagCapacityState();
 
         //_bagInvenView.SetEvent(OnSlotDragDrop, UpdateStatPanel); //구독시키기
         UpdateAllSlot(SlotType.Equip);
         UpdateAllSlot(SlotType.Bag);
         UpdateAllSlot(SlotType.Quick);
         UpdateAllSlot(SlotType.Storage);
+        Debug.Log("프레젠터 초기화 완료");
     }
 
     public void UpdateAllSlot(SlotType slotType)
@@ -345,7 +348,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     //상자 상호작용 시 호출
     public void OnBox(InventoryModel boxModel)
     {
-        //Debug.Log("호출");
+        Debug.Log("P호출");
         _boxModel = boxModel;
         UpdateAllSlot(SlotType.Box);
     }

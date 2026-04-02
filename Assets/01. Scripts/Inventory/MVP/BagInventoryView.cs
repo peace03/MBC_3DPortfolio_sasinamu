@@ -13,7 +13,7 @@ public class BagInventoryView : MonoBehaviour
 
     private List<SlotPrefab> _bagSlots;    //가방 프리펩 슬롯 리스트
 
-    private int maxAllocatedSlots = 16; // 💡 확정적 오버할당할 최대 슬롯 개수 (10 + 3 + 6)
+    private int maxAllocatedSlots = 16; // 💡 확정적 오버할당할 최대 슬롯 개수 (10 + 6)
 
     public void Init(VirtualSlot virtualSlot, int currentCapacity)
     {

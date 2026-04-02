@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour,
     IGamePauseHandler, IPopupUIClosedHandler, IPlayerDeadHandler, IControlManualHandler, IInventoryHandler,
-    IMapHandler, IBoxHandler, IQuickSlotStateHandler, ICraftingHandler, IKeyMakerHandler
+    IMapHandler, IBoxHandler, IQuickSlotStateHandler, ICraftingHandler, IKeyMakerHandler, IGameEndingHandler
 {
     [Header("정보")]
     [SerializeField] private UIType curOpenUIType = UIType.None;        // 현재 열린 UI 종류
@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour,
     [SerializeField] private GameObject settingsUI;                     // 설정 UI
     [SerializeField] private GameObject gameQuitUI;                     // 게임 종료 UI
     [SerializeField] private GameObject gameOverUI;                     // 게임 오버 UI
+    [SerializeField] private GameObject gameEndingUI;                   // 게임 엔딩 UI
     [SerializeField] private GameObject menuBarUI;                      // 메뉴 바 UI
     [SerializeField] private GameObject boxUI;                          // 상자 UI
     [SerializeField] private GameObject craftingUI;                     // 작업대 UI
@@ -45,6 +46,8 @@ public class UIManager : MonoBehaviour,
         Subject<ICraftingHandler>.Attach(this);
         // 열쇠 가공기 이벤트 구독
         Subject<IKeyMakerHandler>.Attach(this);
+        // 게임 엔딩 이벤트 구독
+        Subject<IGameEndingHandler>.Attach(this);
     }
 
     private void OnDisable()
@@ -68,6 +71,8 @@ public class UIManager : MonoBehaviour,
         Subject<ICraftingHandler>.Detach(this);
         // 열쇠 가공기 이벤트 해제
         Subject<IKeyMakerHandler>.Detach(this);
+        //게임 엔딩 이벤트 해제
+        Subject<IGameEndingHandler>.Detach(this);
     }
 
     // 일시정지 함수
@@ -153,6 +158,16 @@ public class UIManager : MonoBehaviour,
     public void OnCraftingTable() => OpenUI(UIType.CraftingTable);
     public void OnKeyMaker() => OpenUI(UIType.KeyMaker);
 
+    // 엔딩씬 넘어가는 함수
+    public void OnGameEnding()
+    {
+        // 기존에 UIManager 내부에 있던 UIType.GameEnding 활성화 로직 호출
+        OpenUI(UIType.GameEnding);
+
+        // 필요에 따라 게임 플레이 시간을 정지하거나, 마우스 커서를 활성화하는 로직 추가
+        Time.timeScale = 0f;
+    }
+
     // UI 열기 함수
     private void OpenUI(UIType type)
     {
@@ -180,6 +195,10 @@ public class UIManager : MonoBehaviour,
             case UIType.GameOver:
                 Time.timeScale = 0f;
                 ChangeUI(gameOverUI, type);
+                break;
+            case UIType.GameEnding:
+                Time.timeScale = 0f;
+                ChangeUI(gameEndingUI, type);
                 break;
             // 가방이라면
             case UIType.Inventory:

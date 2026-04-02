@@ -4,38 +4,22 @@ using UnityEngine;
 public class Box : MonoBehaviour, IInteractable
 {
     [Header("정보")]
+    [SerializeField] private ItemManager itemManager;
     private InventoryModel _boxModel;
     private int _defaultCapacity = 5;
-
-    // [핵심 로직 추가] 게임 시작 시 메모리 할당 (Self-Initialization)
-    private void Start()
-    {
-        // _boxModel이 비어있다면 (즉, 동적 오버플로우 상자가 아니라 월드에 미리 배치된 상자라면)
-        if (_boxModel == null)
-        {
-            _boxModel = new InventoryModel();
-            _boxModel.Init(_defaultCapacity);
-            // 💡 만약 월드 배치 상자에 기본적으로 들어있어야 할 아이템이 있다면 여기서 _boxModel.PutItem(...) 처리
-            GenerateRandomLoot();
-        }
-    }
 
     // [핵심 로직 추가] 난수 기반 전리품 생성 알고리즘
     private void GenerateRandomLoot()
     {
+        if (itemManager == null) return;
         // 1. 이 상자에 몇 개의 아이템을 넣을지 난수 결정
-        int randomCount = Random.Range(1, 5);
+        int randomCount = Random.Range(1, 6);
 
         for (int i = 0; i < randomCount; i++)
         {
-            // 2. 맵에 존재하는 ItemManager의 메모리 주소를 끌어옵니다. 
-            // (만약 ItemManager가 싱글톤 패턴이 아니라면 FindObjectOfType을 사용합니다)
-            ItemManager itemManager = FindObjectOfType<ItemManager>();
-            if (itemManager == null) return;
-
             // 3. 어떤 아이템을 뽑을지 ID 난수 결정 (예: 1번~10번 아이템 중 하나)
             // 실제 프로젝트의 아이템 ID 범위나 기획 확률표에 맞게 수정하십시오.
-            int randomItemID = Random.Range(1, 11);
+            int randomItemID = Random.Range(1, 25);
 
             // 4. ItemManager에게 "ID n번 아이템 인스턴스를 메모리에 찍어내 줘!"라고 요청
             // (학생의 프로젝트 구조에 맞춰 CreateItem, GetItemInstance 등 알맞은 함수명으로 변경하세요)
@@ -59,6 +43,18 @@ public class Box : MonoBehaviour, IInteractable
     // 상호작용 함수
     public void Interact()
     {
+        // [지연 초기화] 플레이어가 최초로 E키를 눌렀을 때만 힙(Heap) 메모리를 할당하고 아이템을 채웁니다.
+        if (_boxModel == null)
+        {
+            _boxModel = new InventoryModel();
+            _boxModel.Init(_defaultCapacity);
+            Debug.Log($"{_boxModel.Capacity}");
+
+            // 💡 여기서 아이템이 배열에 꽂히며 확성기(Subject)가 울리지만,
+            // 이미 플레이어가 상자와 상호작용하는 흐름 안에 있으므로 전혀 문제없이 화면에 그려집니다.
+            GenerateRandomLoot();
+        }
+
         // 상자 이벤트 발생(상자 아이템들 정보 전달)
         Subject<IBoxHandler>.Publish(h => h.OnBox(_boxModel));
         Debug.Log("상호작용");

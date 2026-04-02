@@ -42,6 +42,7 @@ public enum UIType
     Settings,       // 세팅 UI
     GameQuit,       // 게임종료 UI
     GameOver,       // 게임오버 UI
+    GameEnding,     // 게임엔딩 UI
     Inventory,      // 가방 UI
     Stat,           // 스탯 UI
     Map,            // 지도 UI
