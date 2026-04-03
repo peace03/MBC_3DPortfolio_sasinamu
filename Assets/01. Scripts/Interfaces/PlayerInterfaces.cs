@@ -1,4 +1,7 @@
-using UnityEngine;
+public interface IPlayerInitHandler
+{
+    public void OnPlayerInit();
+}
 
 // 플레이어 달리기 관리 인터페이스
 public interface IPlayerRunHandler

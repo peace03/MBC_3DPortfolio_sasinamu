@@ -67,6 +67,10 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
         UpdateAllSlot(SlotType.Bag);
         UpdateAllSlot(SlotType.Quick);
         UpdateAllSlot(SlotType.Storage);
+
+        Subject<IPlayerInitHandler>.Publish(h => h.OnPlayerInit());
+        Subject<IEquipmentSlotHandler>.Publish(h => h.OnEquipmentSlot(_equipModel));
+        Subject<IQuickSlotHandler>.Publish(h => h.OnQuickSlot(_quickModel));
         Debug.Log("프레젠터 초기화 완료");
     }
 
@@ -81,18 +85,7 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
 
     void Test()
     {
-        int[] ids = new int[] { 1,2,3,4,5,6,7,13,14, 15};
-        CreateItem(10);
-        CreateItem(11);
-        CreateItem(1);
-        CreateItem(13);
-        CreateItem(19);
-        CreateItem(16);
-        CreateItem(8);
-        CreateItem(1);
-        CreateItem(18);
-        CreateItem(9);
-        //int[] ids = new int[] { 6, 5, 7, 16, 2, 13 };
+        int[] ids = new int[] { 9, 9, 1, 1, 2, 6, 5, 7, 15, 10, 11, 13 };
 
         for (int i = 0; i < ids.Length; i++)
         {
@@ -247,7 +240,6 @@ public class InventoryPresenter : ISlotExchangeHandler, ISlotChanged,
     }
     public void OnUpdateSingleSlot(SlotType slotType, int index)
     {
-        Debug.Log(GetModel(slotType));
         InventoryModel model = GetModel(slotType);
         Item item = model.GetItem(index);
         switch (slotType)

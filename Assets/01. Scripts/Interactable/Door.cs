@@ -14,6 +14,7 @@ public class Door : MonoBehaviour, IInteractable
     [SerializeField] private Transform _doorHinge; // 회전축(Pivot) 역할을 할 Transform
     [SerializeField] private Vector3 _openLocalEulerAngles = new Vector3(0, 90, 0); // 열렸을 때의 목표 각도
     [SerializeField] private float _openSpeed = 2f; // 문이 열리는 속도 상수
+    [SerializeField] private GameObject fogObject;
 
     [Header("월드 스페이스 UI")]
     [SerializeField] private GameObject _uiCanvas;
@@ -107,6 +108,7 @@ public class Door : MonoBehaviour, IInteractable
     {
         _isOpenEnded = true;
         _uiCanvas.SetActive(false); // UI를 끕니다.
+        fogObject.SetActive(false);
 
         // 문이 열렸으므로 레이더에 더 이상 잡히지 않도록 콜라이더를 끕니다.
         Collider col = GetComponent<Collider>();

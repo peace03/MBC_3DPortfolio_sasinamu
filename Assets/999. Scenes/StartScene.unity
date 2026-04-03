@@ -5428,7 +5428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f9a793d0af605745b7c44318474f857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameLevelUI
-  bunkerScene: 2
+  bunkerScene: 1
   easyLevelButton: {fileID: 946225032}
   hardLevelButton: {fileID: 1589745838}
 --- !u!1 &2064632091

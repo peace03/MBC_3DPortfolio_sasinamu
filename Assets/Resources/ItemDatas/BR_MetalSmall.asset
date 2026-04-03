@@ -12,14 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a583f234123e8841890f27452df94da, type: 3}
   m_Name: BR_MetalSmall
   m_EditorClassIdentifier: Assembly-CSharp::CountableData
-<<<<<<< HEAD
-  sprite: {fileID: 21300000, guid: 5fa0c6c3150779a4b9a1e047803be78f, type: 3}
-  objectPrefab: {fileID: 7679961042214384166, guid: bf83e1e5395f16f4881671a3bfe59c31, type: 3}
-=======
   sprite: {fileID: 21300000, guid: c0b32a7f62061e0419020e06835ff3cb, type: 3}
   objectPrefab: {fileID: 0}
   object2DPrefab: {fileID: 8331372800034266311, guid: 4849b0b0ab435d345965903a366e92e3, type: 3}
->>>>>>> origin/Main
   _id: 5
   _name: "\uAE08\uC18D \uC870\uAC01"
   _weight: 0.6

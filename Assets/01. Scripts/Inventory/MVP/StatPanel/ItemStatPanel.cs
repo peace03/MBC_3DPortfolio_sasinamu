@@ -68,6 +68,7 @@ public class ItemStatPanel : MonoBehaviour
             {
                 //Debug.Log("1");
                 GameObject go = Instantiate(_statText, transform);
+                go.GetComponent<StatTextLine>().Init();
                 StatTextLine stl = go.GetComponent<StatTextLine>();
                 _statTexts.Add(stl);
                 //Debug.Log("2");

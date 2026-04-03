@@ -3,15 +3,10 @@ using UnityEngine;
 public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuickSlotHandler
 {
     [SerializeField] private int equipmentCount;
-    [SerializeField] private Item[] equipments;        // 0, 1 : 총 / 2 : 가방 / 3 : 방어구
+    [SerializeField] private Item[] equipments;       // 0, 1 : 총 / 2 : 가방 / 3 : 방어구
 
     private PlayerStat stat;
     private PlayerQuickSlot quickSlot;
-
-    private void Awake()
-    {
-        equipments = new Item[equipmentCount];
-    }
 
     private void OnEnable()
     {
@@ -45,7 +40,12 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuic
         OnPlayerQuickSlot(quickSlot.CurSelectedSlot);
 
         if (equipments[2] != null)
-            Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerVisual(PlayerVisualType.Inv, PlayerVisualState.LargeInv));
+        {
+            if (equipments[2]._data.ID == 14)
+                Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerVisual(PlayerVisualType.Inv, PlayerVisualState.SmallInv));
+            else
+                Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerVisual(PlayerVisualType.Inv, PlayerVisualState.LargeInv));
+        }
         else
             Subject<IPlayerVisualHandler>.Publish(h => h.OnPlayerVisual(PlayerVisualType.Inv, PlayerVisualState.None));
 
@@ -54,7 +54,7 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuic
 
     public void OnPlayerQuickSlot(int slotNumber)
     {
-        if (slotNumber > 2)
+        if (slotNumber > 2 || slotNumber == 0)
             return;
 
         if (equipments[slotNumber - 1] != null)
@@ -80,6 +80,10 @@ public class PlayerEquipment : MonoBehaviour, IEquipmentSlotHandler, IPlayerQuic
         if (equipments[3] != null)
         {
             var item = equipments[3] as VestItem;
+
+            if (item == null)
+                return;
+
             var data = item._data as VestData;
             stat.UpdateDefensePower(data.Defensive);
 

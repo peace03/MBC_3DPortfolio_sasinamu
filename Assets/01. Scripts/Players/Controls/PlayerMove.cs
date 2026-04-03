@@ -100,7 +100,7 @@ public class PlayerMove : MonoBehaviour, IPlayerRunHandler, IPlayerRollHandler
                 // 걷는 모습(애니메이션)으로 변경
                 anim.ChangePlayerAnimation(PlayerAnimState.Walk);
         }
-        else
+        else if (stat.AttackPower > 8)
         {
             if (pressedRunKey)
                 anim.ChangePlayerAnimation(PlayerAnimState.RunWithWeapon);

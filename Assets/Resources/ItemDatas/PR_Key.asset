@@ -12,14 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5a7d8cd8ec2a5409b8ef53c28e1993, type: 3}
   m_Name: PR_Key
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-<<<<<<< HEAD
-  sprite: {fileID: 21300000, guid: b3ace10554d4d8747b25240638f7e7cf, type: 3}
-  objectPrefab: {fileID: 8133198587253987349, guid: fe708b53dab67684a8962ee2e60d60e7, type: 3}
-=======
   sprite: {fileID: 21300000, guid: 6c3f1ca964afc3b499ada636f6b8b555, type: 3}
   objectPrefab: {fileID: 0}
   object2DPrefab: {fileID: 8331372800034266311, guid: 873adcff67b8b93458386a4a0572da42, type: 3}
->>>>>>> origin/Main
   _id: 8
   _name: "\uBD81\uBD80 \uCEA0\uD504 \uD6C4\uBB38 \uC5F4\uC1E0"
   _weight: 0.5

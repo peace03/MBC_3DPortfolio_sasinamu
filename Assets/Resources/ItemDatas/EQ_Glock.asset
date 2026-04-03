@@ -13,12 +13,8 @@ MonoBehaviour:
   m_Name: EQ_Glock
   m_EditorClassIdentifier: Assembly-CSharp::GunData
   sprite: {fileID: 21300000, guid: e5596600e526d8d42ad8178c8c755a3e, type: 3}
-<<<<<<< HEAD
-  objectPrefab: {fileID: 919132149155446097, guid: f0d76d71c5a5eea4d9364de2461e7699, type: 3}
-=======
   objectPrefab: {fileID: 0}
   object2DPrefab: {fileID: 8331372800034266311, guid: a165d7015a36c8e4c9a6d76b52f118aa, type: 3}
->>>>>>> origin/Main
   _id: 10
   _name: "\uAE00\uB85D"
   _weight: 2

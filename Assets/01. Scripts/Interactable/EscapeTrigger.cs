@@ -20,6 +20,7 @@ public class EscapeTrigger : MonoBehaviour, IPlayerCancelHandler
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.gameObject.name);
         // 들어온 객체가 플레이어인지 해시값 태그로 비교 (메모리상 가장 빠른 문자열 비교 방식)
         if (other.CompareTag("Player"))
         {

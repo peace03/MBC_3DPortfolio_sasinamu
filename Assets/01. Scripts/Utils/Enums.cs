@@ -51,12 +51,7 @@ public enum SceneType
 
     Start,          // 시작
     Bunker,         // 벙커
-    Bunker_Y,         // 벙커_Y
-    Game,           // 게임
-    Game_Y,           // 게임_Y
-    End,             // 끝
-    InvenTest
-
+    Game            // 게임
 }
 
 // UI 종류
@@ -73,7 +68,8 @@ public enum UIType
     Map,            // 지도 UI
     Box,            // 상자 UI
     CraftingTable,  // 제작대 UI (추가)
-    KeyMaker        // 열쇠가공기 UI (추가)
+    KeyMaker,       // 열쇠가공기 UI (추가)
+    Storage
 }
 
 public enum BunkerAnimState

@@ -10,6 +10,7 @@ public class Bridge : MonoBehaviour, IInteractable
 
     [Header("상태 변화 대상")]
     [SerializeField] private GameObject _bridgeBroken;
+    [SerializeField] private GameObject fogObject;
     [SerializeField] private GameObject _bridgeFixed;
 
     [Header("월드 스페이스 UI")]
@@ -97,6 +98,7 @@ public class Bridge : MonoBehaviour, IInteractable
         Debug.Log("다리 수리 완료!");
 
         _bridgeBroken.SetActive(false);
+        fogObject.SetActive(false);
         _bridgeFixed.SetActive(true);
         _uiCanvas.SetActive(false);
 

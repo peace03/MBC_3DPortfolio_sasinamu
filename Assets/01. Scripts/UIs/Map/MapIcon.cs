@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class MapIcon : MonoBehaviour
 {
-    [Header("카메라")]
-    [SerializeField] private Camera mapCamera;      // 지도 카메라
+    [Header("정보")]
+    [SerializeField] private LayerMask iconLayer;
 
+    private Camera camera;                          // 카메라
     private float mapOriginSize;                    // 지도 원래 크기
     private Vector3 iconOriginSize;                 // 아이콘 원래 크기
 
     private void Awake()
     {
         // 초기화
-        mapOriginSize = mapCamera.orthographicSize;
+        camera = Camera.main;
+        mapOriginSize = camera.orthographicSize;
         iconOriginSize = transform.localScale;
     }
 
@@ -20,6 +22,14 @@ public class MapIcon : MonoBehaviour
         // 아이콘 위치 고정
         transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         // 아이콘 크기 고정
-        transform.localScale = iconOriginSize * (mapCamera.orthographicSize / mapOriginSize);
+        transform.localScale = iconOriginSize * (camera.orthographicSize / mapOriginSize);
+    }
+
+    public void ChangeCameraCullingMask(bool state)
+    {
+        if (state)
+            camera.cullingMask |= iconLayer.value;
+        else
+            camera.cullingMask &= ~iconLayer.value;
     }
 }

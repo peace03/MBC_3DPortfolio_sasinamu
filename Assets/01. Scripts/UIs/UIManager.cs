@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour,
     [SerializeField] private GameObject boxUI;                          // 상자 UI
     [SerializeField] private GameObject craftingUI;                     // 작업대 UI
     [SerializeField] private GameObject keyMakerUI;                     // 열쇠 가공기 UI
+    [SerializeField] private GameObject storageUI;
 
     private Stack<GameObject> openedUIStack = new();                    // 열려있는 UI 스택
 
@@ -227,12 +228,17 @@ public class UIManager : MonoBehaviour,
                 OpenUI(boxUI, type);
                 break;
             case UIType.CraftingTable:
-                ChangeUI(menuBarUI, UIType.Inventory); // 필요하다면 메뉴바 연동
-                OpenUI(craftingUI, type);
+                ChangeUI(craftingUI, UIType.Inventory);
                 break;
             case UIType.KeyMaker:
+                ChangeUI(keyMakerUI, UIType.Inventory);
+                break;
+            case UIType.Storage:
                 ChangeUI(menuBarUI, UIType.Inventory);
-                OpenUI(keyMakerUI, type);
+                OnQuickSlotState(true);
+                menuBarUI.GetComponent<MenuBarUI>().UpdateMenuBarUI(UIType.Inventory);
+                // 창고 UI 열기
+                OpenUI(storageUI, type);
                 break;
         }
 
@@ -287,6 +293,11 @@ public class UIManager : MonoBehaviour,
             case UIType.GameOver:
             case UIType.Inventory:
             case UIType.Map:
+            case UIType.CraftingTable:
+            case UIType.GameEnding:
+            case UIType.KeyMaker:
+            case UIType.Storage:
+            case UIType.Box:
                 // UI 열림 상태 이벤트 발행
                 Subject<IUIStateHandler>.Publish(h => h.OnUIState(true));
                 break;

@@ -6,9 +6,20 @@ public class GameOverUI : MonoBehaviour
 {
     [Header("정보")]
     [SerializeField] private SceneType bunkerScene;     // 벙커 씬
+    [SerializeField] private GameObject playerStaminaUI;
 
     [Header("버튼")]
     [SerializeField] private Button continueButton;     // 계속하기 버튼
+
+    private void OnEnable()
+    {
+        playerStaminaUI.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        playerStaminaUI.SetActive(true);
+    }
 
     private void Awake()
     {

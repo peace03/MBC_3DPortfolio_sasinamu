@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour, IPlayerInitHandler
 {
     [Header("플레이어")]
     [SerializeField] private Transform player;                  // 플레이어
@@ -23,13 +23,24 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
-        // 초기화
-        InitPlayer();
+        OnPlayerInit();
     }
 
-    // 플레이어 초기화 함수
-    private void InitPlayer()
+    private void OnEnable()
     {
+        Subject<IPlayerInitHandler>.Attach(this);
+    }
+
+    private void OnDisable()
+    {
+        Subject<IPlayerInitHandler>.Detach(this);
+    }
+
+    public void OnPlayerInit()
+    {
+        if (stat != null)
+            return;
+
         // 플레이어 컴포넌트 받아오기
         stat = player.GetComponent<PlayerStat>();
         anim = player.GetComponent<PlayerAnimationChanger>();

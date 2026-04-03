@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class StatTextLine : MonoBehaviour
     private TextMeshProUGUI _statName;
     private TextMeshProUGUI _statValue;
 
-    private void Awake()
+    public void Init()
     {
         _statName = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         _statValue = transform.GetChild(2).GetComponent<TextMeshProUGUI>();

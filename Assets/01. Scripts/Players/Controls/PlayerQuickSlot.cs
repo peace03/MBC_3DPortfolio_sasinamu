@@ -11,7 +11,7 @@ public class PlayerQuickSlot : MonoBehaviour, IQuickSlotHandler, IPlayerQuickSlo
     private InventoryModel quickSlotModel;
     private Coroutine loadingCoroutine;
 
-    private int curSelectedSlot = 1;
+    private int curSelectedSlot = 0;
     public int CurSelectedSlot => curSelectedSlot;
 
     private float useItemStartTime;
@@ -24,11 +24,6 @@ public class PlayerQuickSlot : MonoBehaviour, IQuickSlotHandler, IPlayerQuickSlo
 
             return Mathf.Clamp01((Time.time - useItemStartTime) / useItemLoadingTime);
         }
-    }
-
-    private void Awake()
-    {
-        quickSlots = new Item[quickSlotCount];
     }
 
     private void OnEnable()

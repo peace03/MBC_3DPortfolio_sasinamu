@@ -22,7 +22,7 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
     [SerializeField] private GameObject rightArmTorus;
     [SerializeField] private GameObject inventory;
 
-    private ItemWorldObject curHoldingItem = null;
+    [SerializeField] private ItemWorldObject curHoldingItem = null;
 
     private PlayerVisualState armState;
     private PlayerVisualState vestState;
@@ -138,16 +138,19 @@ public class PlayerVisual : MonoBehaviour, IPlayerVisualHandler
     {
         if (armState == PlayerVisualState.Items)
         {
-            if (item == null)
+            if (item == null && curHoldingItem != null)
             {
                 curHoldingItem.ReturnToPool();
                 curHoldingItem = null;
                 return;
             }
-            else if (curHoldingItem != null && curHoldingItem.DropItem._data.ID == item._data.ID)
+            else if (curHoldingItem == null && item == null)
                 return;
-            else if (curHoldingItem != null)
+            else if (curHoldingItem != null && item != null)
             {
+                if (curHoldingItem.DropItem._data.ID == item._data.ID)
+                    return;
+
                 curHoldingItem.ReturnToPool();
                 curHoldingItem = null;
             }

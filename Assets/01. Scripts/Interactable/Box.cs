@@ -85,6 +85,7 @@ public class Box : MonoBehaviour, IInteractable
         // 주입받은 아이템 데이터를 상자 모델 배열에 차곡차곡 적재
         for (int i = 0; i < overflowItems.Count; i++)
         {
+            Debug.Log(overflowItems[i]);
             // 💡 프로젝트의 InventoryModel에 구현된 아이템 삽입 메서드(PutItem, AddItem 등)를 사용하십시오.
             _boxModel.PutItem(SlotType.Box, i, overflowItems[i]);
         }

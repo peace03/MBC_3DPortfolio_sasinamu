@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour, ICameraHandler
@@ -21,6 +22,8 @@ public class CameraManager : MonoBehaviour, ICameraHandler
     {
         mapCamera.gameObject.SetActive(state);
         mapCinemachine.SetActive(state);
-        mapCameraLimit.SetActive(state);
+
+        if (mapCameraLimit != null)
+            mapCameraLimit.SetActive(state);
     }
 }

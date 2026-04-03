@@ -12,14 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844c10e751a1bc4419c2daa87a0cc5f6, type: 3}
   m_Name: CS_Water
   m_EditorClassIdentifier: Assembly-CSharp::FoodData
-<<<<<<< HEAD
-  sprite: {fileID: 21300000, guid: 53915b16bbf53d44badc14f9a0c33f4b, type: 3}
-  objectPrefab: {fileID: 3688409362001016138, guid: 5271d0488223a014fb63888d61432cc5, type: 3}
-=======
   sprite: {fileID: 21300000, guid: 4afebefd752d3fe45883662c78d5ee27, type: 3}
   objectPrefab: {fileID: 0}
   object2DPrefab: {fileID: 8331372800034266311, guid: 335f00ff992602b49b9fff759c49dd9b, type: 3}
->>>>>>> origin/Main
   _id: 22
   _name: "\uC0DD\uC218\uD1B5"
   _weight: 0.7

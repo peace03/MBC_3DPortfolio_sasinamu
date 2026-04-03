@@ -12,14 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5a7d8cd8ec2a5409b8ef53c28e1993, type: 3}
   m_Name: PR_Rope
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-<<<<<<< HEAD
-  sprite: {fileID: 21300000, guid: d24c1df5373783846b6608620a8f5570, type: 3}
-  objectPrefab: {fileID: 2561284338621223430, guid: 04fc0a08c729f3649be6aacc04ef464b, type: 3}
-=======
   sprite: {fileID: 21300000, guid: a9c49ba1a46564d46a84f2e42c5a9107, type: 3}
   objectPrefab: {fileID: 0}
   object2DPrefab: {fileID: 8331372800034266311, guid: b20d9e2b6e6dd534c88d4d5c690a0ff5, type: 3}
->>>>>>> origin/Main
   _id: 9
   _name: "\uB85C\uD504"
   _weight: 0.7

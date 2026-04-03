@@ -41,6 +41,9 @@ public class ItemFactory : MonoBehaviour, IItemDataHandler
 
     public ItemWorldObject GetWorldItem(Item item)
     {
+        if (item == null)
+            return null;
+
         if (itemDictionary.TryGetValue(item._data.ID, out var pool))
         {
             var worldItem = pool.Get();

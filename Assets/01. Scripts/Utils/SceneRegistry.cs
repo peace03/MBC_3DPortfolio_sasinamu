@@ -12,11 +12,7 @@ public static class SceneRegistry
         {
             { SceneType.Start, "StartScene" },
             { SceneType.Bunker, "BunkerScene" },
-            { SceneType.Bunker_Y, "BunkerScene_Y" },
-            { SceneType.Game, "GameScene" },
-            { SceneType.Game_Y, "GameScene_Y" },
-            { SceneType.End, "EndScene" },
-            {SceneType.InvenTest, "InventoryTest" }
+            { SceneType.Game, "GameScene" }
         };
     }
 
